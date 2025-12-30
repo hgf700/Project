@@ -25,6 +25,10 @@ Nie potrzebujesz milionów filmów na start
 
 chcialbym uzyc np
 
+sms/email potwierdzanie moze
+
+2️ PODPISYWANIE QUERY (HMAC) – najczęstsze „secure query”/ jwt i w nim wsyzstko
+
 Frontend
 •	React + TypeScript
 •	Vite
