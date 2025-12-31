@@ -9,4 +9,9 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'ProjectApp';
+  loginWithGoogle() {
+  // Otwórz endpoint API w nowym oknie lub przekieruj
+  window.location.href = 'https://localhost:7218/auth/signin-google';
+}
+
 }

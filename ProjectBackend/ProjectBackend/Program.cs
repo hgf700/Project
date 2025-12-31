@@ -1,5 +1,6 @@
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -65,23 +66,23 @@ builder.Services.Configure<IdentityOptions>(options =>
 //});
 
 // Google OAuth z refresh tokenem
-//string googleClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
-//string googleClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
+string googleClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
+string googleClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
 
-//builder.Services.AddAuthentication(options =>
-//{
-//    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-//    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-//})
-//.AddCookie()
-//.AddGoogle(options =>
-//{
-//    options.ClientId = googleClientId;
-//    options.ClientSecret = googleClientSecret;
-//    options.CallbackPath = "/signin-google";
-//    options.AccessType = "offline";
-//    options.SaveTokens = true;
-//});
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+})
+.AddCookie()
+.AddGoogle(options =>
+{
+    options.ClientId = googleClientId;
+    options.ClientSecret = googleClientSecret;
+    options.CallbackPath = "/signin-google";
+    options.AccessType = "offline";
+    options.SaveTokens = true;
+});
 
 var app = builder.Build();
 
