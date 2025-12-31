@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace ProjectBackend.Controllers
+namespace ProjectBackend.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class WeatherForecastController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
-    {
-        
-    }
+    
 }
