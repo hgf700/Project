@@ -6,7 +6,4 @@ namespace ProjectBackend.Models;
 public class ApplicationUser : IdentityUser
 {
 
-    public bool IsOAuth { get; set; }
-    public string? GoogleId { get; set; }
-
 }

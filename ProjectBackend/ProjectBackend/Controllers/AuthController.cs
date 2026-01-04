@@ -21,13 +21,11 @@ public class AuthController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly ILogger<AuthController> _logger;
 
-
     public AuthController(
         UserManager<ApplicationUser> userManager,
         ApplicationDbContext context,
         ILogger<AuthController> logger
         )
-
     {
         _userManager = userManager;
         _context = context;
@@ -38,7 +36,15 @@ public class AuthController : ControllerBase
     [HttpGet("signin-google")]
     public IActionResult SignInWithGoogle(string returnUrl = "/")
     {
-        var redirectUrl = Url.Action("GoogleResponse", "Auth", new { ReturnUrl = returnUrl });
+        //string GOOGLE_REDIRECT_URI = Environment.GetEnvironmentVariable("GOOGLE_REDIRECT_URI");
+
+        var redirectUrl = Url.Action(
+            "GoogleResponse",
+            "Auth",
+            null,
+            Request.Scheme
+        );
+
         var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
         return Challenge(properties, GoogleDefaults.AuthenticationScheme);
     }
@@ -46,8 +52,11 @@ public class AuthController : ControllerBase
     [HttpGet("google-response")]
     public async Task<IActionResult> GoogleResponse()
     {
+        //var authenticateResult = await HttpContext.AuthenticateAsync(
+        //    CookieAuthenticationDefaults.AuthenticationScheme);
+
         var authenticateResult = await HttpContext.AuthenticateAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme);
+            GoogleDefaults.AuthenticationScheme);
 
         if (!authenticateResult.Succeeded)
             return Unauthorized();
