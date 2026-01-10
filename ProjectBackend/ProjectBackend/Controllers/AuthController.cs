@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectBackend.DB;
 using ProjectBackend.ExtraTools;
 using ProjectBackend.Models;
+using ProjectBackend.Services;
 using Sprache;
 using System.Security.Claims;
 
@@ -20,16 +21,19 @@ public class AuthController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
     private readonly ILogger<AuthController> _logger;
+    private readonly JwtService _jwtService;
 
     public AuthController(
         UserManager<ApplicationUser> userManager,
         ApplicationDbContext context,
-        ILogger<AuthController> logger
+        ILogger<AuthController> logger,
+        JwtService jwtService
         )
     {
         _userManager = userManager;
         _context = context;
         _logger= logger;
+        _jwtService = jwtService;
 
     }
 
@@ -52,11 +56,12 @@ public class AuthController : ControllerBase
     [HttpGet("google-response")]
     public async Task<IActionResult> GoogleResponse()
     {
-        //var authenticateResult = await HttpContext.AuthenticateAsync(
-        //    CookieAuthenticationDefaults.AuthenticationScheme);
 
         var authenticateResult = await HttpContext.AuthenticateAsync(
             GoogleDefaults.AuthenticationScheme);
+
+        if (!authenticateResult.Principal.Identities.Any(i => i.AuthenticationType == "Google"))
+            return Unauthorized();
 
         if (!authenticateResult.Succeeded)
             return Unauthorized();
@@ -93,10 +98,11 @@ public class AuthController : ControllerBase
             await _userManager.AddLoginAsync(user, loginInfo);
         }
 
-        //var jwt = _jwtService.GenerateToken(user);
-        var jwt = "asd";
+        var jwt = _jwtService.GenerateToken(user);
 
-        return Redirect($"http://localhost:4200/login-callback?token={jwt}");
+        return Redirect(
+            $"http://localhost:4200/login-callback?token={jwt}"
+        );
     }
 
 }

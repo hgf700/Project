@@ -1,0 +1,23 @@
+//builder.Services.ConfigureApplicationCookie(options =>
+//{
+//    options.Cookie.HttpOnly = true;
+//    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+//    options.Cookie.SameSite = SameSiteMode.Lax;
+//    options.ExpireTimeSpan = TimeSpan.FromHours(1); // D³u¿szy czas ¿ycia sesji
+//    options.SlidingExpiration = true;
+//    options.LoginPath = "/Identity/Account/Login";
+//    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+//    options.LogoutPath = "/Identity/Account/Logout";
+//});
+
+//app.Use(async (context, next) =>
+//{
+//    context.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate";
+//    context.Response.Headers["Pragma"] = "no-cache";
+//    context.Response.Headers["Expires"] = "-1";
+//    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+//    context.Response.Headers["X-Frame-Options"] = "DENY";
+//    context.Response.Headers["X-XSS-Protection"] = "1; mode=block";
+
+//    await next.Invoke();
+//});

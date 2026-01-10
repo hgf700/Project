@@ -1,20 +1,22 @@
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using ProjectBackend.DB;
 using ProjectBackend.ExtraTools;
 using ProjectBackend.Models;
+using ProjectBackend.Services;
 using System.Configuration;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 DotNetEnv.Env.Load();
-
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -38,6 +40,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 builder.Services.AddHttpClient();
 
+builder.Services.AddScoped<JwtService>();
+
 builder.Services.AddAuthorization();
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -53,50 +57,52 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = false;
 });
 
-//builder.Services.ConfigureApplicationCookie(options =>
-//{
-//    options.Cookie.HttpOnly = true;
-//    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-//    options.Cookie.SameSite = SameSiteMode.Lax;
-//    options.ExpireTimeSpan = TimeSpan.FromHours(1); // D³u¿szy czas ¿ycia sesji
-//    options.SlidingExpiration = true;
-//    options.LoginPath = "/Identity/Account/Login";
-//    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-//    options.LogoutPath = "/Identity/Account/Logout";
-//});
-
 // Google OAuth z refresh tokenem
 string googleClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
 string googleClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
+string JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET");
+
+if (string.IsNullOrWhiteSpace(JWT_SECRET))
+    throw new InvalidOperationException("JWT_SECRET is not set");
+
+if (string.IsNullOrWhiteSpace(googleClientId))
+    throw new InvalidOperationException("GOOGLE_CLIENT_ID is not set");
+
+if (string.IsNullOrWhiteSpace(googleClientSecret))
+    throw new InvalidOperationException("GOOGLE_CLIENT_SECRET is not set");
+
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-.AddCookie()
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = false;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(JWT_SECRET)
+        ),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ClockSkew = TimeSpan.Zero
+    };
+})
 .AddGoogle(options =>
 {
     options.ClientId = googleClientId;
     options.ClientSecret = googleClientSecret;
     options.CallbackPath = "/signin-google";
-    options.AccessType = "offline";
     options.SaveTokens = true;
 });
 
 var app = builder.Build();
 
-//app.Use(async (context, next) =>
-//{
-//    context.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate";
-//    context.Response.Headers["Pragma"] = "no-cache";
-//    context.Response.Headers["Expires"] = "-1";
-//    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
-//    context.Response.Headers["X-Frame-Options"] = "DENY";
-//    context.Response.Headers["X-XSS-Protection"] = "1; mode=block";
-
-//    await next.Invoke();
-//});
 
 if (app.Environment.IsDevelopment())
 {
