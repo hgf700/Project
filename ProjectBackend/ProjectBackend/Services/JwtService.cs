@@ -8,12 +8,10 @@ namespace ProjectBackend.Services;
 
 public class JwtService
 {
-    //string JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET");
-    private readonly string _secret;
+    string JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET");
 
-    public JwtService(IConfiguration config)
+    public JwtService()
     {
-        _secret = config["JWT_SECRET"];
     }
 
     public string GenerateToken(ApplicationUser user)
@@ -25,7 +23,7 @@ public class JwtService
         };
 
         var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_secret));
+            Encoding.UTF8.GetBytes(JWT_SECRET));
 
         var creds = new SigningCredentials(
             key, SecurityAlgorithms.HmacSha256Signature);

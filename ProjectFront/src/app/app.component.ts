@@ -8,10 +8,8 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'ProjectApp';
+  title = 'ProjectFront';
   loginWithGoogle() {
-  // Otwórz endpoint API w nowym oknie lub przekieruj
   window.location.href = 'https://localhost:7218/auth/signin-google';
-}
-
+  }
 }
