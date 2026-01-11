@@ -7,9 +7,5 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
-  title = 'ProjectFront';
-  loginWithGoogle() {
-  window.location.href = 'https://localhost:7218/auth/signin-google';
-  }
-}
+export class AppComponent {}
+

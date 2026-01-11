@@ -104,5 +104,4 @@ public class AuthController : ControllerBase
             $"http://localhost:4200/login-callback?token={jwt}"
         );
     }
-
 }
