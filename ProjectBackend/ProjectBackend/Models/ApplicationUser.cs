@@ -5,5 +5,5 @@ namespace ProjectBackend.Models;
 
 public class ApplicationUser : IdentityUser
 {
-
+    //string nickname { get; set; }
 }
