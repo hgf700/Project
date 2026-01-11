@@ -12,4 +12,6 @@ public class Movie
     public string release_date { get; set; }
     public float vote_average { get; set; }
     public string poster_path { get; set; }
+
+    public ICollection<MovieGenre> MovieGenres { get; set; }
 }

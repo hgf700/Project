@@ -2,7 +2,7 @@
 
 namespace ProjectBackend.Models;
 
-public class PlaylistValues
+public class PlaylistValue
 {
     public int PlaylistId { get; set; }
     public Playlist Playlist { get; set; }
