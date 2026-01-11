@@ -1,13 +1,12 @@
-﻿namespace ProjectBackend.Models
+﻿namespace ProjectBackend.Models;
+
+public class Playlist
 {
-    public class Playlist
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public string Name { get; set; }
+    public string Name { get; set; }
 
-        public string UserId { get; set; }
-        public ApplicationUser User { get; set; }
+    public string UserId { get; set; }
+    public ApplicationUser User { get; set; }
 
-    }
 }

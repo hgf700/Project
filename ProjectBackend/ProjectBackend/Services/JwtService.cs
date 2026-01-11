@@ -10,10 +10,6 @@ public class JwtService
 {
     string JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET");
 
-    public JwtService()
-    {
-    }
-
     public string GenerateToken(ApplicationUser user)
     {
         var claims = new[]

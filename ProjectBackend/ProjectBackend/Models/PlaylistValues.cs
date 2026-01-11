@@ -1,13 +1,12 @@
 ﻿using Microsoft.Build.Tasks;
 
-namespace ProjectBackend.Models
-{
-    public class PlaylistValues
-    {
-        public int PlaylistId { get; set; }
-        public Playlist Playlist { get; set; }
+namespace ProjectBackend.Models;
 
-        public int MovieId { get; set; }
-        public Movie Movie { get; set; }
-    }
+public class PlaylistValues
+{
+    public int PlaylistId { get; set; }
+    public Playlist Playlist { get; set; }
+
+    public int MovieId { get; set; }
+    public Movie Movie { get; set; }
 }
