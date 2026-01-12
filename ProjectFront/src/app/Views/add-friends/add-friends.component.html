@@ -1,9 +1,21 @@
-<p>add-friends works!</p>
 
-<form method="POST" action="">
-    
-    <label>email of friend</label><br>
-    <input type="text" name="message_target" required><br>
-    
-    <button type="submit">Add Shipment</button>
+<main class="main">
+<form [formGroup]="addFriendForm" (ngSubmit)="onSubmit()">
+
+  <label>Email znajomego</label>
+  <input type="email" formControlName="email" />
+
+    <div *ngIf="submitted && addFriendForm.get('email')?.errors">
+    <small *ngIf="addFriendForm.get('email')?.errors?.['required']">
+        Email jest wymagany
+    </small>
+    <small *ngIf="addFriendForm.get('email')?.errors?.['email']">
+        Nieprawidłowy email
+    </small>
+    </div>
+
+  <button type="submit">Dodaj znajomego</button>
 </form>
+</main>
+
+<router-outlet></router-outlet>

@@ -1,16 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { FriendService } from '../../Services/add-friend';
-
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-add-friends',
-  imports: [],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterOutlet
+  ],
   templateUrl: './add-friends.component.html',
   styleUrl: './add-friends.component.css'
 })
-export class AddFriendsComponent{
+export class AddFriendsComponent {
 
   addFriendForm!: FormGroup;
   submitted = false;
@@ -18,7 +23,12 @@ export class AddFriendsComponent{
   constructor(
     private fb: FormBuilder,
     private friendService: FriendService
-  ) {}
+  ) {
+    // inicjalizacja formularza
+    this.addFriendForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]]
+    });
+  }
 
   onSubmit() {
     this.submitted = true;
@@ -32,6 +42,4 @@ export class AddFriendsComponent{
         error: err => alert(err.error)
       });
   }
-
 }
-

@@ -27,6 +27,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<MovieGenre>()
             .HasKey(mg => new { mg.MovieId, mg.GenreId });
 
+        modelBuilder.Entity<LikedMaterial>()
+            .HasKey(lm => new { lm.UserId, lm.MovieId });
+
+        modelBuilder.Entity<PlaylistValue>()
+            .HasKey(pv => new { pv.PlaylistId, pv.MovieId });
+
         modelBuilder.Entity<MovieGenre>()
             .HasOne(mg => mg.Movie)
             .WithMany(m => m.MovieGenres)
@@ -36,5 +42,38 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasOne(mg => mg.Genre)
             .WithMany(g => g.MovieGenres)
             .HasForeignKey(mg => mg.GenreId);
+
+        modelBuilder.Entity<LikedMaterial>()
+            .HasOne(lm => lm.User)
+            .WithMany()
+            .HasForeignKey(lm => lm.UserId);
+
+        modelBuilder.Entity<LikedMaterial>()
+            .HasOne(lm => lm.Movie)
+            .WithMany()
+            .HasForeignKey(lm => lm.MovieId);
+
+        modelBuilder.Entity<PlaylistValue>()
+            .HasOne(pv => pv.Playlist)
+            .WithMany()
+            .HasForeignKey(pv => pv.PlaylistId);
+
+        modelBuilder.Entity<PlaylistValue>()
+            .HasOne(pv => pv.Movie)
+            .WithMany()
+            .HasForeignKey(pv => pv.MovieId);
+
+        modelBuilder.Entity<Friend>()
+            .HasOne(f => f.User)
+            .WithMany()
+            .HasForeignKey(f => f.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Friend>()
+            .HasOne(f => f.FriendUser)
+            .WithMany()
+            .HasForeignKey(f => f.FriendUserId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
+
 }
