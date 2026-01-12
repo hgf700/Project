@@ -2,18 +2,16 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FriendService } from '../../Services/add-friend';
-import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-add-friends',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
-    RouterOutlet
+    ReactiveFormsModule
   ],
   templateUrl: './add-friends.component.html',
-  styleUrl: './add-friends.component.css'
+  styleUrls: ['./add-friends.component.css']
 })
 export class AddFriendsComponent {
 

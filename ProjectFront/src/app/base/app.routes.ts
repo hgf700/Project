@@ -10,6 +10,14 @@ export const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login-callback', component: LoginCallbackComponent },
   { path: 'add-friends', component: AddFriendsComponent }
+
+  // {
+  //   path: 'add-friends',
+  //   loadComponent: () => import('../Views/add-friends/add-friends.component')
+  //                     .then(m => m.AddFriendsComponent)
+  // }
+
+
 ];
 
 @NgModule({

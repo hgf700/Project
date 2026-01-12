@@ -8,7 +8,10 @@ export class FriendService {
 
   constructor(private http: HttpClient) {}
 
+  // W FriendService
   addFriend(email: string) {
-    return this.http.post(`${this.apiUrl}`, { email });
+    const token = localStorage.getItem('jwt');
+    const headers = { 'Authorization': `Bearer ${token}` };
+    return this.http.post(this.apiUrl, { email }, { headers });
   }
 }
