@@ -40,7 +40,6 @@ public class AuthController : ControllerBase
     [HttpGet("signin-google")]
     public IActionResult SignInWithGoogle(string returnUrl = "/")
     {
-        //string GOOGLE_REDIRECT_URI = Environment.GetEnvironmentVariable("GOOGLE_REDIRECT_URI");
 
         var redirectUrl = Url.Action(
             "GoogleResponse",
