@@ -9,6 +9,7 @@ using ProjectBackend.DTO;
 using ProjectBackend.Models;
 using ProjectBackend.Services;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace ProjectBackend.Controllers;
 
@@ -36,9 +37,8 @@ public class FriendController : ControllerBase
     [HttpPost("add-friend")]
     public async Task<IActionResult> AddFriend([FromBody] AddFriendDto dto)
     {
-        var currentUser = await _userManager.GetUserAsync(User);
-        if (currentUser == null)
-            return Unauthorized();
+        var email = User.FindFirst(ClaimTypes.Email)?.Value;
+        var currentUser = await _userManager.FindByEmailAsync(email);
 
         var friendUser = await _userManager.FindByEmailAsync(dto.Email);
         if (friendUser == null)
