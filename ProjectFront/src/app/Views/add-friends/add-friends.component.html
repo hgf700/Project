@@ -7,5 +7,14 @@
 
   <button type="submit">Dodaj znajomego</button>
 </form>
-</main>
 
+<button (click)="loadFriends()">Pokaż znajomych</button>
+
+  <ul *ngIf="friends.length > 0">
+    <li *ngFor="let f of friends">
+      {{ f.email }}
+    </li>
+  </ul>
+  <p *ngIf="friends.length === 0">Brak znajomych</p>
+
+</main>

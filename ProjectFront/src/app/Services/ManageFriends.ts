@@ -13,4 +13,11 @@ export class FriendService {
     const headers = { 'Authorization': `Bearer ${token}` };
     return this.http.post(this.apiUrl, { email }, { headers });
   }
+  getFriends() {
+    const token = localStorage.getItem('jwt');
+    const headers = { 'Authorization': `Bearer ${token}` };
+    return this.http.get<{ friendUserId: string; email: string }[]>('https://localhost:7218/friend/show-friends', { headers });
+  }
+
+
 }

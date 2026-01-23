@@ -68,16 +68,23 @@ public class FriendController : ControllerBase
     }
 
     [HttpGet("show-friends")]
-    public async Task<IActionResult> ShowFriend()
+    public async Task<IActionResult> ShowFriends()
     {
         var UserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
-
         var currentUser = await _userManager.FindByEmailAsync(UserEmail);
 
+        if (currentUser == null) return Unauthorized();
 
-        
+        var friends = await _context.Friends
+            .Where(f => f.UserId == currentUser.Id)
+            .Include(f => f.FriendUser) 
+            .Select(f => new
+            {
+                f.FriendUserId,
+                Email = f.FriendUser.Email 
+            })
+            .ToListAsync();
 
-
-        return Ok();
+        return Ok(friends);
     }
 }

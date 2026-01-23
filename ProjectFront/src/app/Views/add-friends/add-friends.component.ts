@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FriendService } from '../../Services/add-friend';
+import { FriendService } from '../../Services/ManageFriends';
 
 @Component({
   selector: 'app-add-friends',
@@ -40,4 +40,19 @@ export class AddFriendsComponent {
         error: err => alert(err.error)
       });
   }
+
+  friends: { friendUserId: string; email: string }[] = [];
+
+loadFriends() {
+  this.friendService.getFriends().subscribe({
+    next: data => {
+      this.friends = data;
+    },
+    error: err => {
+      console.error(err);
+      alert('Nie udało się pobrać znajomych');
+    }
+  });
+}
+
 }
