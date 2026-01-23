@@ -24,7 +24,7 @@ export class AddFriendsComponent {
   ) {
     // inicjalizacja formularza
     this.addFriendForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]]
+      email: ['']
     });
   }
 

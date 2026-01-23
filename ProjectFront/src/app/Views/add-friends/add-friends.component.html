@@ -5,15 +5,6 @@
   <label>Email znajomego</label>
   <input type="email" formControlName="email" />
 
-    <div *ngIf="submitted && addFriendForm.get('email')?.errors">
-    <small *ngIf="addFriendForm.get('email')?.errors?.['required']">
-        Email jest wymagany
-    </small>
-    <small *ngIf="addFriendForm.get('email')?.errors?.['email']">
-        Nieprawidłowy email
-    </small>
-    </div>
-
   <button type="submit">Dodaj znajomego</button>
 </form>
 </main>

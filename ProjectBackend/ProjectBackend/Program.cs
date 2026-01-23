@@ -22,13 +22,12 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var host = Environment.GetEnvironmentVariable("POSTGRES_HOST");
-var port = Environment.GetEnvironmentVariable("POSTGRES_PORT");
 var db = Environment.GetEnvironmentVariable("POSTGRES_DB");
 var user = Environment.GetEnvironmentVariable("POSTGRES_USER");
 var pass = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
 
 var connectionString =
-    $"Host={host};Port={port};Database={db};Username={user};Password={pass}";
+    $"Host={host};Port=5432;Database={db};Username={user};Password={pass}";
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
@@ -43,6 +42,17 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<JwtService>();
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularDev",
+        policy => policy
+            .WithOrigins("http://localhost:4200") 
+            .AllowAnyMethod() 
+            .AllowAnyHeader() 
+            .AllowCredentials()
+    );
+});
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -118,9 +128,7 @@ else
     });
 }
 
-
 var app = builder.Build();
-
 
 if (app.Environment.IsDevelopment())
 {
@@ -131,6 +139,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCors("AllowAngularDev");
 
 app.UseAuthentication();
 app.UseAuthorization();
