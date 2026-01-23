@@ -1,22 +1,30 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ProjectBackend.Models;
-
-//https://developer.themoviedb.org/reference/collection-details
-//http://developer.themoviedb.org/reference/collection-images
-public class Movie
+namespace ProjectBackend.Models
 {
-    public int Id { get; set; }
-    public string name{ get; set; }
-    public string overview { get; set; }
-    public bool adult{ get; set; }
+    public class Movie
+    {
+        public int Id { get; set; }
 
-    [NotMapped]
-    public int[] genre_ids { get; set; }
+        public string Title { get; set; } // zamiast name, spójnie z TMDB
 
-    public string release_date { get; set; }
-    public float vote_average { get; set; }
-    public string poster_path { get; set; }
+        public string Overview { get; set; }
 
-    public ICollection<MovieGenre> MovieGenres { get; set; }
+        public bool Adult { get; set; }
+
+        [NotMapped]
+        public int[] GenreIds { get; set; } // tymczasowe do mapowania gatunków
+
+        public DateTime ReleaseDate { get; set; }
+
+        public float VoteAverage { get; set; }
+
+        public string PosterPath { get; set; }
+
+        public string BackdropPath { get; set; } // dodałem, bo TMDB zwraca tło
+
+        public ICollection<MovieGenre> MovieGenres { get; set; } = new List<MovieGenre>();
+    }
 }

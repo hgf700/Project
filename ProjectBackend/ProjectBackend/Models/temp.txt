@@ -1,4 +1,9 @@
-﻿﻿using System;
+﻿//https://developer.themoviedb.org/reference/collection-details
+//http://developer.themoviedb.org/reference/collection-images﻿
+
+
+
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 

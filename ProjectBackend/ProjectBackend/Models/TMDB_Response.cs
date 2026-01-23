@@ -4,33 +4,33 @@ namespace ProjectBackend.Models;
 
 public class TMDB_Response
 {
-    [JsonPropertyName("name")]
-    public string name { get; set; }
+    [JsonPropertyName("backdrop_path")]
+    public string BackdropPath { get; set; }  // string, np. "/8YFL5QQVPy3AgrEQxNYVSgiPEbe.jpg"
+
+    [JsonPropertyName("original_title")]
+    public string OriginalTitle { get; set; }
 
     [JsonPropertyName("overview")]
-    public string overview { get; set; }
+    public string Overview { get; set; }
 
-    [JsonPropertyName("backdrop_path")]
-    public string BackdropPath { get; set; }
-
-    [JsonPropertyName("adult")]
-    public bool adult { get; set; }
+    [JsonPropertyName("popularity")]
+    public double Popularity { get; set; } // double lub float
 
     [JsonPropertyName("poster_path")]
-    public string poster_path { get; set; }
+    public string PosterPath { get; set; }
 
     [JsonPropertyName("release_date")]
-    public string release_date { get; set; }
+    public string ReleaseDate { get; set; } // można string, potem parsować do DateTime jeśli trzeba
 
     [JsonPropertyName("vote_average")]
-    public float vote_average { get; set; }
+    public double VoteAverage { get; set; } // float lub double
 
-    [JsonPropertyName("parts")]
-    public List<MoviePart> Parts { get; set; }
-}
+    [JsonPropertyName("vote_count")]
+    public int VoteCount { get; set; }
 
-public class MoviePart
-{
+    [JsonPropertyName("adult")]
+    public bool Adult { get; set; }
+
     [JsonPropertyName("genre_ids")]
     public int[] GenreIds { get; set; }
 }
