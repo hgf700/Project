@@ -1,3 +1,9 @@
 npm start
 
-ng generate component Views/login-callback
+ng generate component Views/
+
+
+  constructor(
+    private route: ActivatedRoute,  #odczytywania parametrów z URL np. /movies/123
+    private router: Router  #przekierowań po akcji
+  ) {}

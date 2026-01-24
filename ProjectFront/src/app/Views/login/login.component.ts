@@ -35,7 +35,7 @@ constructor(
     }
 
     
-    this.router.navigate(['/add-friends']);
+    this.router.navigate(['/login-callback']);
 
   }
 }

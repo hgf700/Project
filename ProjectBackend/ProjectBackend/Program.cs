@@ -11,6 +11,7 @@ using ProjectBackend.DB;
 using ProjectBackend.ExtraTools;
 using ProjectBackend.Models;
 using ProjectBackend.Services;
+using ProjectBackend.Services.interfaces;
 using System.Configuration;
 using System.Text;
 
@@ -40,6 +41,8 @@ builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<ITmdbService,TmdbService>();
+
 
 builder.Services.AddAuthorization();
 

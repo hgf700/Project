@@ -1,9 +1,7 @@
 ﻿using ProjectBackend.Models;
 
-namespace ProjectBackend.Services.interfaces
+namespace ProjectBackend.Services.interfaces;
+public interface ITmdbService
 {
-    public interface ITmdbService
-    {
-        Task<TMDB_Response> GetMovieAsync(int movieId);
-    }
+    Task<List<TMDB_Response>> GetPopularMoviesAsync(int page = 1);
 }

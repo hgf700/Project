@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
 using ProjectBackend.Models;
 using ProjectBackend.Services.interfaces;
+using System.Globalization;
 
 namespace ProjectBackend.Controllers;
 
@@ -21,54 +22,73 @@ public class MoviesController : ControllerBase
         _tmdbService = tmdbService;
     }
 
-    [HttpPost("add-from-tmdb/{id}")]
-    public async Task<IActionResult> AddMovieFromTmdb(int id)
+    [HttpPost("add-from-tmdb")]
+    public async Task<IActionResult> AddMoviesFromTmdb(int page = 1)
     {
-        var tmdbMovie = await _tmdbService.GetMovieAsync(id);
+        var tmdbMovies = await _tmdbService.GetPopularMoviesAsync(page);
 
-        if (tmdbMovie == null) return NotFound();
+        if (tmdbMovies == null || !tmdbMovies.Any())
+            return NotFound("Brak filmów z TMDB");
 
-        // Parsowanie release_date
-        DateTime? releaseDate = null;
-        if (!string.IsNullOrEmpty(tmdbMovie.ReleaseDate))
+        foreach (var tmdbMovie in tmdbMovies)
         {
-            if (DateTime.TryParse(tmdbMovie.ReleaseDate, out var parsedDate))
-                releaseDate = parsedDate;
-        }
+            bool exists = await _context.Movies
+                .AnyAsync(m => m.Title == tmdbMovie.OriginalTitle);
 
-        // Mapowanie TMDB_Response na Movie w bazie
-        var movie = new Movie
-        {
-            Title = tmdbMovie.OriginalTitle,
-            Overview = tmdbMovie.Overview,
-            Adult = tmdbMovie.Adult,
-            GenreIds = tmdbMovie.GenreIds,
-            ReleaseDate = releaseDate ?? DateTime.MinValue,
-            VoteAverage = (float)tmdbMovie.VoteAverage,
-            PosterPath = tmdbMovie.PosterPath,
-            BackdropPath = tmdbMovie.BackdropPath
-        };
+            if (exists)
+                continue;
 
-        // Mapowanie gatunków na relacje wiele-do-wielu
-        if (tmdbMovie.GenreIds != null)
-        {
-            foreach (var genreId in tmdbMovie.GenreIds)
+            DateTime releaseDate = DateTime.MinValue;
+
+            if (!string.IsNullOrEmpty(tmdbMovie.ReleaseDate) &&
+                DateTime.TryParseExact(
+                    tmdbMovie.ReleaseDate,
+                    "yyyy-MM-dd",
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out var parsedDate))
             {
-                var genre = await _context.Genres.FirstOrDefaultAsync(g => g.TmdbId == genreId);
-                if (genre != null)
+                releaseDate = DateTime.SpecifyKind(parsedDate, DateTimeKind.Utc);
+            }
+
+
+            var movie = new Movie
+            {
+                Title = tmdbMovie.OriginalTitle,
+                Overview = tmdbMovie.Overview,
+                Adult = tmdbMovie.Adult,
+                ReleaseDate = releaseDate,
+                VoteAverage = (float)tmdbMovie.VoteAverage,
+                PosterPath = tmdbMovie.PosterPath,
+                BackdropPath = tmdbMovie.BackdropPath,
+                MovieGenres = new List<MovieGenre>()
+            };
+
+            // mapowanie gatunków
+            if (tmdbMovie.GenreIds != null)
+            {
+                foreach (var genreId in tmdbMovie.GenreIds)
                 {
-                    movie.MovieGenres.Add(new MovieGenre
+                    var genre = await _context.Genres
+                        .FirstOrDefaultAsync(g => g.TmdbId == genreId);
+
+                    if (genre != null)
                     {
-                        Movie = movie,
-                        Genre = genre
-                    });
+                        movie.MovieGenres.Add(new MovieGenre
+                        {
+                            Movie = movie,
+                            Genre = genre
+                        });
+                    }
                 }
             }
+
+            _context.Movies.Add(movie);
         }
 
-        _context.Movies.Add(movie);
         await _context.SaveChangesAsync();
 
-        return Ok(movie);
+        return Ok("Filmy z TMDB zapisane do bazy");
     }
+
 }
