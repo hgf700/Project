@@ -118,4 +118,30 @@ public class MoviesController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok("Filmy z TMDB zapisane do bazy");
     }
+
+    [Authorize]
+    [HttpPost("rate")]
+    public async Task<IActionResult> SendMovieRate(int num)
+    {
+        var TmdbGenres = await _seedgenres.GetAllGenresAsync();
+
+        foreach (var genres in TmdbGenres)
+        {
+            bool exists = await _context.Genres
+                .AnyAsync(m => m.TmdbId == genres.TmdbId);
+
+            if (exists)
+                continue;
+
+            var genre = new Genre
+            {
+                TmdbId = genres.TmdbId,
+                Name = genres.Name,
+            };
+
+            _context.Genres.Add(genre);
+        }
+        await _context.SaveChangesAsync();
+        return Ok("Filmy z TMDB zapisane do bazy");
+    }
 }

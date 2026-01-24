@@ -1,0 +1,41 @@
+﻿Koncepcja preferencji użytkownika
+
+Każdy użytkownik ma wektor preferencji, który możesz obliczyć na podstawie ocen.
+
+Jeśli masz np. gatunki filmów (MovieGenres), możesz przypisać punkty do każdego gatunku:
+
+Gatunek	Punkty
+Action	10
+Adventure	10
+Drama	3
+Horror	1
+
+alg
+var userRatings = _context.UserMovieRatings
+    .Include(r => r.Movie)
+        .ThenInclude(m => m.MovieGenres)
+            .ThenInclude(mg => mg.Genre)
+    .Where(r => r.UserId == userId)
+    .ToList();
+
+var genreScores = new Dictionary<int, int>();
+
+foreach(var r in userRatings)
+{
+    foreach(var mg in r.Movie.MovieGenres)
+    {
+        if(!genreScores.ContainsKey(mg.GenreId))
+            genreScores[mg.GenreId] = 0;
+
+        genreScores[mg.GenreId] += (int)r.Rating;
+    }
+}
+
+
+Rozszerzenia
+
+Możesz też użyć macierzy użytkownik × film i stosować algorytmy typu collaborative filtering.
+
+Wtedy Points z enumu stają się „ratingiem” w klasycznych systemach rekomendacji.
+
+Możesz też dodawać np. wagi czasowe: starsze oceny są mniej istotne.
