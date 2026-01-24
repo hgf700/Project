@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { PhotoService } from '../../Services/PhotoService';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-show-movie-photo',
   templateUrl: './show-movie-photo.component.html',
-  styleUrl: './show-movie-photo.component.css'
+  styleUrl: './show-movie-photo.component.css',
+  imports: [
+    CommonModule
+  ]
 })
 export class ShowMoviePhotoComponent implements OnInit {
 

@@ -1,4 +1,4 @@
-﻿namespace ProjectBackend.Models;
+﻿namespace ProjectBackend.Models.ReleatedToSocial;
 
 public class Friend
 {

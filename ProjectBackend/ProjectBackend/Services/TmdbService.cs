@@ -1,4 +1,4 @@
-﻿using ProjectBackend.Models;
+﻿using ProjectBackend.Models.ReleatedToMovie;
 using ProjectBackend.Services.interfaces;
 using RestSharp;
 

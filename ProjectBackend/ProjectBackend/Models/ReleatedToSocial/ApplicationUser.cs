@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using NuGet.Protocol.Core.Types;
 
-namespace ProjectBackend.Models;
+namespace ProjectBackend.Models.ReleatedToSocial;
 
 public class ApplicationUser : IdentityUser
 {

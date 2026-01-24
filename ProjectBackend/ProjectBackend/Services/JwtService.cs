@@ -1,5 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using ProjectBackend.Models;
+using ProjectBackend.Models.ReleatedToSocial;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;

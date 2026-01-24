@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Core.Types;
-using ProjectBackend.Models;
+using ProjectBackend.Models.ReleatedToMovie;
+using ProjectBackend.Models.ReleatedToPlaylist;
+using ProjectBackend.Models.ReleatedToSocial;
 
 namespace ProjectBackend.DB;
 

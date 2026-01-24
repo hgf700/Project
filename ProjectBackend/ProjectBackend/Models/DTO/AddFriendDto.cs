@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ProjectBackend.DTO;
+namespace ProjectBackend.Models.DTO;
 
 public class AddFriendDto
 {

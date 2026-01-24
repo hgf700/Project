@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using ProjectBackend.DB;
 using ProjectBackend.ExtraTools;
-using ProjectBackend.Models;
+using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
 using Sprache;
 using System.Security.Claims;

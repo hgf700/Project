@@ -1,0 +1,6 @@
+  <div *ngFor="let img of images" class="movie-card">
+
+    <!-- <div
+      class="backdrop"
+      [style.backgroundImage]="'url(' + getBackdropUrl(img.backdropPath) + ')'">
+    </div> -->

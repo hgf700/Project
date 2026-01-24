@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ProjectBackend.Models;
+namespace ProjectBackend.Models.ReleatedToMovie;
 
 public class TmdbDiscoverResponse
 {

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
-using ProjectBackend.Models;
+using ProjectBackend.Models.ReleatedToMovie;
 using ProjectBackend.Services.interfaces;
 using System.Globalization;
 
@@ -21,6 +21,8 @@ public class MoviesController : ControllerBase
         _context = context;
         _tmdbService = tmdbService;
     }
+
+
 
     [HttpPost("add-from-tmdb")]
     public async Task<IActionResult> AddMoviesFromTmdb(int page = 1)
@@ -65,23 +67,16 @@ public class MoviesController : ControllerBase
                 MovieGenres = new List<MovieGenre>()
             };
 
-            // mapowanie gatunków
-            if (tmdbMovie.GenreIds != null)
-            {
-                foreach (var genreId in tmdbMovie.GenreIds)
-                {
-                    var genre = await _context.Genres
-                        .FirstOrDefaultAsync(g => g.TmdbId == genreId);
+            var genres = await _context.Genres
+                .Where(g => tmdbMovie.GenreIds.Contains(g.TmdbId))
+                .ToListAsync();
 
-                    if (genre != null)
-                    {
-                        movie.MovieGenres.Add(new MovieGenre
-                        {
-                            Movie = movie,
-                            Genre = genre
-                        });
-                    }
-                }
+            foreach (var genre in genres)
+            {
+                movie.MovieGenres.Add(new MovieGenre
+                {
+                    Genre = genre
+                });
             }
 
             _context.Movies.Add(movie);

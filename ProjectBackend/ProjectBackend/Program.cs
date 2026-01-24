@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ProjectBackend.DB;
 using ProjectBackend.ExtraTools;
-using ProjectBackend.Models;
+using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
 using ProjectBackend.Services.interfaces;
 using System.Configuration;

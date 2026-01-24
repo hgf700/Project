@@ -1,6 +1,7 @@
 ﻿using Microsoft.Build.Tasks;
+using ProjectBackend.Models.ReleatedToMovie;
 
-namespace ProjectBackend.Models;
+namespace ProjectBackend.Models.ReleatedToPlaylist;
 
 public class PlaylistValue
 {

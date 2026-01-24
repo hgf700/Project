@@ -1,4 +1,4 @@
-﻿using ProjectBackend.Models;
+﻿using ProjectBackend.Models.ReleatedToMovie;
 
 namespace ProjectBackend.Services.interfaces;
 public interface ITmdbService
