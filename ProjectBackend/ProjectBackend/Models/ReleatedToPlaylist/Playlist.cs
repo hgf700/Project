@@ -1,4 +1,6 @@
-﻿namespace ProjectBackend.Models;
+﻿using ProjectBackend.Models.ReleatedToSocial;
+
+namespace ProjectBackend.Models.ReleatedToPlaylist;
 
 public class Playlist
 {

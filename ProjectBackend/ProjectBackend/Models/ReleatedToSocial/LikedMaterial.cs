@@ -1,4 +1,6 @@
-﻿namespace ProjectBackend.Models;
+﻿using ProjectBackend.Models.ReleatedToMovie;
+
+namespace ProjectBackend.Models.ReleatedToSocial;
 
 public class LikedMaterial
 {

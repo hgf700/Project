@@ -32,6 +32,10 @@ export class LoginCallbackComponent implements OnInit {
     this.router.navigate(['/show-movie-photo']);
   }
 
+  downloadGenre(){
+    this.router.navigate(['/seed-genre']);
+  }
+
   ngOnInit(): void {
     var zoauth=1
     if (zoauth==1){

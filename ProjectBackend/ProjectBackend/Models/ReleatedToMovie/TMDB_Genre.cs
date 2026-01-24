@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ProjectBackend.Models;
+namespace ProjectBackend.Models.ReleatedToMovie;
 
 public class TmdbGenreListResponse
 {
@@ -11,7 +11,7 @@ public class TmdbGenreListResponse
 public class TmdbGenreDto
 {
     [JsonPropertyName("id")]
-    public int Id { get; set; }
+    public int TmdbId { get; set; }
 
     [JsonPropertyName("name")]
     public string Name { get; set; }

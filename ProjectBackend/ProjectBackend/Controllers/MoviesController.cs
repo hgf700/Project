@@ -15,15 +15,21 @@ public class MoviesController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly ITmdbService _tmdbService;
+    private readonly SeedGenresService _seedgenres;
 
-    public MoviesController(ApplicationDbContext context, ITmdbService tmdbService)
+
+    public MoviesController(
+        ApplicationDbContext context,
+        ITmdbService tmdbService,
+        SeedGenresService seedgenres)
     {
         _context = context;
         _tmdbService = tmdbService;
+        _seedgenres = seedgenres;
     }
 
 
-
+    [Authorize]
     [HttpPost("add-from-tmdb")]
     public async Task<IActionResult> AddMoviesFromTmdb(int page = 1)
     {
@@ -87,4 +93,29 @@ public class MoviesController : ControllerBase
         return Ok("Filmy z TMDB zapisane do bazy");
     }
 
+    [Authorize]
+    [HttpPost("seed_genre")]
+    public async Task<IActionResult> SeedGenreFromTmdb()
+    {
+        var TmdbGenres= await _seedgenres.GetAllGenresAsync();
+
+        foreach (var genres in TmdbGenres)
+        {
+            bool exists = await _context.Genres
+                .AnyAsync(m => m.TmdbId == genres.TmdbId);
+
+            if (exists)
+                continue;
+
+            var genre = new Genre
+            {
+                TmdbId = genres.TmdbId,
+                Name= genres.Name,
+            };
+            
+            _context.Genres.Add(genre);
+        }
+        await _context.SaveChangesAsync();
+        return Ok("Filmy z TMDB zapisane do bazy");
+    }
 }
