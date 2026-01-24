@@ -19,7 +19,7 @@ public class SeedGenresService
         var request = new RestRequest("genre/movie/list", Method.Get);
         request.AddHeader("Authorization", $"Bearer {_apiToken}");
         request.AddHeader("accept", "application/json");
-        request.AddQueryParameter("language", "en-US");
+        request.AddQueryParameter("language", "en");
 
         var response = await _client.GetAsync<TmdbGenreListResponse>(request);
         return response?.Genres ?? new List<TmdbGenreDto>();

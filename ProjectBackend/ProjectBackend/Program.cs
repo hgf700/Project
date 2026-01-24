@@ -42,6 +42,8 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<ITmdbService,TmdbService>();
+builder.Services.AddScoped<SeedGenresService>();
+
 
 
 builder.Services.AddAuthorization();
