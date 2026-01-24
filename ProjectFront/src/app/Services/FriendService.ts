@@ -18,6 +18,4 @@ export class FriendService {
     const headers = { 'Authorization': `Bearer ${token}` };
     return this.http.get<{ friendUserId: string; email: string }[]>('https://localhost:7218/friend/show-friends', { headers });
   }
-
-
 }

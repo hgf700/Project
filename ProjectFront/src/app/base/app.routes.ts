@@ -4,6 +4,8 @@ import { LoginCallbackComponent } from '../Views/login-callback/login-callback.c
 import { LoginComponent } from '../Views/login/login.component';
 import { AddFriendsComponent } from '../Views/add-friends/add-friends.component';
 import { AddMoviesTMDBComponent } from '../Views/add-movies-tmdb/add-movies-tmdb.component';
+import { ShowMoviePhotoComponent } from '../Views/show-movie-photo/show-movie-photo.component';
+
 
 
 
@@ -12,7 +14,9 @@ export const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login-callback', component: LoginCallbackComponent },
   { path: 'add-friends', component: AddFriendsComponent },
-  { path: 'add-movies-tmdb', component: AddMoviesTMDBComponent }
+  { path: 'add-movies-tmdb', component: AddMoviesTMDBComponent },
+  { path: 'show-movie-photo', component: ShowMoviePhotoComponent }
+
 
 ];
 

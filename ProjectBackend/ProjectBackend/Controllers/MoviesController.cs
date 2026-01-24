@@ -54,6 +54,7 @@ public class MoviesController : ControllerBase
 
             var movie = new Movie
             {
+                TmdbId= tmdbMovie.TmdbId,
                 Title = tmdbMovie.OriginalTitle,
                 Overview = tmdbMovie.Overview,
                 Adult = tmdbMovie.Adult,

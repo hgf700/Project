@@ -27,6 +27,10 @@ export class LoginCallbackComponent implements OnInit {
   downloadFilm(){
     this.router.navigate(['/add-movies-tmdb']);
   }
+  
+  showPhoto(){
+    this.router.navigate(['/show-movie-photo']);
+  }
 
   ngOnInit(): void {
     var zoauth=1
