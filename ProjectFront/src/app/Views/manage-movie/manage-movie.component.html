@@ -1,12 +1,22 @@
 <p>manage-movie works!</p>
 <main class="main">
 
-      <!-- <button (click)="AddToPlaylist()">AddToPlaylist</button>
+      <p *ngIf="loading">loading films</p>
 
-      <button (click)="RateGood()">RateGood</button>
+      <div *ngIf="!loading && movies.length===0">
+            brak
+      </div>
 
-      <button (click)="RateNeutral()">RateNeutral</button>
+      <div *ngFor="let movie of movies" class="movie-card">
 
-      <button (click)="RateBad()">RateBad</button> -->
+      <h3>{{movie.id}}</h3>
+      <h3>{{movie.title}}</h3>
+      <h3>{{movie.overview}}</h3>
+
+      <button (click)="RateGood(movie.id)">👍 Good</button>
+      <button (click)="RateNeutral(movie.id)">😐 Neutral</button>
+      <button (click)="RateBad(movie.id)">👎 Bad</button>
+
+      </div>
 
 </main>

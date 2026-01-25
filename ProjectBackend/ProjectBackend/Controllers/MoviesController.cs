@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
 using ProjectBackend.Models.ReleatedToMovie;
+using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services.interfaces;
 using System.Globalization;
+using System.Security.Claims;
 
 namespace ProjectBackend.Controllers;
 
@@ -16,16 +19,18 @@ public class MoviesController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly ITmdbService _tmdbService;
     private readonly SeedGenresService _seedgenres;
-
+    private readonly UserManager<ApplicationUser> _userManager;
 
     public MoviesController(
         ApplicationDbContext context,
         ITmdbService tmdbService,
-        SeedGenresService seedgenres)
+        SeedGenresService seedgenres,
+        UserManager<ApplicationUser> userManager)
     {
         _context = context;
         _tmdbService = tmdbService;
         _seedgenres = seedgenres;
+        _userManager = userManager;
     }
 
 
@@ -94,7 +99,7 @@ public class MoviesController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost("seed_genre")]
+    [HttpPost("seed-genre")]
     public async Task<IActionResult> SeedGenreFromTmdb()
     {
         var TmdbGenres= await _seedgenres.GetAllGenresAsync();
@@ -143,5 +148,20 @@ public class MoviesController : ControllerBase
         }
         await _context.SaveChangesAsync();
         return Ok("Filmy z TMDB zapisane do bazy");
+    }
+
+    [Authorize]
+    [HttpGet("show-movies")]
+    public async Task<IActionResult> ShowMovies()
+    {
+        var UserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+        var currentUser = await _userManager.FindByEmailAsync(UserEmail);
+
+        if (currentUser == null) 
+            return Unauthorized();
+
+        var movies = await _context.Movies.ToListAsync();
+
+        return Ok(movies);
     }
 }
