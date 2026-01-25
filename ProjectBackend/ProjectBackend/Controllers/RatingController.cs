@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
+using ProjectBackend.Models.DTO;
 using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
+using System.Security.Claims;
 
 namespace ProjectBackend.Controllers;
 
@@ -28,10 +30,29 @@ public class RatingController : ControllerBase
 
     [Authorize]
     [HttpPost("rate-movie")]
-    public IActionResult RateMovie(int MovieId, int RatingValue)
+    public async Task<IActionResult> RateMovieAsync(int movieId, [FromBody] RateMovieDto dto)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
 
+        var entry = await _context.UserMedias.FirstOrDefaultAsync(x => x.UserId == userId && x.MovieId == movieId);
 
-        return Challenge();
+        if (entry == null)
+        {
+            entry = new UserMedia
+            {
+                UserId = userId,
+                MovieId = movieId,
+                Rating = dto.Rating
+            };
+            _context.UserMedias.Add(entry);
+        }
+        else
+        {
+            entry.Rating= dto.Rating;
+        }
+
+        await _context.SaveChangesAsync();
+        return Ok();
     }
 }

@@ -1,0 +1,5 @@
+﻿
+    //public DbSet<LikedMaterial> LikedMaterials { get; set; }
+
+//modelBuilder.Entity<LikedMaterial>()
+        //    .HasKey(lm => new { lm.UserId, lm.MovieId });

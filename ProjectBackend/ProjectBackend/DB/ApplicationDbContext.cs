@@ -19,7 +19,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<Playlist> Playlists { get; set; }
     public DbSet<PlaylistValue> PlaylistValues{ get; set; }
-    public DbSet<LikedMaterial> LikedMaterials { get; set; }
+    public DbSet<UserMedia> UserMedias { get; set; }
+
     public DbSet<Friend> Friends { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -29,8 +30,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<MovieGenre>()
             .HasKey(mg => new { mg.MovieId, mg.GenreId });
 
-        modelBuilder.Entity<LikedMaterial>()
-            .HasKey(lm => new { lm.UserId, lm.MovieId });
+        modelBuilder.Entity<UserMedia>()
+            .HasIndex(um => new { um.UserId, um.MovieId })
+            .IsUnique();
 
         modelBuilder.Entity<PlaylistValue>()
             .HasKey(pv => new { pv.PlaylistId, pv.MovieId });
@@ -45,12 +47,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(g => g.MovieGenres)
             .HasForeignKey(mg => mg.GenreId);
 
-        modelBuilder.Entity<LikedMaterial>()
+        modelBuilder.Entity<UserMedia>()
             .HasOne(lm => lm.User)
             .WithMany()
             .HasForeignKey(lm => lm.UserId);
 
-        modelBuilder.Entity<LikedMaterial>()
+        modelBuilder.Entity<UserMedia>()
             .HasOne(lm => lm.Movie)
             .WithMany()
             .HasForeignKey(lm => lm.MovieId);
