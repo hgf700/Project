@@ -9,13 +9,14 @@
 
       <div *ngFor="let movie of movies" class="movie-card">
 
+      <h3>{{movie.tmdbId}}</h3>
       <h3>{{movie.id}}</h3>
       <h3>{{movie.title}}</h3>
       <h3>{{movie.overview}}</h3>
 
-      <button (click)="RateGood(movie.id)">👍 Good</button>
-      <button (click)="RateNeutral(movie.id)">😐 Neutral</button>
-      <button (click)="RateBad(movie.id)">👎 Bad</button>
+      <button (click)="RateGood(movie.tmdbId)">👍 Good</button>
+      <button (click)="RateNeutral(movie.tmdbId)">😐 Neutral</button>
+      <button (click)="RateBad(movie.tmdbId)">👎 Bad</button>
 
       </div>
 

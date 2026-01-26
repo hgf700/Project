@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ManageMovieService } from '../../Services/ManageMovieService';
-import { Movie } from '../../interfaces/movie';
+import { MovieAG } from '../../interfaces/movie';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ManageMovieComponent implements OnInit {
 
-  movies: Movie[]=[];
+  movies: MovieAG[]=[];
   loading = true;
 
   constructor(
@@ -30,10 +30,26 @@ export class ManageMovieComponent implements OnInit {
         }
       })
   }
-  RateGood(movieId: number) {}
-  RateNeutral(movieId: number) {}
-  RateBad(movieId: number) {}
+  RateGood(movieId: number) {
+    this.managemovieService.rateMovie(movieId, 10).subscribe({
+      next: () => console.log('Ocena zapisana 10'),
+     error: err => console.error(err)
+    });
+  }
+  RateNeutral(movieId: number) {
+    this.managemovieService.rateMovie(movieId, 3).subscribe({
+      next: () => console.log('Ocena zapisana 3'),
+     error: err => console.error(err)
+    });
+
+  }
+  RateBad(movieId: number) {
+    this.managemovieService.rateMovie(movieId, 1).subscribe({
+      next: () => console.log('Ocena zapisana 1'),
+     error: err => console.error(err)
+    });
+
+  }
 
   AddToPlaylist(movieId: number,userId: number){}
-
 }

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Movie } from '../interfaces/movie';
+import { MovieAG } from '../interfaces/movie';
 
 @Injectable({ providedIn: 'root' })
 export class ManageMovieService {
@@ -12,18 +12,17 @@ export class ManageMovieService {
   getMovies() {
     const token = localStorage.getItem('jwt');
     const headers = { 'Authorization': `Bearer ${token}` };
-    return this.http.get<Movie[]>(this.apiurlShowMovies, { headers });
+    return this.http.get<MovieAG[]>(this.apiurlShowMovies, { headers });
   }
-  RateGood(){
-    const token = localStorage.getItem('jwt');
-    const headers = { 'Authorization': `Bearer ${token}` };
-  }
-  RateNeutral(){
-    const token = localStorage.getItem('jwt');
-    const headers = { 'Authorization': `Bearer ${token}` };
-  }
-  RateBad(){
-    const token = localStorage.getItem('jwt');
-    const headers = { 'Authorization': `Bearer ${token}` };
-  }
+
+rateMovie(movieId: number, rating: number) {
+  const token = localStorage.getItem('jwt');
+  const headers = { Authorization: `Bearer ${token}` };
+
+  return this.http.post(
+    `${this.apiurlRate}?movieId=${movieId}`,
+    { rating },
+    { headers }
+  );
+}
 }
