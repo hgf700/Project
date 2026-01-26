@@ -37,8 +37,10 @@ public class FriendController : ControllerBase
     [HttpPost("add-friend")]
     public async Task<IActionResult> AddFriend([FromBody] AddFriendDto dto)
     {
-        var UserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
 
+        var UserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
         var currentUser = await _userManager.FindByEmailAsync(UserEmail);
 
         var friendUser = await _userManager.FindByEmailAsync(dto.Email);
@@ -70,6 +72,9 @@ public class FriendController : ControllerBase
     [HttpGet("show-friends")]
     public async Task<IActionResult> ShowFriends()
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
+
         var UserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
         var currentUser = await _userManager.FindByEmailAsync(UserEmail);
 

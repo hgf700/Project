@@ -51,5 +51,7 @@ export class ManageMovieComponent implements OnInit {
 
   }
 
-  AddToPlaylist(movieId: number,userId: number){}
+  AddToPlaylist(movieId: number){
+    
+  }
 }
