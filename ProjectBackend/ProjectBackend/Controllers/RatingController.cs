@@ -28,6 +28,7 @@ public class RatingController : ControllerBase
         _context = context;
     }
 
+
     [Authorize]
     [HttpPost("rate-movie")]
     public async Task<IActionResult> RateMovieAsync(int movieId, [FromBody] RateMovieDto dto)
@@ -35,24 +36,32 @@ public class RatingController : ControllerBase
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
 
-        var entry = await _context.UserMedias.FirstOrDefaultAsync(x => x.UserId == userId && x.MovieId == movieId);
+        var movie = await _context.Movies
+            .FirstOrDefaultAsync(m => m.TmdbId == movieId);
+
+        if (movie == null)
+            return NotFound("Movie not found");
+
+        var entry = await _context.UserMedias
+            .FirstOrDefaultAsync(x => x.UserId == userId && x.MovieId == movie.Id);
 
         if (entry == null)
         {
             entry = new UserMedia
             {
                 UserId = userId,
-                MovieId = movieId,
+                MovieId = movie.Id,   // 🔥 DB ID
                 Rating = dto.Rating
             };
             _context.UserMedias.Add(entry);
         }
         else
         {
-            entry.Rating= dto.Rating;
+            entry.Rating = dto.Rating;
         }
 
         await _context.SaveChangesAsync();
         return Ok();
     }
+
 }
