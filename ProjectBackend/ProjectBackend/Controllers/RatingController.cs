@@ -50,8 +50,8 @@ public class RatingController : ControllerBase
             entry = new UserMedia
             {
                 UserId = userId,
-                MovieId = movie.Id,   // 🔥 DB ID
-                Rating = dto.Rating
+                MovieId = movie.Id,   // 🔥 DB ID        
+                Rating = dto.Rating 
             };
             _context.UserMedias.Add(entry);
         }

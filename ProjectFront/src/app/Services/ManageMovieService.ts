@@ -9,7 +9,9 @@ export class ManageMovieService {
 
     private apiurlShowMovies='https://localhost:7218/movies/show-movies';
     private apiurlRate='https://localhost:7218/rating/rate-movie';
-    private apiurlAddToPlaylist='https://localhost:7218/movies/add-to-playlist';
+    private apiurlAddToPlaylist='https://localhost:7218/playlist/add-to-playlist';
+    private apiurlShowPlaylist='https://localhost:7218/playlist/show-playlists';
+
   constructor(private http: HttpClient) {}
 
   getMovies() {
@@ -42,7 +44,10 @@ export class ManageMovieService {
     
   }
   getPlaylists(){
+    const token = localStorage.getItem('jwt');
+    const headers = { Authorization: `Bearer ${token}` };
 
+    return this.http.get<PlaylistAG[]>(this.apiurlShowMovies, { headers });
   }
 
 }

@@ -137,72 +137,7 @@ public class MoviesController : ControllerBase
         return Ok(movies);
     }
 
-    [Authorize]
-    [HttpPost("create-playlist")]
-    public async Task<IActionResult> CreatePlaylist(string PlaylistName)
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null) return Unauthorized();
-
-        var playlist = await _context.Playlists
-            .FirstOrDefaultAsync(p => p.UserId == userId && p.Name == PlaylistName);
-
-        if (playlist == null)
-        {
-            playlist = new Playlist
-            {
-                Name = PlaylistName,
-                UserId = userId
-            };
-            _context.Playlists.Add(playlist);
-            await _context.SaveChangesAsync();
-        }
-
-        return Ok();
-    }
-
-    [Authorize]
-    [HttpPost("add-to-playlist")]
-    public async Task<IActionResult> AddToPlaylist(int movieId)
-    {
-        string tempname = "asd";
-
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null) return Unauthorized();
-
-        var playlist = await _context.Playlists
-            .FirstOrDefaultAsync(p => p.UserId == userId && p.Name == tempname);
-
-        if (playlist == null)
-        {
-            playlist = new Playlist
-            {
-                Name = tempname ,
-                UserId = userId
-            };
-            _context.Playlists.Add(playlist);
-            await _context.SaveChangesAsync(); // ⬅️ MUSI BYĆ
-        }
-
-        var exists = await _context.PlaylistValues.AnyAsync(pv =>
-            pv.PlaylistId == playlist.Id &&
-            pv.MovieId == movieId);
-
-        if (exists)
-            return BadRequest("Movie already in playlist");
-
-        var playlistValue = new PlaylistValue
-        {
-            PlaylistId = playlist.Id,
-            MovieId = movieId
-        };
-
-        _context.PlaylistValues.Add(playlistValue);
-        await _context.SaveChangesAsync();
-
-        return Ok();
-    }
-
+   
     
 
 }

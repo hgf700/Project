@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ManageMovieService } from '../../Services/ManageMovieService';
 import { MovieAG } from '../../interfaces/movie';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-manage-movie',
@@ -51,7 +51,10 @@ export class ManageMovieComponent implements OnInit {
 
   }
 
-  AddToPlaylist(movieId: number){
-    
-  }
+  selectedMovieTmdbId: number | null = null;
+
+  addToPlaylist(movieTmdbId: number) {
+    this.selectedMovieTmdbId = movieTmdbId;
+    // this.openPlaylistModal();
+    }
 }
