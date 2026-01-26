@@ -1,0 +1,29 @@
+﻿
+--usuwanie
+DO $$ DECLARE
+    r RECORD;
+BEGIN
+    FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
+        EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE';
+    END LOOP;
+END $$;
+
+--wysw
+SELECT * FROM "shipments";
+SELECT * FROM "users";
+
+--usuń tabele:
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+
+-- z csv do bazy uzytkownik
+COPY users (id, email, password)
+FROM 'C:\Program Files\PostgreSQL\18\data\users.csv'
+DELIMITER ','
+CSV HEADER;
+
+-- z csv do bazy przesyłka
+COPY shipments (id, user_sender, user_receiver, pickup_lat, pickup_lng, delivery_lat, delivery_lng, message_target, status, created_at)
+FROM 'C:\Program Files\PostgreSQL\18\data\shipments.csv'
+DELIMITER ','
+CSV HEADER;

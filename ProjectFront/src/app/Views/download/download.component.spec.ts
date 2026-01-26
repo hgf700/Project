@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SeedGenreComponent } from './seed-genre.component';
+import { DownloadComponent } from './download.component';
 
-describe('SeedGenreComponent', () => {
-  let component: SeedGenreComponent;
-  let fixture: ComponentFixture<SeedGenreComponent>;
+describe('DownloadComponent', () => {
+  let component: DownloadComponent;
+  let fixture: ComponentFixture<DownloadComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SeedGenreComponent]
+      imports: [DownloadComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SeedGenreComponent);
+    fixture = TestBed.createComponent(DownloadComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
