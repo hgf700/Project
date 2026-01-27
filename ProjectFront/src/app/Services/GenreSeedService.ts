@@ -10,15 +10,12 @@ export class GenreSeedService {
 
     importSeedFromTmdb() {
     const token = localStorage.getItem('jwt');
+    const headers = { 'Authorization': `Bearer ${token}` };
 
     return this.http.post(
       `${this.apiUrl}`,
       {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
+      {headers}
     );
   }
 }

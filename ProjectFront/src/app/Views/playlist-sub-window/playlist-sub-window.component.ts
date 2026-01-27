@@ -3,20 +3,20 @@ import { CommonModule } from '@angular/common';
 import { ManageMovieService } from '../../Services/ManageMovieService';
 
 @Component({
-  selector: 'app-create-or-add-to-playlist',
+  selector: 'app-playlist-sub-window',
   imports: [CommonModule],
-  templateUrl: './create-or-add-to-playlist.component.html',
-  styleUrl: './create-or-add-to-playlist.component.css'
+  templateUrl: './playlist-sub-window.component.html',
+  styleUrl: './playlist-sub-window.component.css'
 })
-export class CreateOrAddToPlaylistComponent implements OnInit {
+export class PlaylistSubWindowComponent implements OnInit {
 
   loading = true;
-
 
 constructor(
     private managemovieService: ManageMovieService
   ){}
-  
+
+// pod okno docs 
 // https://material.angular.dev/components/dialog/overview
 
   ngOnInit(): void {

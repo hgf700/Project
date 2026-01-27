@@ -10,14 +10,11 @@ export class PhotoService {
 
   getImages() {
     const token = localStorage.getItem('jwt');
+    const headers = { Authorization: `Bearer ${token}` };
 
     return this.http.get<
       { posterPath: string | null; backdropPath: string | null }[]
-    >(this.apiUrl, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    >(this.apiUrl, 
+      {headers});
   }
 }
-

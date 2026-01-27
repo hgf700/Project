@@ -8,17 +8,14 @@ export class MovieService {
 
   constructor(private http: HttpClient) {}
 
-    importFromTmdb(page: number = 1) {
+  importFromTmdb(page: number = 1) {
     const token = localStorage.getItem('jwt');
+    const headers = { Authorization: `Bearer ${token}` };
 
     return this.http.post(
       `${this.apiUrl}?page=${page}`,
       {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
+      { headers }
     );
   }
 }
