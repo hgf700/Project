@@ -1,12 +1,7 @@
 <main>
   <div *ngFor="let img of images" class="movie-card">
-
-   <div class="backdrop">
-    <img
-      class="poster"
-      [src]="getPosterUrl(img.posterPath)"
-      alt="poster" />
+    <div class="backdrop">
+      <img class="poster" [src]="getPosterUrl(img.posterPath)" alt="poster" />
     </div>
-
   </div>
 </main>

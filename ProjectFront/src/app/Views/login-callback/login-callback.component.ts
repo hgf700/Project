@@ -8,40 +8,35 @@ import { MovieService } from '../../Services/MovieService';
 @Component({
   selector: 'app-login-callback',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule
-  ],
+  imports: [CommonModule, RouterModule],
   templateUrl: './login-callback.component.html',
-  styleUrl: './login-callback.component.css'
+  styleUrl: './login-callback.component.css',
 })
 export class LoginCallbackComponent implements OnInit {
-
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private genreseedService: GenreSeedService,
-    private moviesService: MovieService
+    private moviesService: MovieService,
   ) {}
-  
+
   addFriend() {
     this.router.navigate(['/add-friends']);
   }
-  
-  showPhoto(){
+
+  showPhoto() {
     this.router.navigate(['/show-movie-photo']);
   }
 
-  manageMedia(){
+  manageMedia() {
     this.router.navigate(['/manage-movie']);
   }
 
-  download(){
+  download() {
     this.router.navigate(['/download']);
   }
 
   ngOnInit(): void {
-
     // var zoauth=1
     // if (zoauth==1){
     var token = this.route.snapshot.queryParamMap.get('token');

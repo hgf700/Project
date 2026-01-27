@@ -6,20 +6,17 @@ import { CommonModule } from '@angular/common';
   selector: 'app-show-movie-photo',
   templateUrl: './show-movie-photo.component.html',
   styleUrl: './show-movie-photo.component.css',
-  imports: [
-    CommonModule
-  ]
+  imports: [CommonModule],
 })
 export class ShowMoviePhotoComponent implements OnInit {
-
   images: { posterPath: string | null; backdropPath: string | null }[] = [];
 
   constructor(private photoService: PhotoService) {}
 
   ngOnInit() {
     this.photoService.getImages().subscribe({
-      next: data => this.images = data,
-      error: err => console.error(err)
+      next: (data) => (this.images = data),
+      error: (err) => console.error(err),
     });
   }
 

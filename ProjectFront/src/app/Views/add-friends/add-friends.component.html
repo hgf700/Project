@@ -1,14 +1,12 @@
-
 <main class="main">
-<form [formGroup]="addFriendForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="addFriendForm" (ngSubmit)="onSubmit()">
+    <label>Email znajomego</label>
+    <input type="email" formControlName="email" />
 
-  <label>Email znajomego</label>
-  <input type="email" formControlName="email" />
+    <button type="submit">Dodaj znajomego</button>
+  </form>
 
-  <button type="submit">Dodaj znajomego</button>
-</form>
-
-<button (click)="loadFriends()">Pokaż znajomych</button>
+  <button (click)="loadFriends()">Pokaż znajomych</button>
 
   <ul *ngIf="friends.length > 0">
     <li *ngFor="let f of friends">
@@ -16,5 +14,4 @@
     </li>
   </ul>
   <p *ngIf="friends.length === 0">Brak znajomych</p>
-
 </main>

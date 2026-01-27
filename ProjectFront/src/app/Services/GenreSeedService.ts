@@ -3,19 +3,14 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class GenreSeedService {
-
   private apiUrl = 'https://localhost:7218/movies/seed-genre';
 
   constructor(private http: HttpClient) {}
 
-    importSeedFromTmdb() {
+  importSeedFromTmdb() {
     const token = localStorage.getItem('jwt');
-    const headers = { 'Authorization': `Bearer ${token}` };
+    const headers = { Authorization: `Bearer ${token}` };
 
-    return this.http.post(
-      `${this.apiUrl}`,
-      {},
-      {headers}
-    );
+    return this.http.post(`${this.apiUrl}`, {}, { headers });
   }
 }

@@ -8,9 +8,8 @@ describe('PlaylistSubWindowComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PlaylistSubWindowComponent]
-    })
-    .compileComponents();
+      imports: [PlaylistSubWindowComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PlaylistSubWindowComponent);
     component = fixture.componentInstance;

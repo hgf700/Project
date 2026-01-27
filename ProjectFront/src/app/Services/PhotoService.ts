@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class PhotoService {
-
   private apiUrl = 'https://localhost:7218/image/show-images';
 
   constructor(private http: HttpClient) {}
@@ -14,7 +13,6 @@ export class PhotoService {
 
     return this.http.get<
       { posterPath: string | null; backdropPath: string | null }[]
-    >(this.apiUrl, 
-      {headers});
+    >(this.apiUrl, { headers });
   }
 }
