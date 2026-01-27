@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ManageMovieService } from '../../Services/ManageMovieService';
+import { PlaylistService } from '../../Services/PlaylistService';
+import { PlaylistAG } from '../../interfaces/playlist';
 
 @Component({
   selector: 'app-playlist-sub-window',
@@ -9,27 +10,26 @@ import { ManageMovieService } from '../../Services/ManageMovieService';
   styleUrl: './playlist-sub-window.component.css'
 })
 export class PlaylistSubWindowComponent implements OnInit {
-
+  playlists: PlaylistAG[]=[];
   loading = true;
 
 constructor(
-    private managemovieService: ManageMovieService
+    private playlistService: PlaylistService
   ){}
 
 // pod okno docs 
 // https://material.angular.dev/components/dialog/overview
 
   ngOnInit(): void {
-      // this.managemovieService.getMovies().subscribe({
-      //   next: value=>{
-      //     this.movies=value;
-      //     this.loading=false;
-      //   },
-      //   error: err =>{
-      //     console.error(err);
-      //     this.loading=false;
-      //   }
-      // })
+    this.playlistService.getPlaylists().subscribe({
+      next: value=>{
+        this.playlists=value;
+        this.loading=false;
+      },
+      error: err =>{
+        console.error(err);
+        this.loading=false;
+      }
+    })
   }
-
 }
