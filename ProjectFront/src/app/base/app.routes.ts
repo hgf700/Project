@@ -8,9 +8,6 @@ import { ManageMovieComponent } from '../Views/manage-movie/manage-movie.compone
 import { DownloadComponent } from '../Views/download/download.component';
 
 
-
-
-
 export const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login-callback', component: LoginCallbackComponent },

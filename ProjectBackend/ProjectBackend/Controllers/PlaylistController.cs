@@ -20,7 +20,6 @@ public class PlaylistController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
 
-
     public PlaylistController(
         ApplicationDbContext context,
         UserManager<ApplicationUser> userManager)
