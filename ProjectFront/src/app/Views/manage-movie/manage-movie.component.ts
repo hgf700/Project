@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatDialog,MatDialogModule } from '@angular/material/dialog';
 import { ManageMovieService } from '../../Services/ManageMovieService';
 import { MovieAG } from '../../interfaces/movie';
+import { PlaylistSubWindowComponent } from '../playlist-sub-window/playlist-sub-window.component';
 
 @Component({
   selector: 'app-manage-movie',
-  imports: [CommonModule],
+  standalone: true,
+  imports: [CommonModule,MatDialogModule],
   templateUrl: './manage-movie.component.html',
   styleUrl: './manage-movie.component.css',
 })
@@ -13,7 +16,10 @@ export class ManageMovieComponent implements OnInit {
   movies: MovieAG[] = [];
   loading = true;
 
-  constructor(private managemovieService: ManageMovieService) {}
+  constructor(
+    private managemovieService: ManageMovieService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.managemovieService.getMovies().subscribe({
@@ -48,8 +54,17 @@ export class ManageMovieComponent implements OnInit {
 
   selectedMovieTmdbId: number | null = null;
 
-  addToPlaylist(movieTmdbId: number) {
-    this.selectedMovieTmdbId = movieTmdbId;
-    // this.openPlaylistModal();
-  }
+  AddToPlaylist(movieTmdbId: number) {
+  const dialogRef = this.dialog.open(PlaylistSubWindowComponent, {
+    width: '600px',
+    height: '400px',
+    data: {
+      tmdbId: movieTmdbId
+    }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    console.log('Dialog closed:', result);
+  });
+}
 }

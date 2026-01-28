@@ -1,1 +1,74 @@
-<p>playlist-sub-window works!</p>
+<main class="playlist-dialog">
+
+  <!-- ACTIONS -->
+  <div class="actions">
+    <button
+      (click)="showList()"
+      [class.active]="viewMode === 'list'"
+      [disabled]="loading"
+    >
+      Istniejące playlisty
+    </button>
+
+    <button
+      (click)="showCreate()"
+      [class.active]="viewMode === 'create'"
+      [disabled]="loading"
+    >
+      + Nowa playlista
+    </button>
+  </div>
+
+  <hr />
+
+  <!-- LISTA PLAYLIST -->
+  <section *ngIf="viewMode === 'list'">
+
+    <p *ngIf="loading">Ładowanie...</p>
+
+    <ul *ngIf="!loading && playlists.length > 0; else empty">
+      <li *ngFor="let p of playlists">
+        <span class="playlist-name">{{ p.name }}</span>
+
+        <button
+          (click)="addToPlaylist(p.id, p.name)" [disabled]="loading">
+          Dodaj
+        </button>
+      </li>
+    </ul>
+
+    <ng-template #empty>
+      <p *ngIf="!loading">Brak playlist</p>
+    </ng-template>
+
+  </section>
+
+  <!-- CREATE PLAYLIST -->
+  <section *ngIf="viewMode === 'create'">
+    <h3>Utwórz nową playlistę</h3>
+
+    <input
+      type="text"
+      placeholder="Nazwa playlisty"
+      [(ngModel)]="newPlaylistName"
+      [disabled]="loading"
+    />
+
+    <div class="create-actions">
+      <button
+        (click)="createPlaylist()"
+        [disabled]="loading || !newPlaylistName.trim()"
+      >
+        Utwórz
+      </button>
+
+      <button
+        (click)="showList()"
+        [disabled]="loading"
+      >
+        Anuluj
+      </button>
+    </div>
+  </section>
+
+</main>

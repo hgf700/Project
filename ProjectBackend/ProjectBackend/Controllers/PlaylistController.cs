@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
 using ProjectBackend.Models.DTO;
+using ProjectBackend.Models.ReleatedToMovie;
 using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
@@ -52,43 +53,57 @@ public class PlaylistController : ControllerBase
         return Ok(new { playlist.Id, playlist.Name });
     }
 
-    [Authorize]
-    [HttpPost("{playlistId}/movies/{movieId}")]
-    public async Task<IActionResult> AddToPlaylist(int playlistId, int movieId)
+    [HttpPost("{playlistId}/movies/{tmdbId}")]
+    public async Task<IActionResult> AddToPlaylist(int playlistId, int tmdbId)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
 
         var playlist = await _context.Playlists
             .FirstOrDefaultAsync(p => p.Id == playlistId && p.UserId == userId);
+        if (playlist == null) return NotFound("Playlist not found");
 
-        //potem ze jak nie istnijee to dodac?
-        if (playlist == null)
-            return NotFound("Playlist not found");
+        var movie = await _context.Movies.SingleOrDefaultAsync(m => m.TmdbId == tmdbId);
+        if (movie == null)
+            return NotFound("movie not found");
 
         var exists = await _context.PlaylistValues.AnyAsync(pv =>
             pv.PlaylistId == playlistId &&
-            pv.MovieId == movieId);
+            pv.MovieId == movie.Id);
 
-        if (exists)
-            return BadRequest("Movie already in playlist");
+        if (exists) return BadRequest("Movie already in playlist");
 
-        var NewpPlaylistValue = new PlaylistValue
+        _context.PlaylistValues.Add(new PlaylistValue
         {
             PlaylistId = playlistId,
-            MovieId = movieId
-        };
-
-        _context.PlaylistValues.Add(NewpPlaylistValue);
+            MovieId = movie.Id
+        });
 
         await _context.SaveChangesAsync();
-
         return Ok();
     }
 
     [Authorize]
     [HttpGet("show-playlists")]
     public async Task<IActionResult> ShowPlaylists()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
+
+        var playlistResult = await _context.Playlists
+        .Where(p => p.UserId == userId)
+        .Select(p => new {
+            p.Id,
+            p.Name
+        })
+        .ToListAsync();
+
+        return Ok(playlistResult);
+    }
+
+    [Authorize]
+    [HttpGet("show-playlist-values")]
+    public async Task<IActionResult> ShowPlaylistValues()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();

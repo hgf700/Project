@@ -4,38 +4,36 @@ import { PlaylistAG } from '../interfaces/playlist';
 
 @Injectable({ providedIn: 'root' })
 export class PlaylistService {
-  private apiurlShowPlaylist = 'https://localhost:7218/playlist/show-playlists';
-  private apiurlCreatePlaylist =
-    'https://localhost:7218/playlist/create-playlist';
+  private readonly baseUrl = 'https://localhost:7218/playlist';
 
   constructor(private http: HttpClient) {}
 
   getPlaylists() {
     const token = localStorage.getItem('jwt');
     const headers = { Authorization: `Bearer ${token}` };
-
-    return this.http.get<PlaylistAG[]>(this.apiurlShowPlaylist, { headers });
+    return this.http.get<PlaylistAG[]>(
+      `${this.baseUrl}/show-playlists`,
+      { headers }
+    );
   }
 
-  //   addToPlaylists(movieId: number){
-  //     const token = localStorage.getItem('jwt');
-  //     const headers = { Authorization: `Bearer ${token}` };
-
-  //     return this.http.post(
-  //       `${this.apiurlAddToPlaylist}`,
-  //       { movieId },
-  //       { headers }
-  //     );
-  //   }
-
-  createPlaylists(nameOfPlaylist: string) {
+  createPlaylist(name: string) {
     const token = localStorage.getItem('jwt');
     const headers = { Authorization: `Bearer ${token}` };
-
     return this.http.post(
-      `${this.apiurlCreatePlaylist}`,
-      { nameOfPlaylist },
-      { headers },
+      `${this.baseUrl}/create-playlist`,
+      { name },
+      { headers } 
+    );
+  }
+
+  addMovieToPlaylist(playlistId: number, tmdbId: number) {
+    const token = localStorage.getItem('jwt');
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.post(
+      `${this.baseUrl}/${playlistId}/movies/${tmdbId}`,
+      {},
+      { headers } 
     );
   }
 }
