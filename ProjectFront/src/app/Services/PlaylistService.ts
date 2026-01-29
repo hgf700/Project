@@ -38,13 +38,24 @@ export class PlaylistService {
     );
   }
 
-showResultFromPlaylist(playlistId: number) {
-  const token = localStorage.getItem('jwt');
-  const headers = { Authorization: `Bearer ${token}` };
+  showResultFromPlaylist(playlistId: number) {
+    const token = localStorage.getItem('jwt');
+    const headers = { Authorization: `Bearer ${token}` };
 
-  return this.http.get<PlaylistResultAG>(
-    `${this.baseUrl}/show-playlist-values/${playlistId}`,
-    { headers }
-  );
-}
+    return this.http.get<PlaylistResultAG>(
+      `${this.baseUrl}/show-playlist-values/${playlistId}`,
+      { headers }
+    );
+  }
+
+  deleteFromPlaylist(playlistId: number, tmdbId: number) {
+    const token = localStorage.getItem('jwt');
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.post<void>(
+      `${this.baseUrl}/${playlistId}/delete-from-playlist/${tmdbId}`,
+      {},
+      { headers } 
+    );
+  }
+ 
 }

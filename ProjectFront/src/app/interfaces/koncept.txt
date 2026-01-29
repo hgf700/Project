@@ -1,0 +1,41 @@
+interface PlaylistItemAG {
+  id: number;
+  playlistId: number;
+  type: 'movie' | 'book' | 'game';
+  title: string;
+  tmdbId?: number;   // dla filmów/seriali
+  isbn?: string;     // dla książek
+  platform?: string; // dla gier
+}
+
+
+
+interface PlaylistAG {
+  id: number;
+  name: string;
+  type: 'movie' | 'book' | 'game' | 'mixed'; // typ playlisty
+}
+
+
+<select [(ngModel)]="filterType" *ngIf="selectedPlaylist?.type === 'mixed'">
+  <option value="all">Wszystko</option>
+  <option value="movie">Filmy</option>
+  <option value="book">Książki</option>
+  <option value="game">Gry</option>
+</select>
+
+<ul>
+  <li *ngFor="let item of filteredItems()">
+    {{ item.title }} <span *ngIf="item.type !== 'mixed'">({{ item.type }})</span>
+  </li>
+</ul>
+
+
+
+filteredItems() {
+  if (!this.selectedPlaylist) return [];
+  if (this.selectedPlaylist.type !== 'mixed' || this.filterType === 'all') {
+    return this.selectedPlaylist.items;
+  }
+  return this.selectedPlaylist.items.filter(i => i.type === this.filterType);
+}

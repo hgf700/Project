@@ -27,12 +27,20 @@
       Brak filmów w tej playliście
     </p>
 
-    <ul *ngIf="selectedPlaylist.movies.length > 0">
-      <li *ngFor="let movie of selectedPlaylist.movies">
-        {{ movie.title }}
-      </li>
-    </ul>
+    
+    <ul *ngIf="selectedPlaylist?.movies?.length">
+  <li *ngFor="let movie of selectedPlaylist.movies">
+    {{ movie.title }}
+    <button
+      (click)="deleteFromPlaylist(selectedPlaylist.id, movie.tmdbId)"
+      [disabled]="loading">
+      Usuń
+    </button>
+  </li>
+</ul>
 
+
+    
     <button (click)="selectedPlaylist = undefined">
       ← Wróć do playlist
     </button>

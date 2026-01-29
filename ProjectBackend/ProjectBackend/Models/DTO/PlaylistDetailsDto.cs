@@ -2,8 +2,8 @@
 
 public class PlaylistDetailsDto
 {
-    public int PlaylistId { get; set; }
-    public string PlaylistName { get; set; }
+    public int Id { get; set; }
+    public string Name { get; set; }
     public List<MovieDto> Movies { get; set; } = new();
 }
 

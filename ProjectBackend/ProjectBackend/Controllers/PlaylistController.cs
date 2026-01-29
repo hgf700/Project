@@ -112,8 +112,8 @@ public class PlaylistController : ControllerBase
             .Where(p => p.Id == playlistId && p.UserId == userId)
             .Select(p => new PlaylistDetailsDto
             {
-                PlaylistId = p.Id,
-                PlaylistName = p.Name,
+                Id = p.Id,
+                Name = p.Name,
                 Movies = _context.PlaylistValues
                     .Where(pv => pv.PlaylistId == p.Id)
                     .Select(pv => new MovieDto
@@ -131,5 +131,34 @@ public class PlaylistController : ControllerBase
 
         return Ok(playlist);
     }
+
+    [Authorize]
+    [HttpPost("{playlistId}/delete-from-playlist/{tmdbId}")]
+    public async Task<IActionResult> DeleteFromPlaylist(int playlistId, int tmdbId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
+
+        var playlist = await _context.Playlists
+            .FirstOrDefaultAsync(p => p.Id == playlistId && p.UserId == userId);
+        if (playlist == null) return NotFound("Playlist not found");
+
+        var movie = await _context.Movies.SingleOrDefaultAsync(m => m.TmdbId == tmdbId);
+        if (movie == null)
+            return NotFound("movie not found");
+
+        var exists = await _context.PlaylistValues.SingleOrDefaultAsync(pv =>
+            pv.PlaylistId == playlistId &&
+            pv.MovieId == movie.Id);
+
+        if (exists == null)
+            return NotFound("Movie not in playlist");
+
+        _context.PlaylistValues.Remove(exists);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
 
 }
