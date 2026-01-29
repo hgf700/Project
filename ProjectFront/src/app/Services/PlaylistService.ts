@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PlaylistAG } from '../interfaces/playlist';
+import { PlaylistResultAG } from '../interfaces/playlistResult';
 
 @Injectable({ providedIn: 'root' })
 export class PlaylistService {
@@ -36,4 +37,14 @@ export class PlaylistService {
       { headers } 
     );
   }
+
+showResultFromPlaylist(playlistId: number) {
+  const token = localStorage.getItem('jwt');
+  const headers = { Authorization: `Bearer ${token}` };
+
+  return this.http.get<PlaylistResultAG>(
+    `${this.baseUrl}/show-playlist-values/${playlistId}`,
+    { headers }
+  );
+}
 }

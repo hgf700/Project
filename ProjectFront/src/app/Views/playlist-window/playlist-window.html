@@ -1,1 +1,59 @@
-<p>playlist-window works!</p>
+<main class="playlist-dialog">
+  <p *ngIf="loading">Ładowanie...</p>
+
+  <!-- LISTA PLAYLIST -->
+  <section *ngIf="!loading && !selectedPlaylist">
+    <ul *ngIf="playlists.length > 0; else empty">
+      <li *ngFor="let p of playlists" class="playlist-item">
+        <span class="playlist-name">{{ p.name }}</span>
+
+        <button (click)="showSelectedPlaylist(p.id)"
+          [disabled]="loading">
+          Pokaż
+        </button>
+      </li>
+    </ul>
+
+    <ng-template #empty>
+      <p>Brak playlist</p>
+    </ng-template>
+  </section>
+
+  <!-- SZCZEGÓŁY PLAYLISTY -->
+  <section *ngIf="selectedPlaylist && !loading" class="playlist-details">
+    <h3>{{ selectedPlaylist.name }}</h3>
+
+    <p *ngIf="selectedPlaylist.movies.length === 0">
+      Brak filmów w tej playliście
+    </p>
+
+    <ul *ngIf="selectedPlaylist.movies.length > 0">
+      <li *ngFor="let movie of selectedPlaylist.movies">
+        {{ movie.title }}
+      </li>
+    </ul>
+
+    <button (click)="selectedPlaylist = undefined">
+      ← Wróć do playlist
+    </button>
+  </section>
+
+  <hr />
+
+  <!-- TWORZENIE PLAYLISTY -->
+  <section class="create-playlist">
+    <h3>Utwórz nową playlistę</h3>
+
+    <input type="text"
+      placeholder="Nazwa playlisty"
+      [(ngModel)]="newPlaylistName"
+      [disabled]="loading"/>
+
+    <div class="create-actions">
+      <button (click)="createPlaylist()"
+        [disabled]="loading || !newPlaylistName.trim()">
+        Utwórz
+      </button>
+    </div>
+  </section>
+</main>

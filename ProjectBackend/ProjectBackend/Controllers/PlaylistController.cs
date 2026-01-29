@@ -102,20 +102,34 @@ public class PlaylistController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("show-playlist-values")]
-    public async Task<IActionResult> ShowPlaylistValues()
+    [HttpGet("show-playlist-values/{playlistId}")]
+    public async Task<IActionResult> ShowPlaylistValues(int playlistId)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
 
-        var playlistResult = await _context.Playlists
-        .Where(p => p.UserId == userId)
-        .Select(p => new {
-            p.Id,
-            p.Name
-        })
-        .ToListAsync();
+        var playlist = await _context.Playlists
+            .Where(p => p.Id == playlistId && p.UserId == userId)
+            .Select(p => new PlaylistDetailsDto
+            {
+                PlaylistId = p.Id,
+                PlaylistName = p.Name,
+                Movies = _context.PlaylistValues
+                    .Where(pv => pv.PlaylistId == p.Id)
+                    .Select(pv => new MovieDto
+                    {
+                        Id = pv.Movie.Id,
+                        TmdbId = pv.Movie.TmdbId,
+                        Title = pv.Movie.Title
+                    })
+                    .ToList()
+            })
+            .FirstOrDefaultAsync();
 
-        return Ok(playlistResult);
+        if (playlist == null)
+            return NotFound("Playlist not found");
+
+        return Ok(playlist);
     }
+
 }

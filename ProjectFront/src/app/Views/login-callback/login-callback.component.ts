@@ -35,6 +35,10 @@ export class LoginCallbackComponent implements OnInit {
   download() {
     this.router.navigate(['/download']);
   }
+  
+  playlistWIndow() {
+    this.router.navigate(['/playlist-window']);
+  }
 
   ngOnInit(): void {
     // var zoauth=1

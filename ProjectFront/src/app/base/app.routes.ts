@@ -6,6 +6,7 @@ import { AddFriendsComponent } from '../Views/add-friends/add-friends.component'
 import { ShowMoviePhotoComponent } from '../Views/show-movie-photo/show-movie-photo.component';
 import { ManageMovieComponent } from '../Views/manage-movie/manage-movie.component';
 import { DownloadComponent } from '../Views/download/download.component';
+import { PlaylistWindow } from '../Views/playlist-window/playlist-window';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -14,6 +15,8 @@ export const routes: Routes = [
   { path: 'show-movie-photo', component: ShowMoviePhotoComponent },
   { path: 'manage-movie', component: ManageMovieComponent },
   { path: 'download', component: DownloadComponent },
+  { path: 'playlist-window', component: PlaylistWindow },
+  
 ];
 
 @NgModule({
