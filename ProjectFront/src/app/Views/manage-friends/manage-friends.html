@@ -11,6 +11,7 @@
   <ul *ngIf="friends.length > 0">
     <li *ngFor="let f of friends">
       {{ f.email }}
+      <button (click)="deleteFriend(f.friendId)">usun znajomego</button>
     </li>
   </ul>
   <p *ngIf="friends.length === 0">Brak znajomych</p>

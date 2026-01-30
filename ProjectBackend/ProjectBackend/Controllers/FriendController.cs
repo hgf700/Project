@@ -52,7 +52,7 @@ public class FriendController : ControllerBase
 
         bool exists = await _context.Friends.AnyAsync(f =>
             f.UserId == currentUser.Id &&
-            f.FriendUserId == friendUser.Id);
+            f.FriendId == friendUser.Id);
 
         if (exists)
             return BadRequest("Znajomy już dodany");
@@ -60,7 +60,7 @@ public class FriendController : ControllerBase
         var friend = new Friend
         {
             UserId = currentUser.Id,
-            FriendUserId = friendUser.Id
+            FriendId = friendUser.Id
         };
 
         _context.Friends.Add(friend);
@@ -85,7 +85,7 @@ public class FriendController : ControllerBase
             .Include(f => f.FriendUser) 
             .Select(f => new
             {
-                f.FriendUserId,
+                f.FriendId,
                 Email = f.FriendUser.Email 
             })
             .ToListAsync();
@@ -98,29 +98,17 @@ public class FriendController : ControllerBase
     public async Task<IActionResult> DeleteFriend([FromBody] DeleteFriendDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null) return Unauthorized();
+        if (userId == null)
+            return Unauthorized();
 
-        var friendUser = await _userManager.FindByEmailAsync(dto.Email);
-        if (friendUser == null)
-            return NotFound("Użytkownik nie istnieje");
+        var friendship = await _context.Friends.FirstOrDefaultAsync(f =>
+            f.UserId == userId &&
+            f.FriendId == dto.FriendId);
 
-        if (currentUser.Id == friendUser.Id)
-            return BadRequest("Nie możesz dodać siebie");
+        if (friendship == null)
+            return NotFound("Znajomy nie istnieje");
 
-        bool exists = await _context.Friends.AnyAsync(f =>
-            f.UserId == currentUser.Id &&
-            f.FriendUserId == friendUser.Id);
-
-        if (exists)
-            return BadRequest("Znajomy już dodany");
-
-        var friend = new Friend
-        {
-            UserId = currentUser.Id,
-            FriendUserId = friendUser.Id
-        };
-
-        _context.Friends.Add(friend);
+        _context.Friends.Remove(friendship);
         await _context.SaveChangesAsync();
 
         return Ok();

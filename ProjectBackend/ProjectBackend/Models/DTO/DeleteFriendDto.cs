@@ -1,7 +1,10 @@
-﻿namespace ProjectBackend.Models.DTO;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ProjectBackend.Models.DTO;
 
 public class DeleteFriendDto
 {
-    public int FriendId { get; set; }
+    [Required]
+    public string FriendId { get; set; }
 
 }

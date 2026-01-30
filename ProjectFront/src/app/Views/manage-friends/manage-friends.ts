@@ -7,17 +7,19 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FriendService } from '../../Services/FriendService';
+import { FriendAG } from '../../interfaces/friend';
 
 @Component({
-  selector: 'app-add-friends',
+  selector: 'app-manage-friends',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './add-friends.component.html',
-  styleUrls: ['./add-friends.component.css'],
+  templateUrl: './manage-friends.html',
+  styleUrl: './manage-friends.css',
 })
-export class AddFriendsComponent {
+export class ManageFriends {
   addFriendForm!: FormGroup;
   submitted = false;
+  friends: FriendAG[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -40,8 +42,6 @@ export class AddFriendsComponent {
     });
   }
 
-  friends: { friendUserId: string; email: string }[] = [];
-
   loadFriends() {
     this.friendService.getFriends().subscribe({
       next: (data) => {
@@ -53,4 +53,17 @@ export class AddFriendsComponent {
       },
     });
   }
+
+  deleteFriend(friendId: string){
+    this.friendService.deleteFriend(friendId).subscribe({
+      next: () => {
+        this.loadFriends();
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    })
+  }
+
+  
 }

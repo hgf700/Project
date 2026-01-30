@@ -20,8 +20,8 @@ export class LoginCallbackComponent implements OnInit {
     private moviesService: MovieService,
   ) {}
 
-  addFriend() {
-    this.router.navigate(['/add-friends']);
+  manageFriend() {
+    this.router.navigate(['/manage-friends']);
   }
 
   showPhoto() {

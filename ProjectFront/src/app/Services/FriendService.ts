@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { FriendAG } from '../interfaces/friend';
 
 @Injectable({ providedIn: 'root' })
 export class FriendService {
@@ -16,15 +17,15 @@ export class FriendService {
   getFriends() {
     const token = localStorage.getItem('jwt');
     const headers = { Authorization: `Bearer ${token}` };
-    return this.http.get<{ friendUserId: string; email: string }[]>(
+    return this.http.get<FriendAG[]>(
       `${this.apiUrl}/show-friends`,
       { headers },
     );
   }
 
-  deleteFriend(userId: number,friendId: number) {
+  deleteFriend(friendId: string) {
     const token = localStorage.getItem('jwt');
     const headers = { Authorization: `Bearer ${token}` };
-    return this.http.post(this.apiUrl, { }, { headers });
+    return this.http.post(`${this.apiUrl}/delete-friend`, { friendId }, { headers });
   }
 }

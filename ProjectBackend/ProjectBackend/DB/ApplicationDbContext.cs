@@ -76,7 +76,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<Friend>()
             .HasOne(f => f.FriendUser)
             .WithMany()
-            .HasForeignKey(f => f.FriendUserId)
+            .HasForeignKey(f => f.FriendId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 
