@@ -162,17 +162,28 @@ public class PlaylistController : ControllerBase
 
     [Authorize]
     [HttpPost("delete-playlist")]
-    public async Task<IActionResult> DeletePlaylist(int playlistId)
+    public async Task<IActionResult> DeletePlaylist([FromBody] DeletePlaylistDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null) return Unauthorized();
+        if (userId == null)
+            return Unauthorized();
 
-        var exists = await _context.Playlists
-            .FirstOrDefaultAsync(p => p.UserId == userId && p.Id== playlistId);
+        var playlist = await _context.Playlists
+            .FirstOrDefaultAsync(p => p.Id == dto.PlaylistId && p.UserId == userId);
 
-        _context.Playlists.Remove(exists);
+        if (playlist == null)
+            return NotFound("Playlist nie istnieje");
+
+        var playlistValues = await _context.PlaylistValues
+            .Where(pv => pv.PlaylistId == dto.PlaylistId)
+            .ToListAsync();
+
+        _context.PlaylistValues.RemoveRange(playlistValues);
+        _context.Playlists.Remove(playlist);
+
         await _context.SaveChangesAsync();
 
         return Ok();
     }
+
 }

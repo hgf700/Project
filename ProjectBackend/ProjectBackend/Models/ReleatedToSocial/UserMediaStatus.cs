@@ -11,7 +11,7 @@ public enum RatingValue
     Good = 10
 }
 
-public class UserMedia
+public class UserMediaStatus
 {
     public int Id { get; set; }
 

@@ -25,4 +25,15 @@ export class ManageMovieService {
       { headers },
     );
   }
+
+  removeRateFromMedia(movieId: number){
+    const token = localStorage.getItem('jwt');
+    const headers = { Authorization: `Bearer ${token}` };
+
+    return this.http.post(
+      `${this.apiurlRate}/remove-rate`,
+      { movieId },
+      { headers },
+    );
+  }
 }

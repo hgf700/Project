@@ -19,7 +19,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<Playlist> Playlists { get; set; }
     public DbSet<PlaylistValue> PlaylistValues{ get; set; }
-    public DbSet<UserMedia> UserMedias { get; set; }
+    public DbSet<UserMediaStatus> UserMediaStatuses { get; set; }
 
     public DbSet<Friend> Friends { get; set; }
 
@@ -29,13 +29,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         modelBuilder.Entity<MovieGenre>()
             .HasKey(mg => new { mg.MovieId, mg.GenreId });
-
-        modelBuilder.Entity<UserMedia>()
-            .HasIndex(um => new { um.UserId, um.MovieId })
-            .IsUnique();
-
-        modelBuilder.Entity<PlaylistValue>()
-            .HasKey(pv => new { pv.PlaylistId, pv.MovieId });
 
         modelBuilder.Entity<MovieGenre>()
             .HasOne(mg => mg.Movie)
@@ -47,20 +40,28 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(g => g.MovieGenres)
             .HasForeignKey(mg => mg.GenreId);
 
-        modelBuilder.Entity<UserMedia>()
+        modelBuilder.Entity<UserMediaStatus>()
+            .HasIndex(um => new { um.UserId, um.MovieId })
+            .IsUnique();
+
+        modelBuilder.Entity<UserMediaStatus>()
             .HasOne(lm => lm.User)
             .WithMany()
             .HasForeignKey(lm => lm.UserId);
 
-        modelBuilder.Entity<UserMedia>()
+        modelBuilder.Entity<UserMediaStatus>()
             .HasOne(lm => lm.Movie)
             .WithMany()
             .HasForeignKey(lm => lm.MovieId);
 
         modelBuilder.Entity<PlaylistValue>()
+            .HasKey(pv => new { pv.PlaylistId, pv.MovieId });
+
+        modelBuilder.Entity<PlaylistValue>()
             .HasOne(pv => pv.Playlist)
             .WithMany()
-            .HasForeignKey(pv => pv.PlaylistId);
+            .HasForeignKey(pv => pv.PlaylistId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<PlaylistValue>()
             .HasOne(pv => pv.Movie)

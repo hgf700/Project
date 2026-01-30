@@ -67,4 +67,11 @@ export class ManageMovieComponent implements OnInit {
       console.log('Dialog closed:', result);
     });
   }
+
+  removeRateFromMedia(movieId: number){
+    this.managemovieService.removeRateFromMedia(movieId).subscribe({
+      next: () => console.log('removeRateFromMedia'),
+      error: (err) => console.error(err),
+    });
+  }
 }

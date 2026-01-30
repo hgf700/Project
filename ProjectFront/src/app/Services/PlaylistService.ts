@@ -56,4 +56,14 @@ export class PlaylistService {
       { headers },
     );
   }
+
+  deletePlaylist(playlistId: number){
+    const token = localStorage.getItem('jwt');
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.post<void>(
+      `${this.baseUrl}/delete-playlist`,
+      {playlistId},
+      { headers },
+    );
+  }
 }

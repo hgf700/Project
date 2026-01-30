@@ -42,23 +42,42 @@ public class RatingController : ControllerBase
         if (movie == null)
             return NotFound("Movie not found");
 
-        var entry = await _context.UserMedias
+        var entry = await _context.UserMediaStatuses
             .FirstOrDefaultAsync(x => x.UserId == userId && x.MovieId == movie.Id);
 
         if (entry == null)
         {
-            entry = new UserMedia
+            entry = new UserMediaStatus
             {
                 UserId = userId,
                 MovieId = movie.Id,   // 🔥 DB ID        
                 Rating = dto.Rating 
             };
-            _context.UserMedias.Add(entry);
+            _context.UserMediaStatuses.Add(entry);
         }
         else
         {
             entry.Rating = dto.Rating;
         }
+
+        await _context.SaveChangesAsync();
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpPost("remove-rate")]
+    public async Task<IActionResult> RemoveRate([FromBody] RemoveRateDto dto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
+
+        var entry = await _context.UserMediaStatuses
+            .FirstOrDefaultAsync(x => x.UserId == userId && x.MovieId == dto.movieId);
+
+        if (entry == null)  
+            return NotFound();
+
+        _context.UserMediaStatuses.Remove(entry);
 
         await _context.SaveChangesAsync();
         return Ok();

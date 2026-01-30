@@ -81,4 +81,16 @@ export class PlaylistWindow implements OnInit {
       },
     });
   }
+  
+  deletePlaylist(playlistId: number,){
+    this.playlistService.deletePlaylist(playlistId).subscribe({
+      next: () => {
+        this.loadPlaylists();
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      },
+    });
+  }
 }

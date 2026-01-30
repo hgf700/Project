@@ -10,6 +10,9 @@
         <button (click)="showSelectedPlaylist(p.id)" [disabled]="loading">
           Pokaż
         </button>
+        <button (click)="deletePlaylist(p.id)" [disabled]="loading">
+          deletePlaylist
+        </button>
       </li>
     </ul>
 
