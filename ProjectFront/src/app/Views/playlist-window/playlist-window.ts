@@ -18,12 +18,10 @@ export class PlaylistWindow implements OnInit {
   loading = false;
 
   newPlaylistName = '';
-  
-  constructor(
-    private playlistService: PlaylistService,
-  ){}
 
-    ngOnInit(): void {
+  constructor(private playlistService: PlaylistService) {}
+
+  ngOnInit(): void {
     this.loadPlaylists();
   }
 
@@ -44,18 +42,16 @@ export class PlaylistWindow implements OnInit {
   createPlaylist() {
     if (!this.newPlaylistName.trim()) return;
     this.loading = true;
-    this.playlistService
-      .createPlaylist(this.newPlaylistName)
-      .subscribe({
-        next: () => {
-          this.newPlaylistName = '';
-          this.loadPlaylists();
-        },
-        error: (err) => {
-          console.error(err);
-          this.loading = false;
-        },
-      });
+    this.playlistService.createPlaylist(this.newPlaylistName).subscribe({
+      next: () => {
+        this.newPlaylistName = '';
+        this.loadPlaylists();
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      },
+    });
   }
 
   showSelectedPlaylist(playlistId: number) {
@@ -75,15 +71,14 @@ export class PlaylistWindow implements OnInit {
   deleteFromPlaylist(playlistId: number, movieId: number) {
     this.loading = true;
 
-    this.playlistService
-      .deleteFromPlaylist(playlistId, movieId).subscribe({
-        next: () => {
-          this.loadPlaylists();
-        },
-        error: (err) => {
-          console.error(err);
-          this.loading = false;
-        },
-      });
+    this.playlistService.deleteFromPlaylist(playlistId, movieId).subscribe({
+      next: () => {
+        this.loadPlaylists();
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      },
+    });
   }
 }

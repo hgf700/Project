@@ -12,10 +12,9 @@ export class PlaylistService {
   getPlaylists() {
     const token = localStorage.getItem('jwt');
     const headers = { Authorization: `Bearer ${token}` };
-    return this.http.get<PlaylistAG[]>(
-      `${this.baseUrl}/show-playlists`,
-      { headers }
-    );
+    return this.http.get<PlaylistAG[]>(`${this.baseUrl}/show-playlists`, {
+      headers,
+    });
   }
 
   createPlaylist(name: string) {
@@ -24,7 +23,7 @@ export class PlaylistService {
     return this.http.post(
       `${this.baseUrl}/create-playlist`,
       { name },
-      { headers } 
+      { headers },
     );
   }
 
@@ -34,7 +33,7 @@ export class PlaylistService {
     return this.http.post(
       `${this.baseUrl}/${playlistId}/movies/${tmdbId}`,
       {},
-      { headers } 
+      { headers },
     );
   }
 
@@ -44,7 +43,7 @@ export class PlaylistService {
 
     return this.http.get<PlaylistResultAG>(
       `${this.baseUrl}/show-playlist-values/${playlistId}`,
-      { headers }
+      { headers },
     );
   }
 
@@ -54,8 +53,7 @@ export class PlaylistService {
     return this.http.post<void>(
       `${this.baseUrl}/${playlistId}/delete-from-playlist/${tmdbId}`,
       {},
-      { headers } 
+      { headers },
     );
   }
- 
 }

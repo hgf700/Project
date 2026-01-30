@@ -16,7 +16,6 @@ export const routes: Routes = [
   { path: 'manage-movie', component: ManageMovieComponent },
   { path: 'download', component: DownloadComponent },
   { path: 'playlist-window', component: PlaylistWindow },
-  
 ];
 
 @NgModule({

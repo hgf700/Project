@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import {FormBuilder,FormGroup,Validators,ReactiveFormsModule,} from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FriendService } from '../../Services/FriendService';
 

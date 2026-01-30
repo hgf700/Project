@@ -8,9 +8,8 @@ describe('PlaylistWindow', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PlaylistWindow]
-    })
-    .compileComponents();
+      imports: [PlaylistWindow],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PlaylistWindow);
     component = fixture.componentInstance;

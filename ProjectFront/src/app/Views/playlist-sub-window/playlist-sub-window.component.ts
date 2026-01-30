@@ -14,7 +14,7 @@ type ViewMode = 'list' | 'create';
 @Component({
   selector: 'app-playlist-sub-window',
   standalone: true,
-  imports: [CommonModule, MatDialogModule,FormsModule],
+  imports: [CommonModule, MatDialogModule, FormsModule],
   templateUrl: './playlist-sub-window.component.html',
   styleUrl: './playlist-sub-window.component.css',
 })
@@ -28,7 +28,7 @@ export class PlaylistSubWindowComponent implements OnInit {
   constructor(
     private playlistService: PlaylistService,
     @Inject(MAT_DIALOG_DATA) public data: { tmdbId: number },
-    private dialogRef: MatDialogRef<PlaylistSubWindowComponent>
+    private dialogRef: MatDialogRef<PlaylistSubWindowComponent>,
   ) {}
 
   // 🔹 lifecycle
@@ -65,19 +65,17 @@ export class PlaylistSubWindowComponent implements OnInit {
     if (!this.newPlaylistName.trim()) return;
 
     this.loading = true;
-    this.playlistService
-      .createPlaylist(this.newPlaylistName)
-      .subscribe({
-        next: () => {
-          this.newPlaylistName = '';
-          this.viewMode = 'list';
-          this.loadPlaylists();
-        },
-        error: (err) => {
-          console.error(err);
-          this.loading = false;
-        },
-      });
+    this.playlistService.createPlaylist(this.newPlaylistName).subscribe({
+      next: () => {
+        this.newPlaylistName = '';
+        this.viewMode = 'list';
+        this.loadPlaylists();
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      },
+    });
   }
 
   selectedPlaylistName: string | null = null;

@@ -7,8 +7,7 @@
       <li *ngFor="let p of playlists" class="playlist-item">
         <span class="playlist-name">{{ p.name }}</span>
 
-        <button (click)="showSelectedPlaylist(p.id)"
-          [disabled]="loading">
+        <button (click)="showSelectedPlaylist(p.id)" [disabled]="loading">
           Pokaż
         </button>
       </li>
@@ -27,23 +26,19 @@
       Brak filmów w tej playliście
     </p>
 
-    
-    <ul *ngIf="selectedPlaylist?.movies?.length">
-  <li *ngFor="let movie of selectedPlaylist.movies">
-    {{ movie.title }}
-    <button
-      (click)="deleteFromPlaylist(selectedPlaylist.id, movie.tmdbId)"
-      [disabled]="loading">
-      Usuń
-    </button>
-  </li>
-</ul>
+    <ul *ngIf="selectedPlaylist.movies.length>0">
+      <li *ngFor="let movie of selectedPlaylist.movies">
+        {{ movie.title }}
+        <button
+          (click)="deleteFromPlaylist(selectedPlaylist.id, movie.tmdbId)"
+          [disabled]="loading"
+        >
+          Usuń
+        </button>
+      </li>
+    </ul>
 
-
-    
-    <button (click)="selectedPlaylist = undefined">
-      ← Wróć do playlist
-    </button>
+    <button (click)="selectedPlaylist = undefined">← Wróć do playlist</button>
   </section>
 
   <hr />
@@ -52,14 +47,18 @@
   <section class="create-playlist">
     <h3>Utwórz nową playlistę</h3>
 
-    <input type="text"
+    <input
+      type="text"
       placeholder="Nazwa playlisty"
       [(ngModel)]="newPlaylistName"
-      [disabled]="loading"/>
+      [disabled]="loading"
+    />
 
     <div class="create-actions">
-      <button (click)="createPlaylist()"
-        [disabled]="loading || !newPlaylistName.trim()">
+      <button
+        (click)="createPlaylist()"
+        [disabled]="loading || !newPlaylistName.trim()"
+      >
         Utwórz
       </button>
     </div>

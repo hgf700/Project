@@ -35,7 +35,7 @@ export class LoginCallbackComponent implements OnInit {
   download() {
     this.router.navigate(['/download']);
   }
-  
+
   playlistWIndow() {
     this.router.navigate(['/playlist-window']);
   }

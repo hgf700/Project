@@ -1,5 +1,4 @@
 <main class="playlist-dialog">
-
   <!-- ACTIONS -->
   <div class="actions">
     <button
@@ -23,15 +22,13 @@
 
   <!-- LISTA PLAYLIST -->
   <section *ngIf="viewMode === 'list'">
-
     <p *ngIf="loading">Ładowanie...</p>
 
     <ul *ngIf="!loading && playlists.length > 0; else empty">
       <li *ngFor="let p of playlists">
         <span class="playlist-name">{{ p.name }}</span>
 
-        <button
-          (click)="addToPlaylist(p.id, p.name)" [disabled]="loading">
+        <button (click)="addToPlaylist(p.id, p.name)" [disabled]="loading">
           Dodaj
         </button>
       </li>
@@ -40,7 +37,6 @@
     <ng-template #empty>
       <p *ngIf="!loading">Brak playlist</p>
     </ng-template>
-
   </section>
 
   <!-- CREATE PLAYLIST -->
@@ -62,13 +58,7 @@
         Utwórz
       </button>
 
-      <button
-        (click)="showList()"
-        [disabled]="loading"
-      >
-        Anuluj
-      </button>
+      <button (click)="showList()" [disabled]="loading">Anuluj</button>
     </div>
   </section>
-
 </main>

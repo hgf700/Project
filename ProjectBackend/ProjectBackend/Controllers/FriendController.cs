@@ -92,4 +92,38 @@ public class FriendController : ControllerBase
 
         return Ok(friends);
     }
+
+    [Authorize]
+    [HttpPost("delete-friend")]
+    public async Task<IActionResult> DeleteFriend([FromBody] DeleteFriendDto dto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
+
+        var friendUser = await _userManager.FindByEmailAsync(dto.Email);
+        if (friendUser == null)
+            return NotFound("Użytkownik nie istnieje");
+
+        if (currentUser.Id == friendUser.Id)
+            return BadRequest("Nie możesz dodać siebie");
+
+        bool exists = await _context.Friends.AnyAsync(f =>
+            f.UserId == currentUser.Id &&
+            f.FriendUserId == friendUser.Id);
+
+        if (exists)
+            return BadRequest("Znajomy już dodany");
+
+        var friend = new Friend
+        {
+            UserId = currentUser.Id,
+            FriendUserId = friendUser.Id
+        };
+
+        _context.Friends.Add(friend);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
 }

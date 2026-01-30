@@ -1,4 +1,4 @@
-import { MovieAG } from "./movie";
+import { MovieAG } from './movie';
 
 export interface PlaylistResultAG {
   id: number;

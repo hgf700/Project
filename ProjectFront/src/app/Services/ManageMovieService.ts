@@ -4,15 +4,15 @@ import { MovieAG } from '../interfaces/movie';
 
 @Injectable({ providedIn: 'root' })
 export class ManageMovieService {
-  private apiurlShowMovies = 'https://localhost:7218/movies/show-movies';
-  private apiurlRate = 'https://localhost:7218/rating/rate-movie';
+  private apiurlMovies = 'https://localhost:7218/movies';
+  private apiurlRate = 'https://localhost:7218/rating';
 
   constructor(private http: HttpClient) {}
 
   getMovies() {
     const token = localStorage.getItem('jwt');
     const headers = { Authorization: `Bearer ${token}` };
-    return this.http.get<MovieAG[]>(this.apiurlShowMovies, { headers });
+    return this.http.get<MovieAG[]>(`${this.apiurlMovies}/show-movies`, { headers });
   }
 
   rateMovie(movieId: number, rating: number) {
@@ -20,7 +20,7 @@ export class ManageMovieService {
     const headers = { Authorization: `Bearer ${token}` };
 
     return this.http.post(
-      `${this.apiurlRate}?movieId=${movieId}`,
+      `${this.apiurlRate}/rate-movie?movieId=${movieId}`,
       { rating },
       { headers },
     );
