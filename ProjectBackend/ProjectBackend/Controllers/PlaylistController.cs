@@ -112,16 +112,23 @@ public class PlaylistController : ControllerBase
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
 
-        var playlistResult = await _context.Playlists
-        .Where(p => p.UserId == userId)
-        .Select(p => new {
-            p.Id,
-            p.Name
-        })
-        .ToListAsync();
+        var playlists = await _context.Playlists
+            .Where(p =>
+                p.UserId == userId ||
+                _context.PlaylistMembers.Any(pm =>
+                    pm.PlaylistId == p.Id && pm.UserId == userId)
+            )
+            .Select(p => new
+            {
+                p.Id,
+                p.Name,
+                IsOwner = p.UserId == userId
+            })
+            .ToListAsync();
 
-        return Ok(playlistResult);
+        return Ok(playlists);
     }
+
 
     [Authorize]
     [HttpGet("show-playlist-values/{playlistId}")]

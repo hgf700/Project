@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
@@ -133,5 +134,34 @@ public class AuthController : ControllerBase
 
         return Ok(new { token = jwt });
     }
+
+    //[Authorize]
+    //[HttpGet("me")]
+    //public async Task<IActionResult> Me()
+    //{
+    //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    //    var email1 = User.FindFirstValue(ClaimTypes.Email);
+
+    //    var user = await _userManager.FindByEmailAsync(email1);
+
+    //    return Ok(new
+    //    {
+    //        userId = user.Id,
+    //        email = user.Email
+    //    });
+    //}
+
+    [Authorize]
+    [HttpGet("me")]
+    public IActionResult Me()
+    {
+        var email = User.FindFirstValue(ClaimTypes.Email);
+
+        return Ok(new
+        {
+            email
+        });
+    }
+
 
 }

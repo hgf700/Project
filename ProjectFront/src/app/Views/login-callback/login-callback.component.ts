@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { CurrentUserService } from '../../Services/CurrentUserService';
+import { CurrentUserAG } from '../../interfaces/currentUser';
 
 @Component({
   selector: 'app-login-callback',
@@ -11,7 +13,10 @@ import { RouterModule } from '@angular/router';
   styleUrl: './login-callback.component.css',
 })
 export class LoginCallbackComponent implements OnInit {
+  currentUser?: CurrentUserAG;
+  
   constructor(
+    private currentUserService:CurrentUserService,
     private route: ActivatedRoute,
     private router: Router,
   ) {}
@@ -36,23 +41,34 @@ export class LoginCallbackComponent implements OnInit {
     this.router.navigate(['/playlist-window']);
   }
 
-  ngOnInit(): void {
-    // var zoauth=1
-    // if (zoauth==1){
-    var token = this.route.snapshot.queryParamMap.get('token');
-    // }
-    // else{
-    //   token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEyOTJkZTYxLTkwMDgtNDY5YS05NDVkLTc2M2M1ZWZlYzU4MCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6InBhd2VsbGFwaW5za2kyMkBnbWFpbC5jb20iLCJleHAiOjE3NjgyNDU4Mzd9.otBBhxws3WPXXTofkQgTfXZI1jRSIJk1AbmFfF8Fpa4"
-    // }
-
-    if (!token) {
-      console.error('Brak tokena w login-callback');
-      // this.router.navigate(['/login']);
-      return;
+  loadCurrentUser() {
+  this.currentUserService.getCurrentUser().subscribe({
+    next: (user) => {
+      console.log('RESPONSE /me:', user);
+      this.currentUser = user;
+    },
+    error: (err) => {
+      console.error('ERROR /me:', err);
     }
-    localStorage.setItem('jwt', token);
+  });
+}
 
-    console.log('JWT zapisany');
-    console.log(token);
+
+  ngOnInit(): void {
+  const tokenFromUrl = this.route.snapshot.queryParamMap.get('token');
+  const tokenFromStorage = localStorage.getItem('jwt');
+
+  if (tokenFromUrl) {
+    localStorage.setItem('jwt', tokenFromUrl);
+    console.log('JWT zapisany z URL');
   }
+
+  if (!tokenFromUrl && !tokenFromStorage) {
+    console.error('Brak tokena – użytkownik niezalogowany');
+    return;
+  }
+
+  this.loadCurrentUser();
+}
+
 }
