@@ -4,12 +4,17 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using ProjectBackend.DB;
 using ProjectBackend.ExtraTools;
+using ProjectBackend.Models.DTO;
 using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
 using Sprache;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 
 namespace ProjectBackend.Controllers;
@@ -103,4 +108,29 @@ public class AuthController : ControllerBase
             $"http://localhost:4200/login-callback?token={jwt}"
         );
     }
+
+    [HttpPost("dev-login")]
+    public async Task<IActionResult> DevLogin([FromBody] DevelopingLoginDto dto)
+    {
+        var user = await _userManager.FindByEmailAsync(dto.Email);
+
+        if (user == null)
+        {
+            user = new ApplicationUser
+            {
+                UserName = dto.Email,
+                Email = dto.Email,
+                EmailConfirmed = true
+            };
+
+            var createResult = await _userManager.CreateAsync(user);
+            if (!createResult.Succeeded)
+                return BadRequest(createResult.Errors);
+        }
+
+        var jwt = _jwtService.GenerateToken(user);
+
+        return Ok(new { token = jwt });
+    }
+
 }

@@ -1,0 +1,8 @@
+<main class="main">
+  <form [formGroup]="developingLoginForm" (ngSubmit)="onSubmit()">
+    <label>Email login</label>
+    <input type="email" formControlName="email" />
+
+    <button type="submit">Email login</button>
+  </form>
+</main>

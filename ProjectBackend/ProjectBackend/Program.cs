@@ -84,7 +84,7 @@ if (string.IsNullOrWhiteSpace(googleClientId))
 if (string.IsNullOrWhiteSpace(googleClientSecret))
     throw new InvalidOperationException("GOOGLE_CLIENT_SECRET is not set");
 
-int zoauth = 1;
+int zoauth = 0;
 
 if (zoauth == 1)
 {
@@ -119,20 +119,25 @@ if (zoauth == 1)
 }
 else
 {
-    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
+    builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
         {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(JWT_SECRET)
-                ),
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                ClockSkew = TimeSpan.Zero
-            };
-        });
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(JWT_SECRET)
+            ),
+            ClockSkew = TimeSpan.Zero
+        };
+    });
 }
 
 var app = builder.Build();

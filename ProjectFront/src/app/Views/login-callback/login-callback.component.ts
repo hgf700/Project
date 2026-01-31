@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { GenreSeedService } from '../../Services/GenreSeedService';
-import { MovieService } from '../../Services/MovieService';
 
 @Component({
   selector: 'app-login-callback',
@@ -16,8 +14,6 @@ export class LoginCallbackComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private genreseedService: GenreSeedService,
-    private moviesService: MovieService,
   ) {}
 
   manageFriend() {

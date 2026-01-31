@@ -7,6 +7,8 @@ import { ManageMovieComponent } from '../Views/manage-movie/manage-movie.compone
 import { DownloadComponent } from '../Views/download/download.component';
 import { PlaylistWindow } from '../Views/playlist-window/playlist-window';
 import { ManageFriends } from '../Views/manage-friends/manage-friends';
+import { DevelopingView } from '../Views/developing-view/developing-view';
+
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -16,6 +18,8 @@ export const routes: Routes = [
   { path: 'download', component: DownloadComponent },
   { path: 'playlist-window', component: PlaylistWindow },
   { path: 'manage-friends', component: ManageFriends },
+  { path: 'developing-view', component: DevelopingView },
+
 
 ];
 
