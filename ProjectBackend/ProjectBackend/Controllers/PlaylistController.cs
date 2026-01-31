@@ -32,7 +32,7 @@ public class PlaylistController : ControllerBase
 
     [Authorize]
     [HttpPost("create-playlist")]
-    public async Task<IActionResult> CreatePlaylist([FromBody] CreatePlaylistDto dto)
+    public async Task<IActionResult> CreatePlaylist([FromBody] CreatePlaylistNameDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
@@ -73,6 +73,7 @@ public class PlaylistController : ControllerBase
 
         var playlist = await _context.Playlists
             .FirstOrDefaultAsync(p => p.Id == playlistId && p.UserId == userId);
+
         if (playlist == null) return NotFound("Playlist not found");
 
         bool canEdit = await _context.PlaylistMembers.AnyAsync(pm =>
@@ -192,7 +193,7 @@ public class PlaylistController : ControllerBase
 
     [Authorize]
     [HttpPost("delete-playlist")]
-    public async Task<IActionResult> DeletePlaylist([FromBody] DeletePlaylistDto dto)
+    public async Task<IActionResult> DeletePlaylist([FromBody] DeletePlaylistIdDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)

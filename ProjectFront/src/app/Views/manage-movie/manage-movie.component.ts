@@ -52,7 +52,7 @@ export class ManageMovieComponent implements OnInit {
     });
   }
 
-  selectedMovieTmdbId: number | null = null;
+  // selectedMovieTmdbId: number | null = null;
 
   AddToPlaylist(movieTmdbId: number) {
     const dialogRef = this.dialog.open(PlaylistSubWindowComponent, {

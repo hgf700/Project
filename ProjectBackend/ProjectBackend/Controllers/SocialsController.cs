@@ -27,25 +27,39 @@ public class SocialsController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost("share-playlist")]
-    public async Task<IActionResult> SharePlaylist([FromBody] SharePlaylistIdDto dto)
+    [HttpPost("share-playlist/{playlistId}/members")]
+    public async Task<IActionResult> SharePlaylist(int playlistId, [FromBody] SharePlaylistIdDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
 
-        var exists = await _context.Playlists
-            .AnyAsync(p => p.UserId == userId && p.Name == dto.Name);
+        var playlist = await _context.Playlists
+            .FirstOrDefaultAsync(p => p.Id == playlistId && p.UserId == userId);
 
-        
+        if (playlist == null) return NotFound("Playlist not found");
 
-        var playlist = new Playlist
+        var exists = await _context.Friends
+            .AnyAsync(p => p.UserId == userId && p.FriendId == dto.friendId);
+
+        if (!exists)
+            return BadRequest("You can only share playlist with your friends");
+
+        var alreadyMember = await _context.PlaylistMembers
+            .AnyAsync(pm => pm.PlaylistId == playlistId && pm.UserId == dto.friendId);
+
+        if (alreadyMember)
+            return BadRequest("User is already a member of this playlist");
+
+        var playlistMember = new PlaylistMember
         {
-            Name = dto.Name,
-            UserId = userId
+            PlaylistId= playlistId,
+            UserId = dto.friendId,
+            Role= PlaylistRole.Editor,
         };
-        _context.Playlists.Add(playlist);
+
+        _context.PlaylistMembers.Add(playlistMember);
         await _context.SaveChangesAsync();
 
-        return Ok(new { playlist.Id, playlist.Name });
+        return Ok();
     }
 }

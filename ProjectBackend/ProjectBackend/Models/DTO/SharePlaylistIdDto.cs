@@ -2,5 +2,6 @@
 
 public class SharePlaylistIdDto
 {
-    public int FriendId { get; set; }
+    public string friendId { get; set; }
+
 }

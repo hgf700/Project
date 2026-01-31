@@ -1,14 +1,16 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { PlaylistService } from '../../Services/PlaylistService';
 import { PlaylistAG } from '../../interfaces/playlist';
 import { PlaylistResultAG } from '../../interfaces/playlistResult';
+import { SubSharePlaylistWindow } from '../sub-share-playlist-window/sub-share-playlist-window';
 
 @Component({
   selector: 'app-playlist-window',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,MatDialogModule],
   templateUrl: './playlist-window.html',
   styleUrl: './playlist-window.css',
 })
@@ -19,7 +21,9 @@ export class PlaylistWindow implements OnInit {
 
   newPlaylistName = '';
 
-  constructor(private playlistService: PlaylistService) {}
+  constructor(private playlistService: PlaylistService,
+    private dialog: MatDialog,
+  ) {}
 
   ngOnInit(): void {
     this.loadPlaylists();
@@ -94,15 +98,17 @@ export class PlaylistWindow implements OnInit {
     });
   }
 
-  // sharePlaylist(playlistId: number,friendId:number){
-  //   this.playlistService.deletePlaylist(playlistId).subscribe({
-  //     next: () => {
-  //       this.loadPlaylists();
-  //     },
-  //     error: (err) => {
-  //       console.error(err);
-  //       this.loading = false;
-  //     },
-  //   });
-  // }
+  openShareDialog(playlistId: number) {
+      const dialogRef = this.dialog.open(SubSharePlaylistWindow, {
+        width: '600px',
+        height: '400px',
+        data: {
+          playlistId
+        },
+      });
+  
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log('Dialog closed:', result);
+      });
+    }
 }

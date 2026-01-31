@@ -1,1 +1,16 @@
-<p>sub-share-playlist-window works!</p>
+<section>
+  <p *ngIf="loading">Ładowanie...</p>
+
+  <ul *ngIf="!loading && friends.length > 0; else empty">
+    <li *ngFor="let f of friends">
+      <span class="friend-name">{{ f.email }}</span>
+      <button (click)="sharePlaylistToFriends(f.friendId)" [disabled]="loading">
+          Dodaj
+      </button>
+    </li>
+  </ul>
+
+  <ng-template #empty>
+    <p *ngIf="!loading">Brak znajomych</p>
+  </ng-template>
+</section>

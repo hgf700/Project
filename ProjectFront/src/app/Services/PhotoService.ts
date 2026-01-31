@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { getAuthHeaders } from '../helpers/GetAuthHeaders';
 
 @Injectable({ providedIn: 'root' })
 export class PhotoService {
@@ -8,11 +9,8 @@ export class PhotoService {
   constructor(private http: HttpClient) {}
 
   getImages() {
-    const token = localStorage.getItem('jwt');
-    const headers = { Authorization: `Bearer ${token}` };
-
     return this.http.get<
       { posterPath: string | null; backdropPath: string | null }[]
-    >(this.apiUrl, { headers });
+    >(this.apiUrl, {  headers: getAuthHeaders() });
   }
 }

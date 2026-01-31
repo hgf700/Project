@@ -63,7 +63,14 @@ public class FriendController : ControllerBase
             FriendId = friendUser.Id
         };
 
+        var friend2 = new Friend
+        {
+            UserId = friendUser.Id,
+            FriendId = currentUser.Id
+        };
+
         _context.Friends.Add(friend);
+        _context.Friends.Add(friend2);
         await _context.SaveChangesAsync();
 
         return Ok();

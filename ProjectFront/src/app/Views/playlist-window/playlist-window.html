@@ -24,6 +24,11 @@
   <!-- SZCZEGÓŁY PLAYLISTY -->
   <section *ngIf="selectedPlaylist && !loading" class="playlist-details">
     <h3>{{ selectedPlaylist.name }}</h3>
+    <button
+          (click)="openShareDialog(selectedPlaylist.id)"
+          [disabled]="loading">
+          dodaj znajomego
+        </button>
 
     <p *ngIf="selectedPlaylist.movies.length === 0">
       Brak filmów w tej playliście
@@ -34,8 +39,7 @@
         {{ movie.title }}
         <button
           (click)="deleteFromPlaylist(selectedPlaylist.id, movie.tmdbId)"
-          [disabled]="loading"
-        >
+          [disabled]="loading">
           Usuń
         </button>
       </li>
@@ -64,6 +68,7 @@
       >
         Utwórz
       </button>
+
     </div>
   </section>
 </main>
