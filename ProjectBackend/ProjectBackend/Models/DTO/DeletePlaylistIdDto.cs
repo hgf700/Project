@@ -1,6 +1,6 @@
 ﻿namespace ProjectBackend.Models.DTO;
 
-public class DeletePlaylistDto
+public class DeletePlaylistIdDto
 {
     public int PlaylistId { get; set; }
 }

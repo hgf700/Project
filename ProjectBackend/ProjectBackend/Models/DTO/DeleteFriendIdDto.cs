@@ -2,7 +2,7 @@
 
 namespace ProjectBackend.Models.DTO;
 
-public class DeleteFriendDto
+public class DeleteFriendIdDto
 {
     [Required]
     public string FriendId { get; set; }

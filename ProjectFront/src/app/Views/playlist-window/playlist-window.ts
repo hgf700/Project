@@ -82,7 +82,7 @@ export class PlaylistWindow implements OnInit {
     });
   }
   
-  deletePlaylist(playlistId: number,){
+  deletePlaylist(playlistId: number){
     this.playlistService.deletePlaylist(playlistId).subscribe({
       next: () => {
         this.loadPlaylists();
@@ -93,4 +93,16 @@ export class PlaylistWindow implements OnInit {
       },
     });
   }
+
+  // sharePlaylist(playlistId: number,friendId:number){
+  //   this.playlistService.deletePlaylist(playlistId).subscribe({
+  //     next: () => {
+  //       this.loadPlaylists();
+  //     },
+  //     error: (err) => {
+  //       console.error(err);
+  //       this.loading = false;
+  //     },
+  //   });
+  // }
 }

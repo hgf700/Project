@@ -31,7 +31,7 @@ public class RatingController : ControllerBase
 
     [Authorize]
     [HttpPost("rate-movie")]
-    public async Task<IActionResult> RateMovieAsync(int movieId, [FromBody] RateMovieDto dto)
+    public async Task<IActionResult> RateMovieAsync(int movieId, [FromBody] RateMovieRateDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
@@ -66,7 +66,7 @@ public class RatingController : ControllerBase
 
     [Authorize]
     [HttpPost("remove-rate")]
-    public async Task<IActionResult> RemoveRate([FromBody] RemoveRateDto dto)
+    public async Task<IActionResult> RemoveRate([FromBody] RemoveRateIdDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();

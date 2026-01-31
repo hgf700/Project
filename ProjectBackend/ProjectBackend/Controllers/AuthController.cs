@@ -112,6 +112,7 @@ public class AuthController : ControllerBase
     [HttpPost("dev-login")]
     public async Task<IActionResult> DevLogin([FromBody] DevelopingLoginDto dto)
     {
+        //developing
         var user = await _userManager.FindByEmailAsync(dto.Email);
 
         if (user == null)

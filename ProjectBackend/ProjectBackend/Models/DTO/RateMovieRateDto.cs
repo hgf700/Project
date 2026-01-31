@@ -2,7 +2,7 @@
 
 namespace ProjectBackend.Models.DTO;
 
-public class RateMovieDto
+public class RateMovieRateDto
 {
     public RatingValue Rating { get; set; }
 }

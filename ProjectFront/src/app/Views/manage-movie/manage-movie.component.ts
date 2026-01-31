@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ManageMovieService } from '../../Services/ManageMovieService';
 import { MovieAG } from '../../interfaces/movie';
-import { PlaylistSubWindowComponent } from '../playlist-sub-window/playlist-sub-window.component';
+import { PlaylistSubWindowComponent } from '../sub-playlist-window/playlist-sub-window.component';
 
 @Component({
   selector: 'app-manage-movie',

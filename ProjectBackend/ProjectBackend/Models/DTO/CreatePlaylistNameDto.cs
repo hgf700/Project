@@ -1,6 +1,6 @@
 ﻿namespace ProjectBackend.Models.DTO;
 
-public class CreatePlaylistDto
+public class CreatePlaylistNameDto
 {
     public string Name { get; set; }
 }

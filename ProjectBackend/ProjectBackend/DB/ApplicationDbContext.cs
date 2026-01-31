@@ -14,13 +14,13 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
     }
     public DbSet<Movie> Movies { get; set; }
-    public DbSet<Genre> Genres { get; set; }
     public DbSet<MovieGenre> MovieGenres { get; set; }
-
+    public DbSet<Genre> Genres { get; set; }
     public DbSet<Playlist> Playlists { get; set; }
     public DbSet<PlaylistValue> PlaylistValues{ get; set; }
-    public DbSet<UserMediaStatus> UserMediaStatuses { get; set; }
+    public DbSet<PlaylistMember> PlaylistMembers { get; set; }
 
+    public DbSet<UserMediaStatus> UserMediaStatuses { get; set; }
     public DbSet<Friend> Friends { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -67,6 +67,19 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasOne(pv => pv.Movie)
             .WithMany()
             .HasForeignKey(pv => pv.MovieId);
+
+        modelBuilder.Entity<PlaylistMember>()
+            .HasKey(pm => new { pm.PlaylistId, pm.UserId });
+
+        modelBuilder.Entity<PlaylistMember>()
+            .HasOne(pm => pm.Playlist)
+            .WithMany(p => p.Members)
+            .HasForeignKey(pm => pm.PlaylistId);
+
+        modelBuilder.Entity<PlaylistMember>()
+            .HasOne(pm => pm.User)
+            .WithMany()
+            .HasForeignKey(pm => pm.UserId);
 
         modelBuilder.Entity<Friend>()
             .HasOne(f => f.User)

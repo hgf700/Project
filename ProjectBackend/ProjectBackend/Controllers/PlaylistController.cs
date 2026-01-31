@@ -9,6 +9,7 @@ using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
 using ProjectBackend.Services.interfaces;
+using System.Data;
 using System.Security.Claims;
 
 namespace ProjectBackend.Controllers;
@@ -45,9 +46,20 @@ public class PlaylistController : ControllerBase
         var playlist = new Playlist
         {
             Name = dto.Name,
-            UserId = userId
+            UserId = userId,
         };
+
         _context.Playlists.Add(playlist);
+        await _context.SaveChangesAsync();
+
+        var playlistMember = new PlaylistMember
+        {
+            PlaylistId = playlist.Id,
+            UserId = userId,
+            Role = PlaylistRole.Owner,
+        };
+        _context.PlaylistMembers.Add(playlistMember);
+
         await _context.SaveChangesAsync();
 
         return Ok(new { playlist.Id, playlist.Name });
@@ -62,6 +74,15 @@ public class PlaylistController : ControllerBase
         var playlist = await _context.Playlists
             .FirstOrDefaultAsync(p => p.Id == playlistId && p.UserId == userId);
         if (playlist == null) return NotFound("Playlist not found");
+
+        bool canEdit = await _context.PlaylistMembers.AnyAsync(pm =>
+            pm.PlaylistId == playlistId &&
+            pm.UserId == userId &&
+            (pm.Role == PlaylistRole.Owner || pm.Role == PlaylistRole.Editor)
+        );
+
+        if(!canEdit)
+            return Unauthorized();
 
         var movie = await _context.Movies.SingleOrDefaultAsync(m => m.TmdbId == tmdbId);
         if (movie == null)
@@ -143,6 +164,15 @@ public class PlaylistController : ControllerBase
             .FirstOrDefaultAsync(p => p.Id == playlistId && p.UserId == userId);
         if (playlist == null) return NotFound("Playlist not found");
 
+        bool canEdit = await _context.PlaylistMembers.AnyAsync(pm =>
+            pm.PlaylistId == playlistId &&
+            pm.UserId == userId &&
+            (pm.Role == PlaylistRole.Owner || pm.Role == PlaylistRole.Editor)
+        );
+
+        if (!canEdit)
+            return Unauthorized();
+
         var movie = await _context.Movies.SingleOrDefaultAsync(m => m.TmdbId == tmdbId);
         if (movie == null)
             return NotFound("movie not found");
@@ -173,6 +203,15 @@ public class PlaylistController : ControllerBase
 
         if (playlist == null)
             return NotFound("Playlist nie istnieje");
+
+        bool canEdit = await _context.PlaylistMembers.AnyAsync(pm =>
+            pm.PlaylistId == dto.PlaylistId &&
+            pm.UserId == userId &&
+            (pm.Role == PlaylistRole.Owner)
+        );
+
+        if (!canEdit)
+            return Unauthorized();
 
         var playlistValues = await _context.PlaylistValues
             .Where(pv => pv.PlaylistId == dto.PlaylistId)

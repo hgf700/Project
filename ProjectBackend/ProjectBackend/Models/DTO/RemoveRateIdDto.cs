@@ -2,7 +2,7 @@
 
 namespace ProjectBackend.Models.DTO;
 
-public class RemoveRateDto
+public class RemoveRateIdDto
 {
     [Required]
     [Range(1, int.MaxValue)]

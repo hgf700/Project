@@ -2,7 +2,7 @@
 
 namespace ProjectBackend.Models.DTO;
 
-public class AddFriendDto
+public class AddFriendEmailDto
 {
     [Required, EmailAddress]
     public string Email { get; init; }

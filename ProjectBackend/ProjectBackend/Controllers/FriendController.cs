@@ -35,7 +35,7 @@ public class FriendController : ControllerBase
 
     [Authorize]
     [HttpPost("add-friend")]
-    public async Task<IActionResult> AddFriend([FromBody] AddFriendDto dto)
+    public async Task<IActionResult> AddFriend([FromBody] AddFriendEmailDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
@@ -95,7 +95,7 @@ public class FriendController : ControllerBase
 
     [Authorize]
     [HttpPost("delete-friend")]
-    public async Task<IActionResult> DeleteFriend([FromBody] DeleteFriendDto dto)
+    public async Task<IActionResult> DeleteFriend([FromBody] DeleteFriendIdDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)

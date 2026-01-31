@@ -2,6 +2,7 @@
 
 namespace ProjectBackend.Models.ReleatedToPlaylist;
 
+
 public class Playlist
 {
     public int Id { get; set; }
@@ -10,5 +11,6 @@ public class Playlist
 
     public string UserId { get; set; }
     public ApplicationUser User { get; set; }
+    public ICollection<PlaylistMember> Members { get; set; }
 
 }
