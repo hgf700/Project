@@ -10,6 +10,7 @@ public class Playlist
     public string Name { get; set; }
 
     public string UserId { get; set; }
+    public bool IsPublic { get; set; }
     public ApplicationUser User { get; set; }
     public ICollection<PlaylistMember> Members { get; set; }
 

@@ -15,4 +15,12 @@ export class ManageSocialService {
       {  headers: getAuthHeaders() },
     );
   }
+
+  sharePlaylistPublically(playlistId: number){
+    return this.http.put(
+      `${this.apiurlSocial}/change-to-public/${playlistId}`,
+      {  },
+      {  headers: getAuthHeaders() },
+    );
+  }
 }

@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { PlaylistService } from '../../Services/PlaylistService';
+import { ManageSocialService } from '../../Services/ManageSocialService';
 import { PlaylistAG } from '../../interfaces/playlist';
 import { PlaylistResultAG } from '../../interfaces/playlistResult';
-import { PlaylistRole} from '../../interfaces/playlistRole';
+import { PlaylistRole} from '../../enum/playlistRole';
 
 import { SubSharePlaylistWindow } from '../sub-share-playlist-window/sub-share-playlist-window';
 
@@ -25,6 +26,7 @@ export class PlaylistWindow implements OnInit {
   newPlaylistName = '';
 
   constructor(private playlistService: PlaylistService,
+    private socialService: ManageSocialService,
     private dialog: MatDialog,
   ) {}
 
@@ -114,4 +116,17 @@ export class PlaylistWindow implements OnInit {
         console.log('Dialog closed:', result);
       });
     }
+
+  sharePublically(playlistId: number){
+    this.socialService.sharePlaylistPublically(playlistId).subscribe({
+      next: () => {
+        this.loadPlaylists();
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      },
+    });
+  }
+
 }

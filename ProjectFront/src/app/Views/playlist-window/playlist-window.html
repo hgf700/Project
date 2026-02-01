@@ -31,6 +31,12 @@
           dodaj znajomego
         </button>
 
+        <button *ngIf="selectedPlaylist.role === PlaylistRole.Owner"
+          (click)="sharePublically(selectedPlaylist.id)"
+          [disabled]="loading">
+          udostepnij publicznie
+        </button>
+
     <p *ngIf="selectedPlaylist.movies.length === 0">
       Brak filmów w tej playliście
     </p>

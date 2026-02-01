@@ -1,4 +1,4 @@
-import { PlaylistRole } from "./playlistRole";
+import { PlaylistRole } from "../enum/playlistRole";
 
 export interface PlaylistAG {
   id: number;

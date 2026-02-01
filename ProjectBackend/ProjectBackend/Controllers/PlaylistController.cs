@@ -47,6 +47,7 @@ public class PlaylistController : ControllerBase
         {
             Name = dto.Name,
             UserId = userId,
+            IsPublic=false,
         };
 
         _context.Playlists.Add(playlist);
@@ -118,7 +119,6 @@ public class PlaylistController : ControllerBase
         return Ok();
     }
 
-
     [Authorize]
     [HttpGet("show-playlists")]
     public async Task<IActionResult> ShowPlaylists()
@@ -129,6 +129,7 @@ public class PlaylistController : ControllerBase
         var playlists = await _context.Playlists
             .Where(p =>
                 p.UserId == userId ||
+                p.IsPublic || 
                 _context.PlaylistMembers.Any(pm =>
                     pm.PlaylistId == p.Id && pm.UserId == userId)
             )
@@ -137,12 +138,14 @@ public class PlaylistController : ControllerBase
                 p.Id,
                 p.Name,
                 Role =
-                p.UserId == userId
-                    ? PlaylistRole.Owner
-                    : _context.PlaylistMembers
-                        .Where(pm => pm.PlaylistId == p.Id && pm.UserId == userId)
-                        .Select(pm => pm.Role)
-                        .FirstOrDefault()
+                p.UserId == userId ? PlaylistRole.Owner : 
+                _context.PlaylistMembers
+                    .Where(pm => pm.PlaylistId == p.Id && pm.UserId == userId)
+                    .Select(pm => pm.Role == PlaylistRole.Editor
+                        ? PlaylistRole.Editor
+                        : PlaylistRole.Viewer
+                        )
+                    .FirstOrDefault() ?? (p.IsPublic ? PlaylistRole.Viewer : (PlaylistRole?)null)
             })
             .ToListAsync();
 
@@ -161,6 +164,7 @@ public class PlaylistController : ControllerBase
                 p.Id == playlistId &&
                 (
                     p.UserId == userId ||
+                    p.IsPublic ||
                     _context.PlaylistMembers.Any(pm =>
                         pm.PlaylistId == p.Id && pm.UserId == userId
                     )
@@ -195,7 +199,6 @@ public class PlaylistController : ControllerBase
 
         return Ok(playlist);
     }
-
 
     [Authorize]
     [HttpPost("{playlistId}/delete-from-playlist/{tmdbId}")]

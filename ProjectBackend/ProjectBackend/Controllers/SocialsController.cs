@@ -71,4 +71,36 @@ public class SocialsController : ControllerBase
 
         return Ok();
     }
+
+    [Authorize]
+    [HttpPut("change-to-public/{playlistId}")]
+    public async Task<IActionResult> SharePublicPlaylist(int playlistId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
+
+        var playlist = await _context.Playlists
+            .FirstOrDefaultAsync(p => p.Id == playlistId && p.UserId == userId);
+
+        if (playlist == null) return NotFound("Playlist not found");
+
+        bool canEdit = await _context.PlaylistMembers.AnyAsync(pm =>
+            pm.PlaylistId == playlistId &&
+            pm.UserId == userId &&
+            (pm.Role == PlaylistRole.Owner)
+        );
+
+        if (!canEdit)
+            return Unauthorized();
+
+        if (playlist.IsPublic)
+            return BadRequest("Playlist is already public");
+
+        playlist.IsPublic = true;
+
+        await _context.SaveChangesAsync();
+
+        return Ok(playlist);
+    }
+
 }
