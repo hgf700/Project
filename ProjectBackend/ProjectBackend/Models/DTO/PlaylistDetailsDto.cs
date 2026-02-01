@@ -1,10 +1,13 @@
-﻿namespace ProjectBackend.Models.DTO;
+﻿using ProjectBackend.Models.ReleatedToPlaylist;
+
+namespace ProjectBackend.Models.DTO;
 
 public class PlaylistDetailsDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
     public List<MovieDto> Movies { get; set; } = new();
+    public PlaylistRole Role { get; set; }
 }
 
 public class MovieDto

@@ -65,6 +65,7 @@ public class PlaylistController : ControllerBase
         return Ok(new { playlist.Id, playlist.Name });
     }
 
+    [Authorize]
     [HttpPost("{playlistId}/movies/{tmdbId}")]
     public async Task<IActionResult> AddToPlaylist(int playlistId, int tmdbId)
     {
@@ -72,28 +73,40 @@ public class PlaylistController : ControllerBase
         if (userId == null) return Unauthorized();
 
         var playlist = await _context.Playlists
-            .FirstOrDefaultAsync(p => p.Id == playlistId && p.UserId == userId);
+            .FirstOrDefaultAsync(p =>
+                p.Id == playlistId &&
+                (
+                    p.UserId == userId ||
+                    _context.PlaylistMembers.Any(pm =>
+                        pm.PlaylistId == p.Id && pm.UserId == userId
+                    )
+                )
+            );
 
-        if (playlist == null) return NotFound("Playlist not found");
+        if (playlist == null)
+            return NotFound("Playlist not found");
 
-        bool canEdit = await _context.PlaylistMembers.AnyAsync(pm =>
-            pm.PlaylistId == playlistId &&
-            pm.UserId == userId &&
-            (pm.Role == PlaylistRole.Owner || pm.Role == PlaylistRole.Editor)
-        );
+        bool canEdit =
+            playlist.UserId == userId ||
+            await _context.PlaylistMembers.AnyAsync(pm =>
+                pm.PlaylistId == playlistId &&
+                pm.UserId == userId &&
+                pm.Role == PlaylistRole.Editor
+            );
 
-        if(!canEdit)
-            return Unauthorized();
+        if (!canEdit)
+            return Forbid();
 
         var movie = await _context.Movies.SingleOrDefaultAsync(m => m.TmdbId == tmdbId);
         if (movie == null)
             return NotFound("movie not found");
 
-        var exists = await _context.PlaylistValues.AnyAsync(pv =>
+        bool exists = await _context.PlaylistValues.AnyAsync(pv =>
             pv.PlaylistId == playlistId &&
             pv.MovieId == movie.Id);
 
-        if (exists) return BadRequest("Movie already in playlist");
+        if (exists)
+            return BadRequest("Movie already in playlist");
 
         _context.PlaylistValues.Add(new PlaylistValue
         {
@@ -104,6 +117,7 @@ public class PlaylistController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok();
     }
+
 
     [Authorize]
     [HttpGet("show-playlists")]
@@ -122,13 +136,18 @@ public class PlaylistController : ControllerBase
             {
                 p.Id,
                 p.Name,
-                IsOwner = p.UserId == userId
+                Role =
+                p.UserId == userId
+                    ? PlaylistRole.Owner
+                    : _context.PlaylistMembers
+                        .Where(pm => pm.PlaylistId == p.Id && pm.UserId == userId)
+                        .Select(pm => pm.Role)
+                        .FirstOrDefault()
             })
             .ToListAsync();
 
         return Ok(playlists);
     }
-
 
     [Authorize]
     [HttpGet("show-playlist-values/{playlistId}")]
@@ -138,12 +157,28 @@ public class PlaylistController : ControllerBase
         if (userId == null) return Unauthorized();
 
         var playlist = await _context.Playlists
-            .Where(p => p.Id == playlistId && p.UserId == userId)
+            .Where(p =>
+                p.Id == playlistId &&
+                (
+                    p.UserId == userId ||
+                    _context.PlaylistMembers.Any(pm =>
+                        pm.PlaylistId == p.Id && pm.UserId == userId
+                    )
+                )
+            )
             .Select(p => new PlaylistDetailsDto
             {
                 Id = p.Id,
                 Name = p.Name,
+                Role = p.UserId == userId
+                    ? PlaylistRole.Owner
+                    : _context.PlaylistMembers
+                        .Where(pm => pm.PlaylistId == p.Id && pm.UserId == userId)
+                        .Select(pm => pm.Role)
+                        .FirstOrDefault(),
+
                 Movies = _context.PlaylistValues
+                    .Select(pv => pv)
                     .Where(pv => pv.PlaylistId == p.Id)
                     .Select(pv => new MovieDto
                     {
@@ -160,6 +195,7 @@ public class PlaylistController : ControllerBase
 
         return Ok(playlist);
     }
+
 
     [Authorize]
     [HttpPost("{playlistId}/delete-from-playlist/{tmdbId}")]
@@ -225,6 +261,11 @@ public class PlaylistController : ControllerBase
             .Where(pv => pv.PlaylistId == dto.PlaylistId)
             .ToListAsync();
 
+        var playlistMembers = await _context.PlaylistMembers
+            .Where(pv => pv.PlaylistId == dto.PlaylistId)
+            .ToListAsync();
+
+        _context.PlaylistMembers.RemoveRange(playlistMembers);
         _context.PlaylistValues.RemoveRange(playlistValues);
         _context.Playlists.Remove(playlist);
 

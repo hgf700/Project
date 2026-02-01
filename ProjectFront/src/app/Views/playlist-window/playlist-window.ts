@@ -5,6 +5,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { PlaylistService } from '../../Services/PlaylistService';
 import { PlaylistAG } from '../../interfaces/playlist';
 import { PlaylistResultAG } from '../../interfaces/playlistResult';
+import { PlaylistRole} from '../../interfaces/playlistRole';
+
 import { SubSharePlaylistWindow } from '../sub-share-playlist-window/sub-share-playlist-window';
 
 @Component({
@@ -17,6 +19,7 @@ import { SubSharePlaylistWindow } from '../sub-share-playlist-window/sub-share-p
 export class PlaylistWindow implements OnInit {
   playlists: PlaylistAG[] = [];
   selectedPlaylist?: PlaylistResultAG;
+  PlaylistRole = PlaylistRole;
   loading = false;
 
   newPlaylistName = '';

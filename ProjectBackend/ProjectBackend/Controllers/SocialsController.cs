@@ -47,6 +47,15 @@ public class SocialsController : ControllerBase
         var alreadyMember = await _context.PlaylistMembers
             .AnyAsync(pm => pm.PlaylistId == playlistId && pm.UserId == dto.friendId);
 
+        bool canEdit = await _context.PlaylistMembers.AnyAsync(pm =>
+            pm.PlaylistId == playlistId &&
+            pm.UserId == userId &&
+            (pm.Role == PlaylistRole.Owner)
+        );
+
+        if (!canEdit)
+            return Unauthorized();
+
         if (alreadyMember)
             return BadRequest("User is already a member of this playlist");
 

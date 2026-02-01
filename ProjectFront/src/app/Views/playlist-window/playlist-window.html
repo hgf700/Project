@@ -10,7 +10,8 @@
         <button (click)="showSelectedPlaylist(p.id)" [disabled]="loading">
           Pokaż
         </button>
-        <button (click)="deletePlaylist(p.id)" [disabled]="loading">
+
+        <button *ngIf="p.role === PlaylistRole.Owner" (click)="deletePlaylist(p.id)" [disabled]="loading" >
           deletePlaylist
         </button>
       </li>
@@ -24,7 +25,7 @@
   <!-- SZCZEGÓŁY PLAYLISTY -->
   <section *ngIf="selectedPlaylist && !loading" class="playlist-details">
     <h3>{{ selectedPlaylist.name }}</h3>
-    <button
+        <button *ngIf="selectedPlaylist.role === PlaylistRole.Owner"
           (click)="openShareDialog(selectedPlaylist.id)"
           [disabled]="loading">
           dodaj znajomego
@@ -37,7 +38,8 @@
     <ul *ngIf="selectedPlaylist.movies.length>0">
       <li *ngFor="let movie of selectedPlaylist.movies">
         {{ movie.title }}
-        <button
+        <button *ngIf="selectedPlaylist.role === PlaylistRole.Owner ||
+            selectedPlaylist.role === PlaylistRole.Editor "
           (click)="deleteFromPlaylist(selectedPlaylist.id, movie.tmdbId)"
           [disabled]="loading">
           Usuń
@@ -64,8 +66,7 @@
     <div class="create-actions">
       <button
         (click)="createPlaylist()"
-        [disabled]="loading || !newPlaylistName.trim()"
-      >
+        [disabled]="loading || !newPlaylistName.trim()">
         Utwórz
       </button>
 
