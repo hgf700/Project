@@ -80,7 +80,7 @@ export class PlaylistWindow implements OnInit {
 
     this.playlistService.deleteFromPlaylist(playlistId, movieId).subscribe({
       next: () => {
-        this.loadPlaylists();
+        this.showSelectedPlaylist(playlistId);
       },
       error: (err) => {
         console.error(err);

@@ -205,30 +205,44 @@ public class PlaylistController : ControllerBase
         if (userId == null) return Unauthorized();
 
         var playlist = await _context.Playlists
-            .FirstOrDefaultAsync(p => p.Id == playlistId && p.UserId == userId);
-        if (playlist == null) return NotFound("Playlist not found");
+            .FirstOrDefaultAsync(p =>
+                p.Id == playlistId &&
+                (
+                    p.UserId == userId ||
+                    _context.PlaylistMembers.Any(pm =>
+                        pm.PlaylistId == p.Id && pm.UserId == userId
+                    )
+                )
+            );
 
-        bool canEdit = await _context.PlaylistMembers.AnyAsync(pm =>
-            pm.PlaylistId == playlistId &&
-            pm.UserId == userId &&
-            (pm.Role == PlaylistRole.Owner || pm.Role == PlaylistRole.Editor)
-        );
+        if (playlist == null)
+            return NotFound("Playlist not found");
+
+        bool canEdit =
+            playlist.UserId == userId ||
+            await _context.PlaylistMembers.AnyAsync(pm =>
+                pm.PlaylistId == playlistId &&
+                pm.UserId == userId &&
+                pm.Role == PlaylistRole.Editor
+            );
 
         if (!canEdit)
-            return Unauthorized();
+            return Forbid();
 
         var movie = await _context.Movies.SingleOrDefaultAsync(m => m.TmdbId == tmdbId);
         if (movie == null)
             return NotFound("movie not found");
 
-        var exists = await _context.PlaylistValues.SingleOrDefaultAsync(pv =>
-            pv.PlaylistId == playlistId &&
-            pv.MovieId == movie.Id);
+        var playlistValue = await _context.PlaylistValues
+            .SingleOrDefaultAsync(pv =>
+                pv.PlaylistId == playlistId &&
+                pv.MovieId == movie.Id
+            );
 
-        if (exists == null)
+        if (playlistValue == null)
             return NotFound("Movie not in playlist");
 
-        _context.PlaylistValues.Remove(exists);
+        _context.PlaylistValues.Remove(playlistValue);
         await _context.SaveChangesAsync();
 
         return NoContent();
