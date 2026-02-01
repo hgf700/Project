@@ -23,4 +23,12 @@ export class ManageSocialService {
       { headers: getAuthHeaders() },
     );
   }
+
+  stopSharePlaylsitPublically(playlistId: number) {
+    return this.http.put(
+      `${this.apiurlSocial}/change-to-private/${playlistId}`,
+      {},
+      { headers: getAuthHeaders() },
+    );
+  }
 }

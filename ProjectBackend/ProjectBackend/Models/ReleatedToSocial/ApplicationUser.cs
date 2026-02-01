@@ -5,5 +5,7 @@ namespace ProjectBackend.Models.ReleatedToSocial;
 
 public class ApplicationUser : IdentityUser
 {
-    //string nickname { get; set; }
+    public ICollection<UserComment> UserCommentsWritten { get; set; }
+    public ICollection<UserComment> UserCommentsReceived { get; set; }
+    public ICollection<PlaylistComment> PlaylistComments { get; set; }
 }

@@ -20,9 +20,6 @@ public class UserMediaStatus
 
     public int MovieId { get; set; }
     public Movie Movie { get; set; }
-
     public RatingValue Rating { get; set; }  
-    //public bool IsInPlaylist { get; set; }    
-
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

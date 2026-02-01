@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Core.Types;
 using ProjectBackend.Models.ReleatedToMovie;
@@ -17,15 +18,19 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<MovieGenre> MovieGenres { get; set; }
     public DbSet<Genre> Genres { get; set; }
     public DbSet<Playlist> Playlists { get; set; }
+    public DbSet<PlaylistComment> PlaylistComments { get; set; }
     public DbSet<PlaylistValue> PlaylistValues{ get; set; }
     public DbSet<PlaylistMember> PlaylistMembers { get; set; }
-
     public DbSet<UserMediaStatus> UserMediaStatuses { get; set; }
+    public DbSet<UserComment> UserComments { get; set; }
     public DbSet<Friend> Friends { get; set; }
-
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<CommentBase>()
+            .UseTphMappingStrategy();
 
         modelBuilder.Entity<MovieGenre>()
             .HasKey(mg => new { mg.MovieId, mg.GenreId });
@@ -54,6 +59,18 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .WithMany()
             .HasForeignKey(lm => lm.MovieId);
 
+        modelBuilder.Entity<UserComment>()
+            .HasOne(c => c.User)
+            .WithMany(u => u.UserCommentsWritten)
+            .HasForeignKey(c => c.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<UserComment>()
+            .HasOne(c => c.TargetUser)
+            .WithMany(u => u.UserCommentsReceived)
+            .HasForeignKey(c => c.TargetUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         modelBuilder.Entity<PlaylistValue>()
             .HasKey(pv => new { pv.PlaylistId, pv.MovieId });
 
@@ -67,6 +84,18 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasOne(pv => pv.Movie)
             .WithMany()
             .HasForeignKey(pv => pv.MovieId);
+
+        modelBuilder.Entity<PlaylistComment>()
+           .HasOne(c => c.User)
+           .WithMany(u => u.PlaylistComments)
+           .HasForeignKey(c => c.UserId)
+           .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<PlaylistComment>()
+            .HasOne(c => c.Playlist)
+            .WithMany(p => p.Comments)
+            .HasForeignKey(c => c.PlaylistId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<PlaylistMember>()
             .HasKey(pm => new { pm.PlaylistId, pm.UserId });
@@ -92,6 +121,18 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .WithMany()
             .HasForeignKey(f => f.FriendId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        //index
+        modelBuilder.Entity<PlaylistComment>()
+            .HasIndex(c => c.PlaylistId);
+
+        modelBuilder.Entity<UserComment>()
+            .HasIndex(c => c.TargetUserId);
+
+        modelBuilder.Entity<Friend>()
+            .HasIndex(f => new { f.UserId, f.FriendId })
+            .IsUnique();
+
     }
 
 }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { PlaylistService } from '../../Services/PlaylistService';
-import { ManageSocialService } from '../../Services/ManageSocialService';
+import { ManageSocialService } from '../../Services/SocialManageService';
 import { PlaylistAG } from '../../interfaces/playlist';
 import { PlaylistResultAG } from '../../interfaces/playlistResult';
 import { PlaylistRole } from '../../enum/playlistRole';
@@ -118,8 +118,20 @@ export class PlaylistWindow implements OnInit {
     });
   }
 
-  sharePublically(playlistId: number) {
+  sharePlaylistPublically(playlistId: number) {
     this.socialService.sharePlaylistPublically(playlistId).subscribe({
+      next: () => {
+        this.loadPlaylists();
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      },
+    });
+  }
+
+  stopSharePlaylsitPublically(playlistId: number) {
+    this.socialService.stopSharePlaylsitPublically(playlistId).subscribe({
       next: () => {
         this.loadPlaylists();
       },

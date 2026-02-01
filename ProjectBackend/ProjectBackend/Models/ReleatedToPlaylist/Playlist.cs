@@ -11,7 +11,9 @@ public class Playlist
 
     public string UserId { get; set; }
     public bool IsPublic { get; set; }
+    public int Likes { get; set; }
     public ApplicationUser User { get; set; }
+    public ICollection<PlaylistComment> Comments { get; set; }
     public ICollection<PlaylistMember> Members { get; set; }
 
 }

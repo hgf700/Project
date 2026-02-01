@@ -6,7 +6,7 @@ import {
 } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { FriendService } from '../../Services/FriendService';
-import { ManageSocialService } from '../../Services/ManageSocialService';
+import { ManageSocialService } from '../../Services/SocialManageService';
 import { FriendAG } from '../../interfaces/friend';
 
 @Component({

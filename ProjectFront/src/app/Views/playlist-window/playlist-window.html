@@ -39,10 +39,16 @@
 
     <button
       *ngIf="selectedPlaylist.role === playlistRole.Owner"
-      (click)="sharePublically(selectedPlaylist.id)"
-      [disabled]="loading"
-    >
+      (click)="sharePlaylistPublically(selectedPlaylist.id)"
+      [disabled]="loading">
       udostepnij publicznie
+    </button>
+
+    <button
+      *ngIf="selectedPlaylist.role === playlistRole.Owner"
+      (click)="stopSharePlaylsitPublically(selectedPlaylist.id)"
+      [disabled]="loading">
+      ustaw prywatnie
     </button>
 
     <p *ngIf="selectedPlaylist.movies.length === 0">
