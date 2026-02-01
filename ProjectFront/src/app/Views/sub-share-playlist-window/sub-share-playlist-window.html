@@ -5,7 +5,7 @@
     <li *ngFor="let f of friends">
       <span class="friend-name">{{ f.email }}</span>
       <button (click)="sharePlaylistToFriends(f.friendId)" [disabled]="loading">
-          Dodaj
+        Dodaj
       </button>
     </li>
   </ul>

@@ -11,6 +11,6 @@ export class PhotoService {
   getImages() {
     return this.http.get<
       { posterPath: string | null; backdropPath: string | null }[]
-    >(this.apiUrl, {  headers: getAuthHeaders() });
+    >(this.apiUrl, { headers: getAuthHeaders() });
   }
 }

@@ -57,12 +57,12 @@ export class PlaylistService {
     );
   }
 
-  deletePlaylist(playlistId: number){
+  deletePlaylist(playlistId: number) {
     const token = localStorage.getItem('jwt');
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.post<void>(
       `${this.baseUrl}/delete-playlist`,
-      {playlistId},
+      { playlistId },
       { headers },
     );
   }

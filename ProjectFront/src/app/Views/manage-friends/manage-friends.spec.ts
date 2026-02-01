@@ -8,9 +8,8 @@ describe('ManageFriends', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ManageFriends]
-    })
-    .compileComponents();
+      imports: [ManageFriends],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ManageFriends);
     component = fixture.componentInstance;

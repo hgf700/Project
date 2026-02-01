@@ -11,7 +11,11 @@
           Pokaż
         </button>
 
-        <button *ngIf="p.role === PlaylistRole.Owner" (click)="deletePlaylist(p.id)" [disabled]="loading" >
+        <button
+          *ngIf="p.role === playlistRole.Owner"
+          (click)="deletePlaylist(p.id)"
+          [disabled]="loading"
+        >
           deletePlaylist
         </button>
       </li>
@@ -25,17 +29,21 @@
   <!-- SZCZEGÓŁY PLAYLISTY -->
   <section *ngIf="selectedPlaylist && !loading" class="playlist-details">
     <h3>{{ selectedPlaylist.name }}</h3>
-        <button *ngIf="selectedPlaylist.role === PlaylistRole.Owner"
-          (click)="openShareDialog(selectedPlaylist.id)"
-          [disabled]="loading">
-          dodaj znajomego
-        </button>
+    <button
+      *ngIf="selectedPlaylist.role === playlistRole.Owner"
+      (click)="openShareDialog(selectedPlaylist.id)"
+      [disabled]="loading"
+    >
+      dodaj znajomego
+    </button>
 
-        <button *ngIf="selectedPlaylist.role === PlaylistRole.Owner"
-          (click)="sharePublically(selectedPlaylist.id)"
-          [disabled]="loading">
-          udostepnij publicznie
-        </button>
+    <button
+      *ngIf="selectedPlaylist.role === playlistRole.Owner"
+      (click)="sharePublically(selectedPlaylist.id)"
+      [disabled]="loading"
+    >
+      udostepnij publicznie
+    </button>
 
     <p *ngIf="selectedPlaylist.movies.length === 0">
       Brak filmów w tej playliście
@@ -44,10 +52,12 @@
     <ul *ngIf="selectedPlaylist.movies.length>0">
       <li *ngFor="let movie of selectedPlaylist.movies">
         {{ movie.title }}
-        <button *ngIf="selectedPlaylist.role === PlaylistRole.Owner ||
-            selectedPlaylist.role === PlaylistRole.Editor "
+        <button
+          *ngIf="selectedPlaylist.role === playlistRole.Owner ||
+            selectedPlaylist.role === playlistRole.Editor "
           (click)="deleteFromPlaylist(selectedPlaylist.id, movie.tmdbId)"
-          [disabled]="loading">
+          [disabled]="loading"
+        >
           Usuń
         </button>
       </li>
@@ -72,10 +82,10 @@
     <div class="create-actions">
       <button
         (click)="createPlaylist()"
-        [disabled]="loading || !newPlaylistName.trim()">
+        [disabled]="loading || !newPlaylistName.trim()"
+      >
         Utwórz
       </button>
-
     </div>
   </section>
 </main>

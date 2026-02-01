@@ -6,26 +6,27 @@ import { PlaylistService } from '../../Services/PlaylistService';
 import { ManageSocialService } from '../../Services/ManageSocialService';
 import { PlaylistAG } from '../../interfaces/playlist';
 import { PlaylistResultAG } from '../../interfaces/playlistResult';
-import { PlaylistRole} from '../../enum/playlistRole';
+import { PlaylistRole } from '../../enum/playlistRole';
 
 import { SubSharePlaylistWindow } from '../sub-share-playlist-window/sub-share-playlist-window';
 
 @Component({
   selector: 'app-playlist-window',
   standalone: true,
-  imports: [CommonModule, FormsModule,MatDialogModule],
+  imports: [CommonModule, FormsModule, MatDialogModule],
   templateUrl: './playlist-window.html',
   styleUrl: './playlist-window.css',
 })
 export class PlaylistWindow implements OnInit {
   playlists: PlaylistAG[] = [];
   selectedPlaylist?: PlaylistResultAG;
-  PlaylistRole = PlaylistRole;
+  playlistRole = PlaylistRole;
   loading = false;
 
   newPlaylistName = '';
 
-  constructor(private playlistService: PlaylistService,
+  constructor(
+    private playlistService: PlaylistService,
     private socialService: ManageSocialService,
     private dialog: MatDialog,
   ) {}
@@ -90,8 +91,8 @@ export class PlaylistWindow implements OnInit {
       },
     });
   }
-  
-  deletePlaylist(playlistId: number){
+
+  deletePlaylist(playlistId: number) {
     this.playlistService.deletePlaylist(playlistId).subscribe({
       next: () => {
         this.loadPlaylists();
@@ -104,20 +105,20 @@ export class PlaylistWindow implements OnInit {
   }
 
   openShareDialog(playlistId: number) {
-      const dialogRef = this.dialog.open(SubSharePlaylistWindow, {
-        width: '600px',
-        height: '400px',
-        data: {
-          playlistId
-        },
-      });
-  
-      dialogRef.afterClosed().subscribe((result) => {
-        console.log('Dialog closed:', result);
-      });
-    }
+    const dialogRef = this.dialog.open(SubSharePlaylistWindow, {
+      width: '600px',
+      height: '400px',
+      data: {
+        playlistId,
+      },
+    });
 
-  sharePublically(playlistId: number){
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('Dialog closed:', result);
+    });
+  }
+
+  sharePublically(playlistId: number) {
     this.socialService.sharePlaylistPublically(playlistId).subscribe({
       next: () => {
         this.loadPlaylists();
@@ -128,5 +129,4 @@ export class PlaylistWindow implements OnInit {
       },
     });
   }
-
 }

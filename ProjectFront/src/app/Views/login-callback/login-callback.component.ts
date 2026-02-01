@@ -14,9 +14,9 @@ import { CurrentUserAG } from '../../interfaces/currentUser';
 })
 export class LoginCallbackComponent implements OnInit {
   currentUser?: CurrentUserAG;
-  
+
   constructor(
-    private currentUserService:CurrentUserService,
+    private currentUserService: CurrentUserService,
     private route: ActivatedRoute,
     private router: Router,
   ) {}
@@ -42,33 +42,31 @@ export class LoginCallbackComponent implements OnInit {
   }
 
   loadCurrentUser() {
-  this.currentUserService.getCurrentUser().subscribe({
-    next: (user) => {
-      console.log('RESPONSE /me:', user);
-      this.currentUser = user;
-    },
-    error: (err) => {
-      console.error('ERROR /me:', err);
-    }
-  });
-}
-
+    this.currentUserService.getCurrentUser().subscribe({
+      next: (user) => {
+        console.log('RESPONSE /me:', user);
+        this.currentUser = user;
+      },
+      error: (err) => {
+        console.error('ERROR /me:', err);
+      },
+    });
+  }
 
   ngOnInit(): void {
-  const tokenFromUrl = this.route.snapshot.queryParamMap.get('token');
-  const tokenFromStorage = localStorage.getItem('jwt');
+    const tokenFromUrl = this.route.snapshot.queryParamMap.get('token');
+    const tokenFromStorage = localStorage.getItem('jwt');
 
-  if (tokenFromUrl) {
-    localStorage.setItem('jwt', tokenFromUrl);
-    console.log('JWT zapisany z URL');
+    if (tokenFromUrl) {
+      localStorage.setItem('jwt', tokenFromUrl);
+      console.log('JWT zapisany z URL');
+    }
+
+    if (!tokenFromUrl && !tokenFromStorage) {
+      console.error('Brak tokena – użytkownik niezalogowany');
+      return;
+    }
+
+    this.loadCurrentUser();
   }
-
-  if (!tokenFromUrl && !tokenFromStorage) {
-    console.error('Brak tokena – użytkownik niezalogowany');
-    return;
-  }
-
-  this.loadCurrentUser();
-}
-
 }

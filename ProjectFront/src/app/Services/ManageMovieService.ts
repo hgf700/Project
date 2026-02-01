@@ -12,7 +12,9 @@ export class ManageMovieService {
   getMovies() {
     const token = localStorage.getItem('jwt');
     const headers = { Authorization: `Bearer ${token}` };
-    return this.http.get<MovieAG[]>(`${this.apiurlMovies}/show-movies`, { headers });
+    return this.http.get<MovieAG[]>(`${this.apiurlMovies}/show-movies`, {
+      headers,
+    });
   }
 
   rateMovie(movieId: number, rating: number) {
@@ -26,7 +28,7 @@ export class ManageMovieService {
     );
   }
 
-  removeRateFromMedia(movieId: number){
+  removeRateFromMedia(movieId: number) {
     const token = localStorage.getItem('jwt');
     const headers = { Authorization: `Bearer ${token}` };
 

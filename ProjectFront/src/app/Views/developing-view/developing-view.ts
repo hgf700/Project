@@ -13,7 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-developing-view',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './developing-view.html',
   styleUrls: ['./developing-view.css'],
 })
@@ -40,12 +40,11 @@ export class DevelopingView {
     const email = this.developingLoginForm.value.email;
 
     this.devLogin.developingLogin(email).subscribe({
-  next: (res) => {
-    localStorage.setItem('jwt', res.token);
-    this.router.navigate(['/login-callback']); 
-  },
-  error: (err) => alert(err.error),
-});
-
+      next: (res) => {
+        localStorage.setItem('jwt', res.token);
+        this.router.navigate(['/login-callback']);
+      },
+      error: (err) => alert(err.error),
+    });
   }
 }

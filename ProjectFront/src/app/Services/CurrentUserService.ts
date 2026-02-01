@@ -10,9 +10,8 @@ export class CurrentUserService {
   constructor(private http: HttpClient) {}
 
   getCurrentUser() {
-  return this.http.get<CurrentUserAG>(
-    `${this.apiUrl}/me`,
-    { headers: getAuthHeaders() }
-  );
-}
+    return this.http.get<CurrentUserAG>(`${this.apiUrl}/me`, {
+      headers: getAuthHeaders(),
+    });
+  }
 }

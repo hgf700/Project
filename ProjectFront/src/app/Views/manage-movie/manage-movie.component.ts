@@ -52,8 +52,6 @@ export class ManageMovieComponent implements OnInit {
     });
   }
 
-  // selectedMovieTmdbId: number | null = null;
-
   AddToPlaylist(movieTmdbId: number) {
     const dialogRef = this.dialog.open(PlaylistSubWindowComponent, {
       width: '600px',
@@ -68,7 +66,7 @@ export class ManageMovieComponent implements OnInit {
     });
   }
 
-  removeRateFromMedia(movieId: number){
+  removeRateFromMedia(movieId: number) {
     this.managemovieService.removeRateFromMedia(movieId).subscribe({
       next: () => console.log('removeRateFromMedia'),
       error: (err) => console.error(err),

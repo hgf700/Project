@@ -8,10 +8,8 @@ export class DevelopingLoginService {
   constructor(private http: HttpClient) {}
 
   developingLogin(email: string) {
-  return this.http.post<{ token: string }>(
-    `${this.apiUrl}/dev-login`,
-    { email }
-  );
-}
-
+    return this.http.post<{ token: string }>(`${this.apiUrl}/dev-login`, {
+      email,
+    });
+  }
 }

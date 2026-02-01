@@ -9,7 +9,6 @@ import { PlaylistWindow } from '../Views/playlist-window/playlist-window';
 import { ManageFriends } from '../Views/manage-friends/manage-friends';
 import { DevelopingView } from '../Views/developing-view/developing-view';
 
-
 export const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login-callback', component: LoginCallbackComponent },
@@ -19,8 +18,6 @@ export const routes: Routes = [
   { path: 'playlist-window', component: PlaylistWindow },
   { path: 'manage-friends', component: ManageFriends },
   { path: 'developing-view', component: DevelopingView },
-
-
 ];
 
 @NgModule({

@@ -20,7 +20,6 @@ export class LoginComponent {
   }
 
   NormalLogin() {
-
     this.router.navigate(['/developing-view']);
   }
 }

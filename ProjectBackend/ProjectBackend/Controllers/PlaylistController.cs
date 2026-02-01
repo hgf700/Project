@@ -126,10 +126,10 @@ public class PlaylistController : ControllerBase
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
 
-        var playlists = await _context.Playlists
+        var playlistsQuery = _context.Playlists
             .Where(p =>
                 p.UserId == userId ||
-                p.IsPublic || 
+                p.IsPublic ||
                 _context.PlaylistMembers.Any(pm =>
                     pm.PlaylistId == p.Id && pm.UserId == userId)
             )
@@ -137,17 +137,25 @@ public class PlaylistController : ControllerBase
             {
                 p.Id,
                 p.Name,
-                Role =
-                p.UserId == userId ? PlaylistRole.Owner : 
-                _context.PlaylistMembers
-                    .Where(pm => pm.PlaylistId == p.Id && pm.UserId == userId)
-                    .Select(pm => pm.Role == PlaylistRole.Editor
-                        ? PlaylistRole.Editor
-                        : PlaylistRole.Viewer
-                        )
-                    .FirstOrDefault() ?? (p.IsPublic ? PlaylistRole.Viewer : (PlaylistRole?)null)
+                Role = p.UserId == userId
+                    ? PlaylistRole.Owner
+                    : _context.PlaylistMembers
+                        .Where(pm => pm.PlaylistId == p.Id && pm.UserId == userId)
+                        .Select(pm => pm.Role)
+                        .FirstOrDefault() // EFCore tu zwróci 0,1,2 albo default(PlaylistRole)
+            });
+
+        var playlists = playlistsQuery
+            .AsEnumerable() 
+            .Select(p => new
+            {
+                p.Id,
+                p.Name,
+                Role = Enum.IsDefined(typeof(PlaylistRole), p.Role) ? p.Role : PlaylistRole.Viewer
             })
-            .ToListAsync();
+            .ToList();
+
+
 
         return Ok(playlists);
     }

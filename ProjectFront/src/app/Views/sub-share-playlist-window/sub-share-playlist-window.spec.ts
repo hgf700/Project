@@ -8,9 +8,8 @@ describe('SubSharePlaylistWindow', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SubSharePlaylistWindow]
-    })
-    .compileComponents();
+      imports: [SubSharePlaylistWindow],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SubSharePlaylistWindow);
     component = fixture.componentInstance;

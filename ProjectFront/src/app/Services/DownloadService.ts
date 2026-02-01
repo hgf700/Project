@@ -18,6 +18,10 @@ export class DownloadService {
     const token = localStorage.getItem('jwt');
     const headers = { Authorization: `Bearer ${token}` };
 
-    return this.http.post(`${this.apiUrl}/add-from-tmdb?page=${page}`, {}, { headers });
+    return this.http.post(
+      `${this.apiUrl}/add-from-tmdb?page=${page}`,
+      {},
+      { headers },
+    );
   }
 }

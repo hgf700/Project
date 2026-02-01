@@ -4,11 +4,11 @@ export function getAuthHeaders(): HttpHeaders {
   // const token = localStorage.getItem('jwt') || '';
   const token = localStorage.getItem('jwt');
 
-if (!token) {
+  if (!token) {
     return new HttpHeaders();
   }
 
   return new HttpHeaders({
-    Authorization: `Bearer ${token}`
+    Authorization: `Bearer ${token}`,
   });
 }

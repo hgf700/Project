@@ -12,19 +12,19 @@ import { FriendAG } from '../../interfaces/friend';
 @Component({
   selector: 'app-sub-share-playlist-window',
   standalone: true,
-  imports: [CommonModule,MatDialogModule],
+  imports: [CommonModule, MatDialogModule],
   templateUrl: './sub-share-playlist-window.html',
   styleUrl: './sub-share-playlist-window.css',
 })
-export class SubSharePlaylistWindow implements OnInit{
+export class SubSharePlaylistWindow implements OnInit {
   loading = false;
   friends: FriendAG[] = [];
 
   constructor(
-      @Inject(MAT_DIALOG_DATA) public data: { playlistId: number },
-      private dialogRef: MatDialogRef<SubSharePlaylistWindow>,
-      private friendService: FriendService,
-      private manageSocialService: ManageSocialService
+    @Inject(MAT_DIALOG_DATA) public data: { playlistId: number },
+    private dialogRef: MatDialogRef<SubSharePlaylistWindow>,
+    private friendService: FriendService,
+    private manageSocialService: ManageSocialService,
   ) {}
 
   ngOnInit(): void {
@@ -46,18 +46,20 @@ export class SubSharePlaylistWindow implements OnInit{
     });
   }
 
-  sharePlaylistToFriends(friendId: string){
+  sharePlaylistToFriends(friendId: string) {
     const playlistId = this.data.playlistId;
-    this.manageSocialService.sharePlaylistWithFriends(playlistId, friendId).subscribe({
-      next: () => {
-        alert('Playlist udostępniona!');
-        this.dialogRef.close();
-      },
-      error: (err) => {
-        console.error(err);
-        alert('Nie udało się udostępnić playlisty');
-      },
-    });
+    this.manageSocialService
+      .sharePlaylistWithFriends(playlistId, friendId)
+      .subscribe({
+        next: () => {
+          alert('Playlist udostępniona!');
+          this.dialogRef.close();
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Nie udało się udostępnić playlisty');
+        },
+      });
   }
 
   close() {

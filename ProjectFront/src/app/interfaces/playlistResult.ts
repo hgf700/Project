@@ -1,5 +1,5 @@
 import { MovieAG } from './movie';
-import { PlaylistRole } from "../enum/playlistRole";
+import { PlaylistRole } from '../enum/playlistRole';
 
 export interface PlaylistResultAG {
   id: number;

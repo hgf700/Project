@@ -8,19 +8,19 @@ export class ManageSocialService {
 
   constructor(private http: HttpClient) {}
 
-  sharePlaylistWithFriends(playlistId: number, friendId: string){
+  sharePlaylistWithFriends(playlistId: number, friendId: string) {
     return this.http.post(
       `${this.apiurlSocial}/share-playlist/${playlistId}/members`,
       { friendId },
-      {  headers: getAuthHeaders() },
+      { headers: getAuthHeaders() },
     );
   }
 
-  sharePlaylistPublically(playlistId: number){
+  sharePlaylistPublically(playlistId: number) {
     return this.http.put(
       `${this.apiurlSocial}/change-to-public/${playlistId}`,
-      {  },
-      {  headers: getAuthHeaders() },
+      {},
+      { headers: getAuthHeaders() },
     );
   }
 }

@@ -54,7 +54,7 @@ export class ManageFriends {
     });
   }
 
-  deleteFriend(friendId: string){
+  deleteFriend(friendId: string) {
     this.friendService.deleteFriend(friendId).subscribe({
       next: () => {
         this.loadFriends();
@@ -62,8 +62,6 @@ export class ManageFriends {
       error: (err) => {
         console.error(err);
       },
-    })
+    });
   }
-
-  
 }
