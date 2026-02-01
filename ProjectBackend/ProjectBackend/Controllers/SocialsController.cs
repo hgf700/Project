@@ -134,4 +134,59 @@ public class SocialsController : ControllerBase
         return Ok(playlist);
     }
 
+    [HttpGet("show-friends")]
+    public async Task<IActionResult> ShowFriends()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
+
+        var UserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+        var currentUser = await _userManager.FindByEmailAsync(UserEmail);
+
+        if (currentUser == null) return Unauthorized();
+
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpPost("write-profile-message")]
+    public async Task<IActionResult> WriteProfileMessage(string targetUserId, [FromBody] ProfileMessageDto dto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
+
+        if (userId == targetUserId)
+            return BadRequest("Nie możesz napisać komentarza do samego siebie.");
+
+        var targetUserExists = await _userManager.FindByIdAsync(targetUserId);
+
+        if (targetUserExists==null)
+            return NotFound("Użytkownik nie istnieje.");
+
+        var comment = new UserComment
+        {
+            Text = dto.Text,
+            UserId = userId,
+            TargetUserId = targetUserId,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _context.Add(comment);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpPost("delete-profile-message")]
+    public async Task<IActionResult> DeleteProfileMessage(string targetUserId, [FromBody] ProfileMessageDto dto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
+
+
+
+        return Ok();
+    }
+
 }

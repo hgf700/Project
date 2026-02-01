@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component ,OnInit} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FriendService } from '../../Services/FriendService';
+import { ManageSocialService } from '../../Services/SocialManageService';
 import { FriendAG } from '../../interfaces/friend';
 
 @Component({
@@ -16,7 +17,7 @@ import { FriendAG } from '../../interfaces/friend';
   templateUrl: './manage-friends.html',
   styleUrl: './manage-friends.css',
 })
-export class ManageFriends {
+export class ManageFriends implements OnInit {
   addFriendForm!: FormGroup;
   submitted = false;
   friends: FriendAG[] = [];
@@ -24,6 +25,7 @@ export class ManageFriends {
   constructor(
     private fb: FormBuilder,
     private friendService: FriendService,
+    private manageSocialService: ManageSocialService,
   ) {
     // inicjalizacja formularza
     this.addFriendForm = this.fb.group({
@@ -31,15 +33,8 @@ export class ManageFriends {
     });
   }
 
-  onSubmit() {
-    this.submitted = true;
-
-    if (this.addFriendForm.invalid) return;
-
-    this.friendService.addFriend(this.addFriendForm.value.email).subscribe({
-      next: () => alert('Zaproszenie wysłane'),
-      error: (err) => alert(err.error),
-    });
+  ngOnInit(): void {
+    this.loadFriends();
   }
 
   loadFriends() {
@@ -51,6 +46,20 @@ export class ManageFriends {
         console.error(err);
         alert('Nie udało się pobrać znajomych');
       },
+    });
+  }
+
+  onSubmit() {
+    this.submitted = true;
+
+    if (this.addFriendForm.invalid) return;
+
+    this.friendService.addFriend(this.addFriendForm.value.email).subscribe({
+      next: () => {
+        alert('Zaproszenie wysłane')
+        this.loadFriends();
+      },
+      error: (err) => alert(err.error),
     });
   }
 
