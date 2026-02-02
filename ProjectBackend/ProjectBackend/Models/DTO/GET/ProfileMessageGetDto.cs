@@ -1,7 +1,8 @@
-﻿namespace ProjectBackend.Models.DTO;
+﻿namespace ProjectBackend.Models.DTO.GET;
 
-public class ProfileMessageDto
+public class ProfileMessageGetDto
 {
+    public int Id { get; set; }
     public string AuthorId { get; set; }
     public string AuthorEmail { get; set; }
     public DateTime CreatedAt { get; set; }

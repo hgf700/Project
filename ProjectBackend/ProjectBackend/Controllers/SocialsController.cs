@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
 using ProjectBackend.Models.DTO;
+using ProjectBackend.Models.DTO.GET;
+using ProjectBackend.Models.DTO.POST;
 using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
 using System.Security.Claims;
@@ -165,8 +167,9 @@ public class SocialsController : ControllerBase
 
         var comments = await _context.UserComments
             .Where(c => c.TargetUserId == targetUserId)
-            .Select(c => new ProfileMessageDto
+            .Select(c => new ProfileMessageGetDto
             {
+                Id=c.Id,
                 AuthorId = c.User.Id,        // autor komentarza
                 AuthorEmail = c.User.Email,  // autor komentarza
                 CreatedAt = c.CreatedAt,
@@ -179,7 +182,7 @@ public class SocialsController : ControllerBase
 
     [Authorize]
     [HttpPost("{targetUserId}/write-profile-message")]
-    public async Task<IActionResult> WriteProfileMessage(string targetUserId, [FromBody] ProfileMessageDto dto)
+    public async Task<IActionResult> WriteProfileMessage(string targetUserId, [FromBody] ProfileMessagePostDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
@@ -208,15 +211,26 @@ public class SocialsController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost("{targetUserId}/delete-profile-message")]
-    public async Task<IActionResult> DeleteProfileMessage(string targetUserId, int messageId)
+    [HttpDelete("delete-profile-message/{messageId}")]
+    public async Task<IActionResult> DeleteProfileMessage(int messageId)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
 
+        var comment = await _context.UserComments
+            .FirstOrDefaultAsync(c => c.Id == messageId);
 
+        if (comment == null)
+            return NotFound();
 
-        return Ok();
+        // 🔐 tylko autor LUB właściciel profilu
+        if (comment.UserId != userId && comment.TargetUserId != userId)
+            return Forbid();
+
+        _context.UserComments.Remove(comment);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
     }
 
 }

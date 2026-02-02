@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
-using ProjectBackend.Models.DTO;
+using ProjectBackend.Models.DTO.POST;
 using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
 using System.Security.Claims;
@@ -31,7 +31,7 @@ public class RatingController : ControllerBase
 
     [Authorize]
     [HttpPost("rate-movie")]
-    public async Task<IActionResult> RateMovieAsync(int movieId, [FromBody] RateMovieRateDto dto)
+    public async Task<IActionResult> RateMovieAsync(int movieId, [FromBody] RateMoviePostDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
@@ -66,7 +66,7 @@ public class RatingController : ControllerBase
 
     [Authorize]
     [HttpPost("remove-rate")]
-    public async Task<IActionResult> RemoveRate([FromBody] RemoveRateIdDto dto)
+    public async Task<IActionResult> RemoveRate([FromBody] RemoveRateIdPostDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();

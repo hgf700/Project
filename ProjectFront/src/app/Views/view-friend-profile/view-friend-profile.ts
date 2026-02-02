@@ -66,10 +66,24 @@ export class ViewFriendProfile implements OnInit{
       this.writeCommentForm.value.text
     ).subscribe({
       next: () => {
-        alert('Zaproszenie wysłane')
+        alert('wiadomosc wysłane')
         this.loadComments();
       },
       error: (err) => alert(err.error),
+    });
+  }
+
+  deleteProfileMessage(messageId:number){
+    this.loading = true;
+    this.socialManageService.deleteProfileMessage(messageId).subscribe({
+      next: () => {
+        this.loadComments();
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      },
     });
   }
 

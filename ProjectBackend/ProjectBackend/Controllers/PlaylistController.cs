@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
 using ProjectBackend.Models.DTO;
+using ProjectBackend.Models.DTO.POST;
 using ProjectBackend.Models.ReleatedToMovie;
 using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
@@ -32,7 +33,7 @@ public class PlaylistController : ControllerBase
 
     [Authorize]
     [HttpPost("create-playlist")]
-    public async Task<IActionResult> CreatePlaylist([FromBody] CreatePlaylistNameDto dto)
+    public async Task<IActionResult> CreatePlaylist([FromBody] CreatePlaylistNamePostDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
@@ -261,7 +262,7 @@ public class PlaylistController : ControllerBase
 
     [Authorize]
     [HttpPost("delete-playlist")]
-    public async Task<IActionResult> DeletePlaylist([FromBody] DeletePlaylistIdDto dto)
+    public async Task<IActionResult> DeletePlaylist([FromBody] DeletePlaylistIdPostDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)

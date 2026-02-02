@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ProjectBackend.Models.DTO;
+namespace ProjectBackend.Models.DTO.POST;
 
-public class AddFriendEmailDto
+public class AddFriendEmailPostDto
 {
     //[Required, EmailAddress]
     public string Email { get; init; }

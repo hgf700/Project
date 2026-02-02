@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
-using ProjectBackend.Models.DTO;
+using ProjectBackend.Models.DTO.POST;
 using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
 using System.ComponentModel.DataAnnotations;
@@ -35,7 +35,7 @@ public class FriendController : ControllerBase
 
     [Authorize]
     [HttpPost("add-friend")]
-    public async Task<IActionResult> AddFriend([FromBody] AddFriendEmailDto dto)
+    public async Task<IActionResult> AddFriend([FromBody] AddFriendEmailPostDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
@@ -102,7 +102,7 @@ public class FriendController : ControllerBase
 
     [Authorize]
     [HttpPost("delete-friend")]
-    public async Task<IActionResult> DeleteFriend([FromBody] DeleteFriendIdDto dto)
+    public async Task<IActionResult> DeleteFriend([FromBody] DeleteFriendIdPostDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)

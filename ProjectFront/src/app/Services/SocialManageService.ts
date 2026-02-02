@@ -51,4 +51,11 @@ export class SocialManageService {
     );
   }
 
+  deleteProfileMessage(messageId: number) {
+    return this.http.delete(
+      `${this.apiurlSocial}/delete-profile-message/${messageId}`,
+      { headers: getAuthHeaders() }
+    );
+  }
+
 }

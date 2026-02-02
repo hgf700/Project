@@ -1,6 +1,7 @@
 export interface profileMessageDto {
-  AuthorId: string;
-  AuthorEmail: string;
-  CreatedAt: Date;
-  Text: string;
+  id: number;
+  authorId: string;
+  authorEmail: string;
+  createdAt: Date;
+  text: string;
 }
