@@ -1,0 +1,19 @@
+<main class="main">
+  <form [formGroup]="writeCommentForm" (ngSubmit)="onSubmit()">
+    <label>text do znajomego</label>
+    <input type="text"/>
+
+    <button type="submit">text do znajomego</button>
+  </form>
+
+  <button (click)="loadComments()">loadComments</button>
+
+  <ul *ngIf="profileMessage.length > 0">
+    <li *ngFor="let pM of profileMessage">
+      {{ pM.AuthorEmail }}
+      {{ pM.Text }}
+      {{ pM.CreatedAt }}
+    </li>
+  </ul>
+  <p *ngIf="profileMessage.length === 0">Brak wiadomosci</p>
+</main>

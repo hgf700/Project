@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { PlaylistService } from '../../Services/PlaylistService';
-import { ManageSocialService } from '../../Services/SocialManageService';
+import { SocialManageService } from '../../Services/SocialManageService';
 import { PlaylistAG } from '../../interfaces/playlist';
 import { PlaylistResultAG } from '../../interfaces/playlistResult';
 import { PlaylistRole } from '../../enum/playlistRole';
@@ -27,7 +27,7 @@ export class PlaylistWindow implements OnInit {
 
   constructor(
     private playlistService: PlaylistService,
-    private socialService: ManageSocialService,
+    private socialService: SocialManageService,
     private dialog: MatDialog,
   ) {}
 

@@ -13,6 +13,7 @@ public abstract class CommentBase
 public class UserComment : CommentBase
 {
     public string TargetUserId { get; set; }
+    //public string Target { get; set; }
     public ApplicationUser TargetUser { get; set; }
 }
 

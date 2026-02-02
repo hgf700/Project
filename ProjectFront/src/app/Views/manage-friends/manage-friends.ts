@@ -5,15 +5,17 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FriendService } from '../../Services/FriendService';
-import { ManageSocialService } from '../../Services/SocialManageService';
+import { SocialManageService } from '../../Services/SocialManageService';
 import { FriendAG } from '../../interfaces/friend';
 
 @Component({
   selector: 'app-manage-friends',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,RouterModule],
   templateUrl: './manage-friends.html',
   styleUrl: './manage-friends.css',
 })
@@ -25,7 +27,8 @@ export class ManageFriends implements OnInit {
   constructor(
     private fb: FormBuilder,
     private friendService: FriendService,
-    private manageSocialService: ManageSocialService,
+    private manageSocialService: SocialManageService,
+    private router: Router,
   ) {
     // inicjalizacja formularza
     this.addFriendForm = this.fb.group({
@@ -73,4 +76,9 @@ export class ManageFriends implements OnInit {
       },
     });
   }
+
+  showFriendSocialAccount(friendId: string) {
+    this.router.navigate(['/view-friend-profile',friendId]);
+  }
+  
 }

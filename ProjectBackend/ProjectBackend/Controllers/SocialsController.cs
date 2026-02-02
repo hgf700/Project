@@ -149,7 +149,36 @@ public class SocialsController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost("write-profile-message")]
+    [HttpGet("users/{targetUserId}/view-profile-message")]
+    public async Task<IActionResult> GetProfileMessages(string targetUserId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
+
+        if (userId == targetUserId)
+            return BadRequest("Nie możesz napisać komentarza do samego siebie.");
+
+        var targetUserExists = await _userManager.FindByIdAsync(targetUserId);
+
+        if (targetUserExists == null)
+            return NotFound("Użytkownik nie istnieje.");
+
+        var comments = await _context.UserComments
+            .Where(c => c.TargetUserId == targetUserId)
+            .Select(c => new ProfileMessageDto
+            {
+                AuthorId = c.User.Id,        // autor komentarza
+                AuthorEmail = c.User.Email,  // autor komentarza
+                CreatedAt = c.CreatedAt,
+                Text = c.Text
+            })
+            .ToListAsync();
+
+        return Ok(comments);
+    }
+
+    [Authorize]
+    [HttpPost("{targetUserId}/write-profile-message")]
     public async Task<IActionResult> WriteProfileMessage(string targetUserId, [FromBody] ProfileMessageDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -165,11 +194,12 @@ public class SocialsController : ControllerBase
 
         var comment = new UserComment
         {
-            Text = dto.Text,
-            UserId = userId,
+            UserId = userId,           
             TargetUserId = targetUserId,
-            CreatedAt = DateTime.UtcNow
+            Text = dto.Text,
+            CreatedAt = DateTime.UtcNow,
         };
+
 
         _context.Add(comment);
         await _context.SaveChangesAsync();
@@ -178,8 +208,8 @@ public class SocialsController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost("delete-profile-message")]
-    public async Task<IActionResult> DeleteProfileMessage(string targetUserId, [FromBody] ProfileMessageDto dto)
+    [HttpPost("{targetUserId}/delete-profile-message")]
+    public async Task<IActionResult> DeleteProfileMessage(string targetUserId, int messageId)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();

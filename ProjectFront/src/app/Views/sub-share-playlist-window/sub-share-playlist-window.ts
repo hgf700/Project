@@ -6,7 +6,7 @@ import {
 } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { FriendService } from '../../Services/FriendService';
-import { ManageSocialService } from '../../Services/SocialManageService';
+import { SocialManageService } from '../../Services/SocialManageService';
 import { FriendAG } from '../../interfaces/friend';
 
 @Component({
@@ -24,7 +24,7 @@ export class SubSharePlaylistWindow implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { playlistId: number },
     private dialogRef: MatDialogRef<SubSharePlaylistWindow>,
     private friendService: FriendService,
-    private manageSocialService: ManageSocialService,
+    private manageSocialService: SocialManageService,
   ) {}
 
   ngOnInit(): void {
