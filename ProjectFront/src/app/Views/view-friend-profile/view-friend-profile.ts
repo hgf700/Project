@@ -87,4 +87,11 @@ export class ViewFriendProfile implements OnInit{
     });
   }
 
+  followFriend(){
+
+  }
+  
+  unfollowFriend(){
+
+  }
 }

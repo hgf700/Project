@@ -21,9 +21,13 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<PlaylistComment> PlaylistComments { get; set; }
     public DbSet<PlaylistValue> PlaylistValues{ get; set; }
     public DbSet<PlaylistMember> PlaylistMembers { get; set; }
+    public DbSet<PlaylistLike> PlaylistLikes { get; set; }
+    
     public DbSet<UserMediaStatus> UserMediaStatuses { get; set; }
     public DbSet<UserComment> UserComments { get; set; }
+    public DbSet<UserFollow> UserFollows { get; set; }
     public DbSet<Friend> Friends { get; set; }
+
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -70,6 +74,36 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(u => u.UserCommentsReceived)
             .HasForeignKey(c => c.TargetUserId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<UserFollow>()
+            .HasKey(uf => new { uf.UserId, uf.TargetUserId });
+
+        modelBuilder.Entity<UserFollow>()
+            .HasOne(uf => uf.User)
+            .WithMany(u => u.Following) // zakładamy ICollection<UserFollow> Following w ApplicationUser
+            .HasForeignKey(uf => uf.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<UserFollow>()
+            .HasOne(uf => uf.TargetUser)
+            .WithMany(u => u.Followers) // zakładamy ICollection<UserFollow> Followers w ApplicationUser
+            .HasForeignKey(uf => uf.TargetUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<PlaylistLike>()
+            .HasKey(pl => new { pl.PlaylistId, pl.UserId }); 
+
+        modelBuilder.Entity<PlaylistLike>()
+            .HasOne(pl => pl.Playlist)
+            .WithMany(p => p.Likes) // playlista ma kolekcję lajków
+            .HasForeignKey(pl => pl.PlaylistId)
+            .OnDelete(DeleteBehavior.Cascade); // jeśli usuniesz playlistę, jej lajki też znikną
+
+        modelBuilder.Entity<PlaylistLike>()
+            .HasOne(pl => pl.User)
+            .WithMany(u => u.LikedPlaylists) // user ma kolekcję polubionych playlist
+            .HasForeignKey(pl => pl.UserId)
+            .OnDelete(DeleteBehavior.Cascade); // jeśli usuniesz usera, jego lajki też znikną
 
         modelBuilder.Entity<PlaylistValue>()
             .HasKey(pv => new { pv.PlaylistId, pv.MovieId });

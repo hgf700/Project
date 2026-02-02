@@ -8,6 +8,10 @@
   </form>
 
   <button (click)="loadComments()">loadComments</button>
+  <button (click)="followFriend()">followFriend</button>
+  <button (click)="unfollowFriend()">followFriend</button>
+
+
 
   <ul *ngIf="profileMessage.length > 0">
     <li *ngFor="let pM of profileMessage">
