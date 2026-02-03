@@ -9,7 +9,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FriendService } from '../../Services/FriendService';
-import { SocialManageService } from '../../Services/SocialManageService';
 import { FriendAG } from '../../interfaces/friend';
 
 @Component({
@@ -27,7 +26,6 @@ export class ManageFriends implements OnInit {
   constructor(
     private fb: FormBuilder,
     private friendService: FriendService,
-    private manageSocialService: SocialManageService,
     private router: Router,
   ) {
     // inicjalizacja formularza

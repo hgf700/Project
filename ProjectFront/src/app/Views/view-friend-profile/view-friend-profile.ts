@@ -8,7 +8,7 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { SocialManageService } from '../../Services/SocialManageService';
+import { ProfileMessageService } from '../../Services/ProfileMessageService';
 import { profileMessageDto } from '../../Dto/profileMessageDto';
 
 @Component({
@@ -28,7 +28,9 @@ export class ViewFriendProfile implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private socialManageService: SocialManageService,
+    private profileMessageServ: ProfileMessageService,
+
+    
   ) {
     this.writeCommentForm = this.fb.group({
       text: [''],
@@ -44,7 +46,7 @@ export class ViewFriendProfile implements OnInit {
 
   loadComments() {
     this.loading = true;
-    this.socialManageService.getProfileMessage(this.friendId).subscribe({
+    this.profileMessageServ.getProfileMessage(this.friendId).subscribe({
       next: (value) => {
         this.profileMessage = value;
         this.loading = false;
@@ -61,7 +63,7 @@ export class ViewFriendProfile implements OnInit {
 
     if (this.writeCommentForm.invalid) return;
 
-    this.socialManageService
+    this.profileMessageServ
       .writeProfileMessage(this.friendId, this.writeCommentForm.value.text)
       .subscribe({
         next: () => {
@@ -74,7 +76,7 @@ export class ViewFriendProfile implements OnInit {
 
   deleteProfileMessage(messageId: number) {
     this.loading = true;
-    this.socialManageService.deleteProfileMessage(messageId).subscribe({
+    this.profileMessageServ.deleteProfileMessage(messageId).subscribe({
       next: () => {
         this.loadComments();
         this.loading = false;

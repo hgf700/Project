@@ -8,6 +8,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { PlaylistService } from '../../Services/PlaylistService';
 import { PlaylistAG } from '../../interfaces/playlist';
+import { PlaylistValuesService } from '../../Services/PlaylistValuesService';
 
 type ViewMode = 'list' | 'create';
 
@@ -29,6 +30,7 @@ export class PlaylistSubWindowComponent implements OnInit {
     private playlistService: PlaylistService,
     @Inject(MAT_DIALOG_DATA) public data: { tmdbId: number },
     private dialogRef: MatDialogRef<PlaylistSubWindowComponent>,
+    private playlistValueService: PlaylistValuesService,
   ) {}
 
   // 🔹 lifecycle
@@ -84,7 +86,7 @@ export class PlaylistSubWindowComponent implements OnInit {
     this.selectedPlaylistName = playlistName;
     this.loading = true;
 
-    this.playlistService
+    this.playlistValueService
       .addMovieToPlaylist(playlistId, this.data.tmdbId)
       .subscribe({
         next: () => {

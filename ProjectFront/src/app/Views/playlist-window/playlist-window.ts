@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { PlaylistService } from '../../Services/PlaylistService';
-import { SocialManageService } from '../../Services/SocialManageService';
+import { PlaylistValuesService } from '../../Services/PlaylistValuesService';
+import { SharePlaylistPublically } from '../../Services/SharePlaylistPublically';
 import { PlaylistAG } from '../../interfaces/playlist';
 import { PlaylistResultAG } from '../../interfaces/playlistResult';
 import { PlaylistRole } from '../../enum/playlistRole';
@@ -27,7 +28,10 @@ export class PlaylistWindow implements OnInit {
 
   constructor(
     private playlistService: PlaylistService,
-    private socialService: SocialManageService,
+    private playlistValueService: PlaylistValuesService,
+    private sharePlaylistPub: SharePlaylistPublically,
+
+    
     private dialog: MatDialog,
   ) {}
 
@@ -67,7 +71,7 @@ export class PlaylistWindow implements OnInit {
   showSelectedPlaylist(playlistId: number) {
     this.loading = true;
 
-    this.playlistService.showResultFromPlaylist(playlistId).subscribe({
+    this.playlistValueService.showResultFromPlaylist(playlistId).subscribe({
       next: (value) => {
         this.selectedPlaylist = value;
         this.loading = false;
@@ -81,7 +85,7 @@ export class PlaylistWindow implements OnInit {
   deleteFromPlaylist(playlistId: number, movieId: number) {
     this.loading = true;
 
-    this.playlistService.deleteFromPlaylist(playlistId, movieId).subscribe({
+    this.playlistValueService.deleteFromPlaylist(playlistId, movieId).subscribe({
       next: () => {
         this.showSelectedPlaylist(playlistId);
       },
@@ -119,7 +123,7 @@ export class PlaylistWindow implements OnInit {
   }
 
   sharePlaylistPublically(playlistId: number) {
-    this.socialService.sharePlaylistPublically(playlistId).subscribe({
+    this.sharePlaylistPub.sharePlaylistPublically(playlistId).subscribe({
       next: () => {
         this.loadPlaylists();
       },
@@ -131,7 +135,7 @@ export class PlaylistWindow implements OnInit {
   }
 
   stopSharePlaylsitPublically(playlistId: number) {
-    this.socialService.stopSharePlaylsitPublically(playlistId).subscribe({
+    this.sharePlaylistPub.stopSharePlaylsitPublically(playlistId).subscribe({
       next: () => {
         this.loadPlaylists();
       },

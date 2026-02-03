@@ -6,7 +6,7 @@ import {
 } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { FriendService } from '../../Services/FriendService';
-import { SocialManageService } from '../../Services/SocialManageService';
+import { SharePlaylistToFriendsService } from '../../Services/SharePlaylistToFriendsService';
 import { FriendAG } from '../../interfaces/friend';
 
 @Component({
@@ -24,7 +24,9 @@ export class SubSharePlaylistWindow implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { playlistId: number },
     private dialogRef: MatDialogRef<SubSharePlaylistWindow>,
     private friendService: FriendService,
-    private manageSocialService: SocialManageService,
+    private sharePlaylistToFriend: SharePlaylistToFriendsService,
+
+    
   ) {}
 
   ngOnInit(): void {
@@ -48,7 +50,7 @@ export class SubSharePlaylistWindow implements OnInit {
 
   sharePlaylistToFriends(friendId: string) {
     const playlistId = this.data.playlistId;
-    this.manageSocialService
+    this.sharePlaylistToFriend
       .sharePlaylistWithFriends(playlistId, friendId)
       .subscribe({
         next: () => {
