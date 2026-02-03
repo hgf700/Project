@@ -1,6 +1,6 @@
-﻿namespace ProjectBackend.Models.DTO.GET;
+﻿namespace ProjectBackend.Models.DTO.RelatedToMovies;
 
-public class UserRatedMedia
+public class getUserRatedMedia
 {
     public int PlaylistId { get; set; }
     public string UserId { get; set; }

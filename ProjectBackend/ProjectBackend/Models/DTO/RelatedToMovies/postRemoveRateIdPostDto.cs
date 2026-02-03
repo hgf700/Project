@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ProjectBackend.Models.DTO.POST;
+namespace ProjectBackend.Models.DTO.RelatedToMovies;
 
-public class RemoveRateIdPostDto
+public class postRemoveRateIdPostDto
 {
     [Required]
     [Range(1, int.MaxValue)]

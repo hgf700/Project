@@ -1,4 +1,4 @@
-﻿namespace ProjectBackend.Models.DTO.POST;
+﻿namespace ProjectBackend.Models.DTO.RelatedToPlaylist;
 
 public class SharePlaylistIdDto
 {

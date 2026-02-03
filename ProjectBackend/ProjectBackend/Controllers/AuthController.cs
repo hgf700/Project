@@ -9,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using ProjectBackend.DB;
 using ProjectBackend.ExtraTools;
-using ProjectBackend.Models.DTO.POST;
+using ProjectBackend.Models.DTO;
 using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
 using Sprache;

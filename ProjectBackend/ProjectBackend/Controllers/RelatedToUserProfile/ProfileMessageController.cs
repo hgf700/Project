@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
-using ProjectBackend.Models.DTO.GET;
-using ProjectBackend.Models.DTO.POST;
+using ProjectBackend.Models.DTO.RelatedToUserProfile;
 using ProjectBackend.Models.ReleatedToSocial;
 using System.Security.Claims;
 
@@ -43,7 +42,7 @@ public class ProfileMessageController : ControllerBase
 
         var comments = await _context.UserComments
             .Where(c => c.TargetUserId == targetUserId)
-            .Select(c => new ProfileMessageGetDto
+            .Select(c => new getProfileMessageDto
             {
                 Id = c.Id,
                 AuthorId = c.User.Id,        // autor komentarza
@@ -58,7 +57,7 @@ public class ProfileMessageController : ControllerBase
 
     [Authorize]
     [HttpPost("{targetUserId}/write-profile-message")]
-    public async Task<IActionResult> WriteProfileMessage(string targetUserId, [FromBody] ProfileMessagePostDto dto)
+    public async Task<IActionResult> WriteProfileMessage(string targetUserId, [FromBody] postProfileMessagePostDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();

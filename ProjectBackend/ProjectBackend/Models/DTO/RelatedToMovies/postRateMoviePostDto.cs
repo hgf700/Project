@@ -1,8 +1,8 @@
 ﻿using ProjectBackend.Models.ReleatedToSocial;
 
-namespace ProjectBackend.Models.DTO.POST;
+namespace ProjectBackend.Models.DTO.RelatedToMovies;
 
-public class RateMoviePostDto
+public class postRateMoviePostDto
 {
     public RatingValue Rating { get; set; }
 }

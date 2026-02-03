@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ProjectBackend.Models.DTO.POST;
+namespace ProjectBackend.Models.DTO.RelatedToUserProfile;
 
-public class DeleteFriendIdPostDto
+public class postDeleteFriendIdPostDto
 {
     [Required]
     public string FriendId { get; set; }

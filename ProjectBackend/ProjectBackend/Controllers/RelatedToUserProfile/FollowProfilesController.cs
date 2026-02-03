@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
-using ProjectBackend.Models.DTO.GET;
+using ProjectBackend.Models.DTO.RelatedToUserProfile;
 using ProjectBackend.Models.ReleatedToSocial;
 using System.Security.Claims;
 
@@ -92,7 +92,7 @@ public class FollowProfilesController : ControllerBase
 
         var follows = await _context.UserFollows
         .Where(f => f.UserId == userId)
-        .Select(f => new FollowedProfilesDto
+        .Select(f => new getFollowedProfilesDto
         {
             UserId = f.UserId,
             TargetUserId = f.TargetUserId,

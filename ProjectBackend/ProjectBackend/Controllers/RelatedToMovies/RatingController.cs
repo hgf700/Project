@@ -7,8 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
 using ProjectBackend.Models.DTO;
-using ProjectBackend.Models.DTO.GET;
-using ProjectBackend.Models.DTO.POST;
+using ProjectBackend.Models.DTO.RelatedToMovies;
 using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
@@ -41,7 +40,7 @@ public class RatingController : ControllerBase
 
         var rates = await _context.PlaylistLikes
             .Where(p =>p.UserId == userId)
-            .Select(p => new UserRatedMedia
+            .Select(p => new getUserRatedMedia
             {
                 PlaylistId= p.PlaylistId,
                 UserId=p.UserId,
@@ -57,7 +56,7 @@ public class RatingController : ControllerBase
 
     [Authorize]
     [HttpPost("rate-movie")]
-    public async Task<IActionResult> RateMovieAsync(int movieId, [FromBody] RateMoviePostDto dto)
+    public async Task<IActionResult> RateMovieAsync(int movieId, [FromBody] postRateMoviePostDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
@@ -92,7 +91,7 @@ public class RatingController : ControllerBase
 
     [Authorize]
     [HttpPost("remove-rate")]
-    public async Task<IActionResult> RemoveRate([FromBody] RemoveRateIdPostDto dto)
+    public async Task<IActionResult> RemoveRate([FromBody] postRemoveRateIdPostDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();

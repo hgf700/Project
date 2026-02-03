@@ -1,6 +1,6 @@
-﻿namespace ProjectBackend.Models.DTO.GET;
+﻿namespace ProjectBackend.Models.DTO.RelatedToUserProfile;
 
-public class FollowedProfilesDto
+public class getFollowedProfilesDto
 {
     public string UserId { get; set; }
     public string TargetUserId { get; set; }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
-using ProjectBackend.Models.DTO.POST;
+using ProjectBackend.Models.DTO.RelatedToPlaylist;
 using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
 using System.Security.Claims;

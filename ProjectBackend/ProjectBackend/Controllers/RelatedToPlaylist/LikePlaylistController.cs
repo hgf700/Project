@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
-using ProjectBackend.Models.DTO.GET;
+using ProjectBackend.Models.DTO.RelatedToPlaylist;
 using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
 using System.Security.Claims;
@@ -102,7 +102,7 @@ public class LikePlaylistController : ControllerBase
 
         var likes = await _context.PlaylistLikes
         .Where(f => f.UserId == userId)
-        .Select(f => new viewLikedPlaylistDto
+        .Select(f => new getLikedPlaylistDto
         {
             UserId = f.UserId,
             PlaylistId = f.PlaylistId,
