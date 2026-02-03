@@ -28,13 +28,7 @@ public class SocialsController : ControllerBase
         _context = context;
         _userManager = userManager;
     }
-
     
-
-   
-
-    
-
     //niespraw
 
     [Authorize]

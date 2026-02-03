@@ -10,7 +10,6 @@ import { ManageFriends } from '../Views/manage-friends/manage-friends';
 import { DevelopingView } from '../Views/developing-view/developing-view';
 import { ViewFriendProfile } from '../Views/view-friend-profile/view-friend-profile';
 
-
 export const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login-callback', component: LoginCallbackComponent },
@@ -21,7 +20,6 @@ export const routes: Routes = [
   { path: 'manage-friends', component: ManageFriends },
   { path: 'developing-view', component: DevelopingView },
   { path: 'view-friend-profile/:id', component: ViewFriendProfile },
-
 ];
 
 @NgModule({

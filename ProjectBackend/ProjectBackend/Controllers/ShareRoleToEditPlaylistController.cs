@@ -13,7 +13,7 @@ namespace ProjectBackend.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("share-edit-playlist")]
+[Route("share-playlist-to-friend")]
 public class ShareRoleToEditPlaylistController : ControllerBase
 {
     private readonly ApplicationDbContext _context;

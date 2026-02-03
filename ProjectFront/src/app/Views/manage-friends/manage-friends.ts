@@ -1,4 +1,4 @@
-import { Component ,OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -15,7 +15,7 @@ import { FriendAG } from '../../interfaces/friend';
 @Component({
   selector: 'app-manage-friends',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './manage-friends.html',
   styleUrl: './manage-friends.css',
 })
@@ -59,7 +59,7 @@ export class ManageFriends implements OnInit {
 
     this.friendService.addFriend(this.addFriendForm.value.email).subscribe({
       next: () => {
-        alert('Zaproszenie wysłane')
+        alert('Zaproszenie wysłane');
         this.loadFriends();
       },
       error: (err) => alert(err.error),
@@ -78,7 +78,6 @@ export class ManageFriends implements OnInit {
   }
 
   showFriendSocialAccount(friendId: string) {
-    this.router.navigate(['/view-friend-profile',friendId]);
+    this.router.navigate(['/view-friend-profile', friendId]);
   }
-  
 }

@@ -8,9 +8,8 @@ describe('ViewFriendProfile', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ViewFriendProfile]
-    })
-    .compileComponents();
+      imports: [ViewFriendProfile],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ViewFriendProfile);
     component = fixture.componentInstance;

@@ -1,8 +1,7 @@
 <main class="main">
   <form [formGroup]="writeCommentForm" (ngSubmit)="onSubmit()">
     <label>text do znajomego</label>
-    <input type="text" formControlName="text"/>
-    
+    <input type="text" formControlName="text" />
 
     <button type="submit">text do znajomego</button>
   </form>
@@ -11,14 +10,12 @@
   <button (click)="followFriend()">followFriend</button>
   <button (click)="unfollowFriend()">followFriend</button>
 
-
-
   <ul *ngIf="profileMessage.length > 0">
     <li *ngFor="let pM of profileMessage">
-      {{ pM.authorEmail }}
-      tekst {{ pM.text }}
-      {{ pM.createdAt }}
-      <button (click)="deleteProfileMessage(pM.id)">deleteProfileMessage</button>
+      {{ pM.authorEmail }} tekst {{ pM.text }} {{ pM.createdAt }}
+      <button (click)="deleteProfileMessage(pM.id)">
+        deleteProfileMessage
+      </button>
     </li>
   </ul>
   <p *ngIf="profileMessage.length === 0">Brak wiadomosci</p>

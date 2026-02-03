@@ -1,38 +1,39 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PlaylistAG } from '../interfaces/playlist';
 import { PlaylistResultAG } from '../interfaces/playlistResult';
 
 @Injectable({ providedIn: 'root' })
-export class PlaylistService {
+export class PlaylistValuesService {
   private readonly baseUrl = 'https://localhost:7218/playlist';
 
   constructor(private http: HttpClient) {}
 
-  getPlaylists() {
-    const token = localStorage.getItem('jwt');
-    const headers = { Authorization: `Bearer ${token}` };
-    return this.http.get<PlaylistAG[]>(`${this.baseUrl}/show-playlists`, {
-      headers,
-    });
-  }
-
-  createPlaylist(name: string) {
+  addMovieToPlaylist(playlistId: number, tmdbId: number) {
     const token = localStorage.getItem('jwt');
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.post(
-      `${this.baseUrl}/create-playlist`,
-      { name },
+      `${this.baseUrl}/${playlistId}/movies/${tmdbId}`,
+      {},
       { headers },
     );
   }
 
-  deletePlaylist(playlistId: number) {
+  showResultFromPlaylist(playlistId: number) {
+    const token = localStorage.getItem('jwt');
+    const headers = { Authorization: `Bearer ${token}` };
+
+    return this.http.get<PlaylistResultAG>(
+      `${this.baseUrl}/show-playlist-values/${playlistId}`,
+      { headers },
+    );
+  }
+
+  deleteFromPlaylist(playlistId: number, tmdbId: number) {
     const token = localStorage.getItem('jwt');
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.post<void>(
-      `${this.baseUrl}/delete-playlist`,
-      { playlistId },
+      `${this.baseUrl}/${playlistId}/delete-from-playlist/${tmdbId}`,
+      {},
       { headers },
     );
   }
