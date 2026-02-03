@@ -10,7 +10,7 @@ using ProjectBackend.Services.interfaces;
 using System.Globalization;
 using System.Security.Claims;
 
-namespace ProjectBackend.Controllers;
+namespace ProjectBackend.Controllers.RelatedToMovies;
 
 [Authorize]
 [ApiController]

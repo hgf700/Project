@@ -7,7 +7,7 @@ import { viewLikedPlaylistDto } from '../Dto/viewLikedPlaylistDto';
 
 @Injectable({ providedIn: 'root' })
 export class SharePlaylistToFriendsService {
-  private apiurlSocial = 'https://localhost:7218/social';
+  private apiurlSocial = 'https://localhost:7218/share-playlist-to-friend';
 
   profileMessage: profileMessageDto[] = [];
   followedProfiles: followedProfilesDto[] = [];

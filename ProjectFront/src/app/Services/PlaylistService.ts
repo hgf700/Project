@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PlaylistAG } from '../interfaces/playlist';
-import { PlaylistResultAG } from '../interfaces/playlistResult';
 
 @Injectable({ providedIn: 'root' })
 export class PlaylistService {

@@ -8,18 +8,18 @@ using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
 using System.Security.Claims;
 
-namespace ProjectBackend.Controllers;
+namespace ProjectBackend.Controllers.RelatedToPlaylist;
 
 
 [Authorize]
 [ApiController]
 [Route("share-playlist-to-friend")]
-public class ShareRoleToEditPlaylistController : ControllerBase
+public class SharePlaylistWithFriendsController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public ShareRoleToEditPlaylistController(
+    public SharePlaylistWithFriendsController(
         ApplicationDbContext context,
         UserManager<ApplicationUser> userManager)
     {

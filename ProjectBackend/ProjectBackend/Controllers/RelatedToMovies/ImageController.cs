@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
 using ProjectBackend.Services.interfaces;
 
-namespace ProjectBackend.Controllers;
+namespace ProjectBackend.Controllers.RelatedToMovies;
 
 [Authorize]
 [ApiController]

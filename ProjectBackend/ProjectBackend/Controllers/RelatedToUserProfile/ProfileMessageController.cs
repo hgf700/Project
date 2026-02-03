@@ -8,7 +8,7 @@ using ProjectBackend.Models.DTO.POST;
 using ProjectBackend.Models.ReleatedToSocial;
 using System.Security.Claims;
 
-namespace ProjectBackend.Controllers;
+namespace ProjectBackend.Controllers.RelatedToUserProfile;
 
 [Authorize]
 [ApiController]

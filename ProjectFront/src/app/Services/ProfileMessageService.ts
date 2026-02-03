@@ -4,8 +4,8 @@ import { getAuthHeaders } from '../helpers/GetAuthHeaders';
 import { profileMessageDto } from '../Dto/profileMessageDto';
 
 @Injectable({ providedIn: 'root' })
-export class SocialManageService {
-  private apiurlSocial = 'https://localhost:7218/social';
+export class ProfileMessageService {
+  private apiurlSocial = 'https://localhost:7218/profile-message';
 
   profileMessage: profileMessageDto[] = [];
 

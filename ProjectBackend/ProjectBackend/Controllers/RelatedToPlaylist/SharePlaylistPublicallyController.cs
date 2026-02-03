@@ -7,8 +7,11 @@ using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
 using System.Security.Claims;
 
-namespace ProjectBackend.Controllers;
+namespace ProjectBackend.Controllers.RelatedToPlaylist;
 
+[Authorize]
+[ApiController]
+[Route("share-playlist-publically")]
 public class SharePlaylistPublicallyController : ControllerBase
 {
     private readonly ApplicationDbContext _context;

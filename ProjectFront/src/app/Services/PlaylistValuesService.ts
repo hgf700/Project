@@ -4,7 +4,7 @@ import { PlaylistResultAG } from '../interfaces/playlistResult';
 
 @Injectable({ providedIn: 'root' })
 export class PlaylistValuesService {
-  private readonly baseUrl = 'https://localhost:7218/playlist';
+  private readonly baseUrl = 'https://localhost:7218/playlist-value';
 
   constructor(private http: HttpClient) {}
 

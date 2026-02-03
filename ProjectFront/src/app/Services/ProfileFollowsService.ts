@@ -5,7 +5,7 @@ import { followedProfilesDto } from '../Dto/followedProfilesDto';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileFollowsService {
-  private apiurlSocial = 'https://localhost:7218/social';
+  private apiurlSocial = 'https://localhost:7218/follow';
 
   followedProfiles: followedProfilesDto[] = [];
 

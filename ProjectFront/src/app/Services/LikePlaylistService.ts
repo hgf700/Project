@@ -5,7 +5,7 @@ import { viewLikedPlaylistDto } from '../Dto/viewLikedPlaylistDto';
 
 @Injectable({ providedIn: 'root' })
 export class LikePlaylistService {
-  private apiurlSocial = 'https://localhost:7218/social';
+  private apiurlSocial = 'https://localhost:7218/like-playlist';
 
   viewLikedPlaylist: viewLikedPlaylistDto[] = [];
 

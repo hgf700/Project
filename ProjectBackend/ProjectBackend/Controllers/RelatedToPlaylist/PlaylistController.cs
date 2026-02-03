@@ -13,7 +13,7 @@ using ProjectBackend.Services.interfaces;
 using System.Data;
 using System.Security.Claims;
 
-namespace ProjectBackend.Controllers;
+namespace ProjectBackend.Controllers.RelatedToPlaylist;
 
 [Authorize]
 [ApiController]

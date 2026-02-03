@@ -8,11 +8,11 @@ using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
 using System.Security.Claims;
 
-namespace ProjectBackend.Controllers;
+namespace ProjectBackend.Controllers.RelatedToPlaylist;
 
 [Authorize]
 [ApiController]
-[Route("playlistValue")]
+[Route("playlist-value")]
 public class PlaylistValuesController : ControllerBase
 {
     private readonly ApplicationDbContext _context;

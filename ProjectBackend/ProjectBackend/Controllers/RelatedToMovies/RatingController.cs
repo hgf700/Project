@@ -14,7 +14,7 @@ using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
 using System.Security.Claims;
 
-namespace ProjectBackend.Controllers;
+namespace ProjectBackend.Controllers.RelatedToMovies;
 
 [Authorize]
 [ApiController]

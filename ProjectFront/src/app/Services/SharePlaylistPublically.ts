@@ -4,7 +4,7 @@ import { getAuthHeaders } from '../helpers/GetAuthHeaders';
 
 @Injectable({ providedIn: 'root' })
 export class SharePlaylistPublically {
-  private apiurlSocial = 'https://localhost:7218/social';
+  private apiurlSocial = 'https://localhost:7218/share-playlist-publically';
 
   constructor(private http: HttpClient) {}
 
