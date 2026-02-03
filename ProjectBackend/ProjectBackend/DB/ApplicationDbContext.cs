@@ -22,7 +22,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<PlaylistValue> PlaylistValues{ get; set; }
     public DbSet<PlaylistMember> PlaylistMembers { get; set; }
     public DbSet<PlaylistLike> PlaylistLikes { get; set; }
-    
     public DbSet<UserMediaStatus> UserMediaStatuses { get; set; }
     public DbSet<UserComment> UserComments { get; set; }
     public DbSet<UserFollow> UserFollows { get; set; }

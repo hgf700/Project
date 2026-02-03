@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
+using ProjectBackend.Models.DTO;
+using ProjectBackend.Models.DTO.GET;
 using ProjectBackend.Models.DTO.POST;
+using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
 using System.Security.Claims;
@@ -28,6 +32,28 @@ public class RatingController : ControllerBase
         _context = context;
     }
 
+    [Authorize]
+    [HttpGet("show-user-rates")]
+    public async Task<IActionResult> ShowPlaylistValues()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
+
+        var rates = await _context.PlaylistLikes
+            .Where(p =>p.UserId == userId)
+            .Select(p => new UserRatedMedia
+            {
+                PlaylistId= p.PlaylistId,
+                UserId=p.UserId,
+                CreatedAt= p.CreatedAt,
+            })
+            .FirstOrDefaultAsync();
+
+        if (rates == null)
+            return NotFound("Playlist not found");
+
+        return Ok(rates);
+    }
 
     [Authorize]
     [HttpPost("rate-movie")]
@@ -82,5 +108,6 @@ public class RatingController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok();
     }
+
 
 }

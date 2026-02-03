@@ -2,6 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { getAuthHeaders } from '../helpers/GetAuthHeaders';
 import { profileMessageDto } from '../Dto/profileMessageDto';
+import { followedProfilesDto } from '../Dto/followedProfilesDto';
+import { viewLikedPlaylistDto } from '../Dto/viewLikedPlaylistDto';
+
 
 
 @Injectable({ providedIn: 'root' })
@@ -9,6 +12,8 @@ export class SocialManageService {
   private apiurlSocial = 'https://localhost:7218/social';
 
   profileMessage: profileMessageDto[]=[];
+  followedProfiles: followedProfilesDto[]=[];
+  viewLikedPlaylist: viewLikedPlaylistDto[]=[];
 
   constructor(private http: HttpClient) {}
 
@@ -58,4 +63,47 @@ export class SocialManageService {
     );
   }
 
+  followProfile(targetUserId: string) {
+    return this.http.post(
+      `${this.apiurlSocial}/follow-profile/${targetUserId}`,
+      {},
+      { headers: getAuthHeaders() },
+    );
+  }
+
+  stopFollowProfile(targetUserId: string) {
+    return this.http.delete(
+      `${this.apiurlSocial}/stop-follow-profile/${targetUserId}`,
+      { headers: getAuthHeaders() }
+    );
+  }
+
+  getProfileFollows() {
+    return this.http.get<followedProfilesDto[]>(
+      `${this.apiurlSocial}/view-follows-of-profile`,
+      { headers: getAuthHeaders() }
+    );
+  }
+
+  likePlaylist(playlistId: number) {
+    return this.http.post(
+      `${this.apiurlSocial}/like-playlist/${playlistId}`,
+      {},
+      { headers: getAuthHeaders() },
+    );
+  }
+
+  stopLikePlaylist(playlistId: number) {
+    return this.http.delete(
+      `${this.apiurlSocial}/stop-like-playlist/${playlistId}`,
+      { headers: getAuthHeaders() }
+    );
+  }
+
+  getLikedPlaylist() {
+    return this.http.get<viewLikedPlaylistDto[]>(
+      `${this.apiurlSocial}/view-liked-playlist`,
+      { headers: getAuthHeaders() }
+    );
+  }
 }
