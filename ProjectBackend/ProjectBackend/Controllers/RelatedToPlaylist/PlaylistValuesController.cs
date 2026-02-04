@@ -128,7 +128,7 @@ public class PlaylistValuesController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost("{playlistId}/delete-from-playlist/{tmdbId}")]
+    [HttpDelete("{playlistId}/delete-from-playlist/{tmdbId}")]
     public async Task<IActionResult> DeleteFromPlaylist(int playlistId, int tmdbId)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

@@ -137,7 +137,5 @@ public class MoviesController : ControllerBase
         return Ok(movies);
     }
 
-   
-    
 
 }

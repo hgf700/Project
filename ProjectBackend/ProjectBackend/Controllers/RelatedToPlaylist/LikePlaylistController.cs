@@ -49,7 +49,8 @@ public class LikePlaylistController : ControllerBase
         var like = new PlaylistLike
         {
             PlaylistId = playlistId,
-            UserId = userId
+            UserId = userId,
+            CreatedAt = DateTime.UtcNow,
         };
 
         _context.PlaylistLikes.Add(like);
@@ -70,7 +71,7 @@ public class LikePlaylistController : ControllerBase
 
     [Authorize]
     [HttpDelete("stop-like-playlist/{playlistId}")]
-    public async Task<IActionResult> UnlikePlaylist(int playlistId)
+    public async Task<IActionResult> StoplikePlaylist(int playlistId)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
