@@ -75,7 +75,7 @@ public class SharePlaylistWithFriendsController : ControllerBase
     }
 
     [Authorize]
-    [HttpDelete("stop-share-playlist/{playlistId}/members")]
+    [HttpPost("stop-share-playlist/{playlistId}/members")]
     public async Task<IActionResult> StopSharePlaylist(int playlistId, [FromBody] SharePlaylistIdDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

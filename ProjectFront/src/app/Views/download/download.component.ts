@@ -18,18 +18,17 @@ export class DownloadComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.downloadService.importFromTmdb().subscribe({
-      next: () => alert('Filmy zapisane do bazy'),
-      error: (err) => {
-        alert(err.error || 'Błąd importu');
-      },
-    });
+  this.downloadService.importSeedFromTmdb().subscribe({
+    next: () => {
+      console.log('genre zapisane do bazy');
 
-    this.downloadService.importSeedFromTmdb().subscribe({
-      next: () => alert('genre zapisane do bazy'),
-      error: (err) => {
-        alert(err.error || 'Błąd importu');
-      },
-    });
-  }
+      this.downloadService.importFromTmdb().subscribe({
+        next: () => console.log('Filmy zapisane do bazy'),
+        error: err => alert(err.error),
+      });
+    },
+    error: err => alert(err.error),
+  });
+}
+
 }

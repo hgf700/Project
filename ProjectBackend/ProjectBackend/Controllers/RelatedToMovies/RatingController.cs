@@ -90,7 +90,7 @@ public class RatingController : ControllerBase
     }
 
     [Authorize]
-    [HttpDelete("remove-rate")]
+    [HttpPost("remove-rate")]
     public async Task<IActionResult> RemoveRate([FromBody] postRemoveRateIdPostDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

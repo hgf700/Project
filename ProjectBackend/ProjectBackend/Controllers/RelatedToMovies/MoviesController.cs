@@ -44,6 +44,9 @@ public class MoviesController : ControllerBase
         if (tmdbMovies == null || !tmdbMovies.Any())
             return NotFound("Brak filmów z TMDB");
 
+        var genreDictionary = await _context.Genres
+            .ToDictionaryAsync(g => g.TmdbId, g => g);
+
         foreach (var tmdbMovie in tmdbMovies)
         {
             bool exists = await _context.Movies
@@ -83,18 +86,23 @@ public class MoviesController : ControllerBase
                 .Where(g => tmdbMovie.GenreIds.Contains(g.TmdbId))
                 .ToListAsync();
 
-            foreach (var genre in genres)
+            foreach (var genreId in tmdbMovie.GenreIds)
             {
-                movie.MovieGenres.Add(new MovieGenre
+                if (genreDictionary.TryGetValue(genreId, out var genre))
                 {
-                    Genre = genre
-                });
+                    movie.MovieGenres.Add(new MovieGenre
+                    {
+                        GenreId = genre.Id
+                    });
+                }
             }
 
             _context.Movies.Add(movie);
         }
 
         await _context.SaveChangesAsync();
+        var tracked = _context.ChangeTracker.Entries<MovieGenre>().Count();
+        Console.WriteLine($"Tracked MovieGenres: {tracked}");
 
         return Ok("Filmy z TMDB zapisane do bazy");
     }

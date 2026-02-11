@@ -16,7 +16,7 @@ public class Movie
     public bool Adult { get; set; }
 
     [NotMapped]
-    public int[] GenreIds { get; set; } // tymczasowe do mapowania gatunków
+    public int[] GenreIds { get; set; }
 
     public DateTime ReleaseDate { get; set; }
 

@@ -101,7 +101,7 @@ public class FriendController : ControllerBase
     }
 
     [Authorize]
-    [HttpDelete("delete-friend")]
+    [HttpPost("delete-friend")]
     public async Task<IActionResult> DeleteFriend([FromBody] postDeleteFriendIdPostDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
