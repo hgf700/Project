@@ -67,6 +67,7 @@ public class PlaylistController : ControllerBase
         return Ok(new { playlist.Id, playlist.Name });
     }
 
+    //dto dodac jak playlist values
     [Authorize]
     [HttpGet("show-playlists")]
     public async Task<IActionResult> ShowPlaylists()

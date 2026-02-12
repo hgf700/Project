@@ -1,16 +1,48 @@
 <section>
-  <p *ngIf="loading">Ładowanie...</p>
 
-  <ul *ngIf="!loading && friends.length > 0; else empty">
+  <!-- ŁADOWANIE ZNAJOMYCH -->
+  <p *ngIf="loadingFriends">Ładowanie znajomych...</p>
+
+  <!-- LISTA ZNAJOMYCH -->
+  <ul *ngIf="!loadingFriends && friends.length > 0; else emptyFriends">
     <li *ngFor="let f of friends">
       <span class="friend-name">{{ f.email }}</span>
-      <button (click)="sharePlaylistToFriends(f.friendId)" [disabled]="loading">
+
+      <button
+        (click)="sharePlaylistToFriends(f.friendId)"
+        [disabled]="loadingAction">
         Dodaj
+      </button>
+
+      <button
+        (click)="stopSharePlaylistToFriends(f.friendId)"
+        [disabled]="loadingAction">
+        Usuń
       </button>
     </li>
   </ul>
 
-  <ng-template #empty>
-    <p *ngIf="!loading">Brak znajomych</p>
+  <ng-template #emptyFriends>
+    <p *ngIf="!loadingFriends">Brak znajomych</p>
   </ng-template>
+
+  <hr />
+
+  <!-- PLAYLISTA ZE ZNAJOMYMI -->
+  <button
+    (click)="loadPlaylistWithFriends()"
+    [disabled]="loadingPlaylist">
+    Załaduj playlistę ze znajomymi
+  </button>
+
+  <p *ngIf="loadingPlaylist">Ładowanie playlisty...</p>
+
+  <ul *ngIf="!loadingPlaylist && playlistFriends.length > 0">
+    <li *ngFor="let p of playlistFriends">
+      <span class="friend-name">email {{ p.email }}</span>
+      <span class="friend-role"> role {{ p.role }}</span>
+
+    </li>
+  </ul>
+
 </section>

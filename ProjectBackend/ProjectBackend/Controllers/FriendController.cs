@@ -90,9 +90,9 @@ public class FriendController : ControllerBase
         var friends = await _context.Friends
             .Where(f => f.UserId == currentUser.Id)
             .Include(f => f.FriendUser) 
-            .Select(f => new
+            .Select(f => new getShowFriendsDto
             {
-                f.FriendId,
+                FriendId=f.FriendId,
                 Email = f.FriendUser.Email 
             })
             .ToListAsync();

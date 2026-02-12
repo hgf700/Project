@@ -121,11 +121,12 @@ public class SharePlaylistWithFriendsController : ControllerBase
         if (userId == null) return Unauthorized();
 
         var playlistFreinds = await _context.PlaylistMembers.Where(p=>
-            p.PlaylistId==playlistId)
+            p.PlaylistId==playlistId && p.UserId != userId)
             .Select(pm => new getPlaylistFriendsDto
             {
                 PlaylistId = pm.PlaylistId,
-                UserId = userId,
+                UserId = pm.UserId,
+                Email= pm.User.Email,
                 Role = pm.Role,
             }).ToListAsync();
 
