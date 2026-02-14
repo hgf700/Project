@@ -4,7 +4,8 @@ using RestSharp;
 
 namespace ProjectBackend.Services;
 
-public class TmdbService : ITmdbService
+//public class TmdbService : ITmdbService
+public class TmdbService 
 {
     private readonly RestClient _client;
     private readonly string _apiToken;

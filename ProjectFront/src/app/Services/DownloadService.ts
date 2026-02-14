@@ -7,21 +7,14 @@ export class DownloadService {
 
   constructor(private http: HttpClient) {}
 
-  importSeedFromTmdb() {
-    const token = localStorage.getItem('jwt');
-    const headers = { Authorization: `Bearer ${token}` };
-
-    return this.http.post(`${this.apiUrl}/seed-genre`, {}, { headers });
-  }
-
-  importFromTmdb(page: number = 1) {
+  importAllTmdb() {
     const token = localStorage.getItem('jwt');
     const headers = { Authorization: `Bearer ${token}` };
 
     return this.http.post(
-      `${this.apiUrl}/add-from-tmdb?page=${page}`,
+      `${this.apiUrl}/import-from-tmdb`,
       {},
-      { headers },
-    );
+      { headers }
+    )
   }
 }

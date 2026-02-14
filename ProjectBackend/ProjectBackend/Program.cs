@@ -40,8 +40,10 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 builder.Services.AddHttpClient();
 
+builder.Services.AddScoped<TmdbImportService>();
 builder.Services.AddScoped<JwtService>();
-builder.Services.AddScoped<ITmdbService,TmdbService>();
+//builder.Services.AddScoped<ITmdbService,TmdbService>();
+builder.Services.AddScoped<TmdbService>();
 builder.Services.AddScoped<SeedGenresService>();
 
 builder.Services.AddAuthorization();
