@@ -21,20 +21,17 @@ namespace ProjectBackend.Controllers.RelatedToMovies;
 public class MoviesController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
-    private readonly ITmdbService _tmdbService;
     private readonly SeedGenresService _seedgenres;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly TmdbImportService _importService;
 
     public MoviesController(
         ApplicationDbContext context,
-        ITmdbService tmdbService,
         SeedGenresService seedgenres,
         UserManager<ApplicationUser> userManager,
         TmdbImportService importService)
     {
         _context = context;
-        _tmdbService = tmdbService;
         _seedgenres = seedgenres;
         _userManager = userManager;
         _importService = importService;

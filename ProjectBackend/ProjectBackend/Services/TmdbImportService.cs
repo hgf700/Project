@@ -73,13 +73,17 @@ public class TmdbImportService
 
             if (existingMovie != null) continue; // Pomijamy duplikaty
 
+            DateTime releaseDate = DateTime.MinValue;
+            if (DateTime.TryParse(movieDto.ReleaseDate, out var d))
+                releaseDate = DateTime.SpecifyKind(d, DateTimeKind.Utc);
+
             var newMovie = new Movie
             {
                 TmdbId = movieDto.TmdbId,
                 Title = movieDto.Title ?? movieDto.OriginalTitle,
                 Overview = movieDto.Overview,
                 Adult = movieDto.Adult,
-                ReleaseDate = DateTime.TryParse(movieDto.ReleaseDate, out var dt) ? dt : DateTime.MinValue,
+                ReleaseDate = releaseDate,
                 VoteAverage = (float)movieDto.VoteAverage,
                 PosterPath = movieDto.PosterPath,
                 BackdropPath = movieDto.BackdropPath
@@ -98,7 +102,9 @@ public class TmdbImportService
                         _context.MovieGenres.Add(new MovieGenre
                         {
                             MovieId = newMovie.Id,
-                            GenreId = genre.Id
+                            GenreId = genre.Id,
+                            MovieTitle=newMovie.Title,
+                            GenreName=genre.Name,
                         });
                     }
                     else

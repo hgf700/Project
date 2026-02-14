@@ -9,4 +9,8 @@ public class MovieGenre
 
     public int GenreId { get; set; }
     public Genre Genre { get; set; } = null!;
+    public string MovieTitle { get; set; }
+    //wyjebac potem genre name i moze movie title
+    public string GenreName{ get; set; }
+
 }
