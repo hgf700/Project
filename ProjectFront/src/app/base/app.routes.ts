@@ -9,6 +9,7 @@ import { PlaylistWindow } from '../Views/playlist-window/playlist-window';
 import { ManageFriends } from '../Views/manage-friends/manage-friends';
 import { DevelopingView } from '../Views/developing-view/developing-view';
 import { ViewFriendProfile } from '../Views/view-friend-profile/view-friend-profile';
+import { PrefferedGenre } from '../Views/preffered-genre/preffered-genre';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -20,6 +21,7 @@ export const routes: Routes = [
   { path: 'manage-friends', component: ManageFriends },
   { path: 'developing-view', component: DevelopingView },
   { path: 'view-friend-profile/:id', component: ViewFriendProfile },
+  { path: 'preffered-genre', component: PrefferedGenre },
 ];
 
 @NgModule({

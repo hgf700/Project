@@ -1,0 +1,29 @@
+<main class="playlist-dialog">
+  <p *ngIf="loading">Ładowanie...</p>
+
+  <section *ngIf="!loading">
+    <ul *ngIf="genres.length > 0; else empty">
+      <li *ngFor="let g of genres" class="genres-item">
+        <span class="genres-name">{{ g.genreName }}</span>
+
+        <button
+          (click)="chooseGenre(g.genreId)"
+          [disabled]="loading"
+        >
+          likeGenre
+        </button>
+
+        <button
+          (click)="removeChoosenGenre(g.genreId)"
+          [disabled]="loading"
+        >
+          stopLikeGenre
+        </button>
+      </li>
+    </ul>
+
+    <ng-template #empty>
+      <p>Brak genre</p>
+    </ng-template>
+  </section>
+</main>

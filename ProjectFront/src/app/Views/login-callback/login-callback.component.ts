@@ -41,6 +41,10 @@ export class LoginCallbackComponent implements OnInit {
     this.router.navigate(['/playlist-window']);
   }
 
+  manageFollowedGenres() {
+    this.router.navigate(['/preffered-genre']);
+  }
+
   loadCurrentUser() {
     this.currentUserService.getCurrentUser().subscribe({
       next: (user) => {

@@ -26,8 +26,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<UserComment> UserComments { get; set; }
     public DbSet<UserFollow> UserFollows { get; set; }
     public DbSet<Friend> Friends { get; set; }
+    public DbSet<PrefferedGenre> PrefferedGenres { get; set; }
 
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -142,6 +143,19 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasOne(pm => pm.User)
             .WithMany()
             .HasForeignKey(pm => pm.UserId);
+
+        modelBuilder.Entity<PrefferedGenre>()
+            .HasKey(pg => new { pg.GenreId, pg.UserId });
+
+        modelBuilder.Entity<PrefferedGenre>()
+            .HasOne(pg => pg.Genre)
+            .WithMany(g => g.PrefferedGenres)
+            .HasForeignKey(pg => pg.GenreId);
+
+        modelBuilder.Entity<PrefferedGenre>()
+            .HasOne(pg => pg.User)
+            .WithMany(u => u.PrefferedGenres)
+            .HasForeignKey(pg => pg.UserId);
 
         modelBuilder.Entity<Friend>()
             .HasOne(f => f.User)

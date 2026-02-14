@@ -14,4 +14,6 @@ public class ApplicationUser : IdentityUser
     public ICollection<UserFollow> Followers { get; set; } // kto obserwuje
 
     public ICollection<PlaylistLike> LikedPlaylists { get; set; } = new List<PlaylistLike>();
+    public ICollection<PrefferedGenre> PrefferedGenres { get; set; }
+
 }
