@@ -10,6 +10,9 @@ import { ManageFriends } from '../Views/manage-friends/manage-friends';
 import { DevelopingView } from '../Views/developing-view/developing-view';
 import { ViewFriendProfile } from '../Views/view-friend-profile/view-friend-profile';
 import { PrefferedGenre } from '../Views/preffered-genre/preffered-genre';
+import { MovieRecomendations } from '../Views/movie-recomendations/movie-recomendations';
+
+
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -22,6 +25,8 @@ export const routes: Routes = [
   { path: 'developing-view', component: DevelopingView },
   { path: 'view-friend-profile/:id', component: ViewFriendProfile },
   { path: 'preffered-genre', component: PrefferedGenre },
+  { path: 'movie-recomendations', component: MovieRecomendations },
+
 ];
 
 @NgModule({

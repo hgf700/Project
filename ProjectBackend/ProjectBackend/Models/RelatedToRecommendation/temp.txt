@@ -1,0 +1,13 @@
+﻿public class MovieUserPreference
+{
+    public string UserId { get; set; }
+    public ApplicationUser User { get; set; }
+    public Dictionary<int, double> GenreWeights { get; set; } = new();
+    public Dictionary<int, double> YearsRange { get; set; } = new();
+    public Dictionary<int, double> ActorWeights { get; set; } = new();
+    public Dictionary<int, double> TmdbRatingRanges { get; set; } = new();
+    public DateTime UpdatedAt { get; set; }
+}
+
+
+

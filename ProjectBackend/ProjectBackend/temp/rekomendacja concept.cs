@@ -1,31 +1,4 @@
 ﻿
-//namespace ProjectBackend.temp
-//{
-//    public class Class
-//    {
-//    }
-//}
-
-//public class MovieFeatures
-//{
-//    public int Id { get; set; }
-//    public List<string> Genres { get; set; } = new();
-//    public string YearBucket { get; set; }
-//    public string RatingBucket { get; set; }
-//    public List<string> Actors { get; set; } = new();
-//}
-
-//Profil użytkownika
-
-//Na start możesz trzymać to w pamięci (np. per user/session):
-//public class UserProfile
-//{
-//    public Dictionary<string, double> Genres { get; set; } = new();
-//    public Dictionary<string, double> Years { get; set; } = new();
-//    public Dictionary<string, double> Ratings { get; set; } = new();
-//    public Dictionary<string, double> Actors { get; set; } = new();
-//}
-
 
 //public static class EventWeights
 //{
@@ -38,7 +11,6 @@
 //        { "quickExit", -1 }
 //    };
 //}
-
 
 //public void UpdateUserProfile(UserProfile profile, MovieFeatures movie, string eventType)
 //{

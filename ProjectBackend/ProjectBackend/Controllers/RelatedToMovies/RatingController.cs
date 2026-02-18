@@ -11,7 +11,9 @@ using ProjectBackend.Models.DTO.RelatedToMovies;
 using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
+using System.ComponentModel.Design;
 using System.Security.Claims;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProjectBackend.Controllers.RelatedToMovies;
 
@@ -22,13 +24,17 @@ public class RatingController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly UserMoviePreferenceService _moviePreferenceService;
+
     public RatingController(
         UserManager<ApplicationUser> userManager,
-        ApplicationDbContext context
+        ApplicationDbContext context,
+        UserMoviePreferenceService moviePreferenceService
         )
     {
         _userManager = userManager;
         _context = context;
+        _moviePreferenceService = moviePreferenceService;
     }
 
     [Authorize]
@@ -61,6 +67,9 @@ public class RatingController : ControllerBase
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
 
+        var userPreference = await _context.MovieUserPreferences
+            .FirstOrDefaultAsync(m => m.UserId == userId);
+
         var movie = await _context.Movies
             .FirstOrDefaultAsync(m => m.TmdbId == movieId);
 
@@ -79,6 +88,24 @@ public class RatingController : ControllerBase
                 Rating = dto.Rating 
             };
             _context.UserMediaStatuses.Add(entry);
+
+            var releaseYear = movie.ReleaseDate.Year;
+
+            _moviePreferenceService.UpdateYearPreference(
+                userPreference,
+                releaseYear,
+                dto.Rating
+            );
+
+            //cos mi brakuje tu i chybra trzeba usunac entry null? bo musze w kilku miejscach logike dac UpdatePreference
+            foreach (var genre in movie.MovieGenres)
+            {
+                _moviePreferenceService.UpdateGenrePreference(
+                    userPreference,
+                    genre.GenreId,
+                    dto.Rating
+                );
+            }
         }
         else
         {

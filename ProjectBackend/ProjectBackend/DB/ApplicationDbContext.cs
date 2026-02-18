@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Core.Types;
+using ProjectBackend.Models.RelatedToRecommendation;
 using ProjectBackend.Models.ReleatedToMovie;
 using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
@@ -27,7 +28,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<UserFollow> UserFollows { get; set; }
     public DbSet<Friend> Friends { get; set; }
     public DbSet<PrefferedGenre> PrefferedGenres { get; set; }
+    public DbSet<MovieUserPreference> MovieUserPreferences { get; set; }
 
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -48,6 +51,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasOne(mg => mg.Genre)
             .WithMany(g => g.MovieGenres)
             .HasForeignKey(mg => mg.GenreId);
+
+        modelBuilder.Entity<MovieUserPreference>()
+            .HasKey(p => p.UserId);
+
+        modelBuilder.Entity<MovieUserPreference>()
+            .HasOne(p => p.User)
+            .WithOne()
+            .HasForeignKey<MovieUserPreference>(p => p.UserId);
 
         modelBuilder.Entity<UserMediaStatus>()
             .HasIndex(um => new { um.UserId, um.MovieId })
