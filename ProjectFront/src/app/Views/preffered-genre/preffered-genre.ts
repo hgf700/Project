@@ -27,6 +27,7 @@ export class PrefferedGenre implements OnInit{
       next: (value) => {
         this.genres = value;
         this.loading = false;
+        
       },
       error: (err) => {
         console.error(err);
@@ -40,6 +41,7 @@ export class PrefferedGenre implements OnInit{
     this.manageGenre.chooseGenre(genreId).subscribe({
       next: () => {
         this.loadGenres();
+        console.log('success Genre');
       },
       error: (err) => {
         console.error(err);
@@ -52,6 +54,7 @@ export class PrefferedGenre implements OnInit{
     this.loading = true;
     this.manageGenre.deleteChoosenGenre(genreId).subscribe({
       next: () => {
+        console.log('success Genre');
         this.loadGenres();
       },
       error: (err) => {

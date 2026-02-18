@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { getAuthHeaders } from '../helpers/GetAuthHeaders';
 import { MovieAG } from '../interfaces/movie';
+import { movieActorsDto } from '../Dto/movieActorsDto';
 
 @Injectable({ providedIn: 'root' })
 export class ManageMovieService {
@@ -15,6 +17,13 @@ export class ManageMovieService {
     return this.http.get<MovieAG[]>(`${this.apiurlMovies}/show-movies`, {
       headers,
     });
+  }
+
+  getMovieActors(filmId: number){
+    return this.http.get<movieActorsDto[]>(
+      `${this.apiurlMovies}/show-actors/${filmId}`,
+      { headers: getAuthHeaders() },
+    );
   }
 
   rateMovie(movieId: number, rating: number) {

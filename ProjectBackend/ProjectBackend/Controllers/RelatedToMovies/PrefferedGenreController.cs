@@ -25,11 +25,11 @@ public class PrefferedGenreController : ControllerBase
     [HttpGet("show-genres")]
     public async Task<IActionResult> ShowGenres()
     {
-        var genres = await _context.MovieGenres
+        var genres = await _context.Genres
             .Select(g => new getGenresDto
             {
-                GenreId = g.GenreId,
-                GenreName = g.GenreName
+                GenreId = g.Id,
+                GenreName = g.Name
             })
             .ToListAsync();
 
@@ -37,7 +37,7 @@ public class PrefferedGenreController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost("choose-genre")]
+    [HttpPost("choose-genre/{genreId}")]
     public async Task<IActionResult> ChooseGenre(int genreId)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -63,7 +63,7 @@ public class PrefferedGenreController : ControllerBase
 
 
     [Authorize]
-    [HttpPost("remove-choosen-genre")]
+    [HttpDelete("remove-choosen-genre/{genreId}")]
     public async Task<IActionResult> RemoveChosenGenre(int genreId)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

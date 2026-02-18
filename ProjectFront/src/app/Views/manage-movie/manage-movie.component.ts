@@ -4,6 +4,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ManageMovieService } from '../../Services/MovieManageService';
 import { MovieAG } from '../../interfaces/movie';
 import { PlaylistSubWindowComponent } from '../sub-playlist-window/playlist-sub-window.component';
+import { movieActorsDto } from '../../Dto/movieActorsDto';
+
 
 @Component({
   selector: 'app-manage-movie',
@@ -14,6 +16,7 @@ import { PlaylistSubWindowComponent } from '../sub-playlist-window/playlist-sub-
 })
 export class ManageMovieComponent implements OnInit {
   movies: MovieAG[] = [];
+  movieActors:movieActorsDto[]=[];
   loading = true;
 
   constructor(
@@ -33,18 +36,34 @@ export class ManageMovieComponent implements OnInit {
       },
     });
   }
+
+  loadMovieActors(movieId: number){
+    this.managemovieService.getMovieActors(movieId).subscribe({
+      next: (value) => {
+        this.movieActors = value;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      },
+    })
+  }
+
   RateGood(movieId: number) {
     this.managemovieService.rateMovie(movieId, 10).subscribe({
       next: () => console.log('Ocena zapisana 10'),
       error: (err) => console.error(err),
     });
   }
+
   RateNeutral(movieId: number) {
     this.managemovieService.rateMovie(movieId, 3).subscribe({
       next: () => console.log('Ocena zapisana 3'),
       error: (err) => console.error(err),
     });
   }
+
   RateBad(movieId: number) {
     this.managemovieService.rateMovie(movieId, 1).subscribe({
       next: () => console.log('Ocena zapisana 1'),

@@ -14,6 +14,17 @@
     <button (click)="RateNeutral(movie.tmdbId)">😐 Neutral</button>
     <button (click)="RateBad(movie.tmdbId)">👎 Bad</button>
     <button (click)="AddToPlaylist(movie.tmdbId)">AddToPlaylist</button>
-    <button (click)="removeRateFromMedia(movie.id)">removeRateFromMedia</button>
+    <button (click)="removeRateFromMedia(movie.id)">removeRateFromMedia</button><br>
+
+    <button (click)="loadMovieActors(movie.tmdbId)">loadMovieActors</button><br>
+
+    <ul *ngIf="movieActors.length > 0">
+      <li *ngFor="let ma of movieActors">
+        {{ ma.original_name }}
+        {{ ma.character }}
+        {{ ma.order }}
+      </li>
+    </ul>
+    
   </div>
 </main>
