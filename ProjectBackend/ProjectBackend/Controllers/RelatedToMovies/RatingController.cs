@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
 using ProjectBackend.Models.DTO;
 using ProjectBackend.Models.DTO.RelatedToMovies;
+using ProjectBackend.Models.RelatedToRecommendation;
 using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
@@ -59,7 +60,7 @@ public class RatingController : ControllerBase
 
         return Ok(rates);
     }
-
+    
     [Authorize]
     [HttpPost("rate-movie")]
     public async Task<IActionResult> RateMovie(int movieId, [FromBody] postRateMoviePostDto dto)
@@ -67,10 +68,8 @@ public class RatingController : ControllerBase
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
 
-        var userPreference = await _context.MovieUserPreferences
-            .FirstOrDefaultAsync(m => m.UserId == userId);
-
         var movie = await _context.Movies
+            .Include(m => m.MovieGenres) // WAŻNE
             .FirstOrDefaultAsync(m => m.TmdbId == movieId);
 
         if (movie == null)
@@ -79,14 +78,28 @@ public class RatingController : ControllerBase
         var entry = await _context.UserMediaStatuses
             .FirstOrDefaultAsync(x => x.UserId == userId && x.MovieId == movie.Id);
 
+        var userPreference = await _context.MovieUserPreferences
+            .FirstOrDefaultAsync(x => x.UserId == userId);
+
+        if (userPreference == null)
+        {
+            userPreference = new MovieUserPreference
+            {
+                UserId = userId
+            };
+
+            _context.MovieUserPreferences.Add(userPreference);
+        }
+
         if (entry == null)
         {
             entry = new UserMediaStatus
             {
                 UserId = userId,
-                MovieId = movie.Id,   // 🔥 DB ID        
-                Rating = dto.Rating 
+                MovieId = movie.Id,
+                Rating = dto.Rating
             };
+
             _context.UserMediaStatuses.Add(entry);
 
             var releaseYear = movie.ReleaseDate.Year;
@@ -97,7 +110,6 @@ public class RatingController : ControllerBase
                 dto.Rating
             );
 
-            //cos mi brakuje tu i chybra trzeba usunac entry null? bo musze w kilku miejscach logike dac UpdatePreference
             foreach (var genre in movie.MovieGenres)
             {
                 _moviePreferenceService.UpdateGenrePreference(
@@ -110,6 +122,7 @@ public class RatingController : ControllerBase
         else
         {
             entry.Rating = dto.Rating;
+            // tu możesz w przyszłości zrobić korektę wag
         }
 
         await _context.SaveChangesAsync();

@@ -8,6 +8,9 @@ public class UserMoviePreferenceService
 {
     public void UpdateYearPreference(MovieUserPreference user, int year, RatingValue rate)
     {
+        if (user.YearBuckets == null)
+            user.YearBuckets = new Dictionary<int, double>();
+
         int bucket = (year / 10) * 10;
 
         if (!user.YearBuckets.ContainsKey(bucket))
@@ -18,6 +21,9 @@ public class UserMoviePreferenceService
 
     public void UpdateGenrePreference(MovieUserPreference user, int genreId, RatingValue rate)
     {
+        if (user.GenreWeights == null)
+            user.GenreWeights = new Dictionary<int, double>();
+
         if (!user.GenreWeights.ContainsKey(genreId))
             user.GenreWeights[genreId] = 0;
 

@@ -40,7 +40,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 builder.Services.AddHttpClient();
 
-
+builder.Services.AddScoped<UserMoviePreferenceService>();
 builder.Services.AddScoped<LoadActorsService>();
 builder.Services.AddScoped<TmdbImportService>();
 builder.Services.AddScoped<JwtService>();

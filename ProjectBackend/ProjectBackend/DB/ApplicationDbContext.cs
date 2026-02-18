@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿    using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Core.Types;
@@ -6,6 +6,8 @@ using ProjectBackend.Models.RelatedToRecommendation;
 using ProjectBackend.Models.ReleatedToMovie;
 using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
+using System.Text.Json;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ProjectBackend.DB;
 
@@ -52,6 +54,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(g => g.MovieGenres)
             .HasForeignKey(mg => mg.GenreId);
 
+        var dictConverter = new ValueConverter<Dictionary<int, double>, string>(
+            v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+            v => JsonSerializer.Deserialize<Dictionary<int, double>>(v, (JsonSerializerOptions)null)
+        );
+
         modelBuilder.Entity<MovieUserPreference>()
             .HasKey(p => p.UserId);
 
@@ -59,6 +66,18 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasOne(p => p.User)
             .WithOne()
             .HasForeignKey<MovieUserPreference>(p => p.UserId);
+
+        modelBuilder.Entity<MovieUserPreference>()
+            .Property(p => p.GenreWeights)
+            .HasConversion(dictConverter);
+
+        modelBuilder.Entity<MovieUserPreference>()
+            .Property(p => p.YearBuckets)
+            .HasConversion(dictConverter);
+
+        modelBuilder.Entity<MovieUserPreference>()
+            .Property(p => p.TmdbRatingBuckets)
+            .HasConversion(dictConverter);
 
         modelBuilder.Entity<UserMediaStatus>()
             .HasIndex(um => new { um.UserId, um.MovieId })
