@@ -31,6 +31,7 @@ export class MovieDetails implements OnInit{
     this.route.paramMap.subscribe((params) => {
       this.tmdbId = Number(params.get('id'));
       this.loadSelectedMovie(this.tmdbId);
+      this.loadMovieActors(this.tmdbId);
     });
   }
 

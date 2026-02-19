@@ -58,21 +58,50 @@ public class UserMoviePreferenceService
     }
 
 
-    //public double CalculateScore(MovieUserPreference profile, Movie movie)
-    //{
-    //    double score = 0;
+    public double CalculateMovieScore(MovieUserPreference user, Movie movie)
+    {
+        double score = 0;
 
-    //    foreach (var genre in movie.GenreIds)
-    //    {
-    //        if (profile.GenreWeights.TryGetValue(genre, out var weight))
-    //            score += weight;
-    //    }
+        // 1️⃣ Gatunki
+        if (user.GenreWeights != null)
+        {
+            foreach (var genre in movie.MovieGenres)
+            {
+                if (user.GenreWeights.TryGetValue(genre.GenreId, out var value))
+                    score += value * 2; // gatunki ważne
+            }
+        }
 
-    //    int bucket = (movie.ReleaseYear / 10) * 10;
-    //    if (profile.YearBuckets.TryGetValue(bucket, out var yearWeight))
-    //        score += yearWeight;
+        // 2️⃣ Rok (dekada)
+        if (user.YearBuckets != null)
+        {
+            int bucket = (movie.ReleaseDate.Year / 10) * 10;
 
-    //    return score;
-    //}
+            if (user.YearBuckets.TryGetValue(bucket, out var value))
+                score += value * 1.2;
+        }
+
+        // 3️⃣ TMDB rating
+        if (user.TmdbRatingBuckets != null)
+        {
+            int bucket = (int)Math.Floor(movie.VoteAverage);
+
+            if (user.TmdbRatingBuckets.TryGetValue(bucket, out var value))
+                score += value * 0.5; // mniejsza waga
+        }
+
+        // 4️⃣ Aktorzy
+        //if (user.ActorWeights != null)
+        //{
+        //    foreach (var actor in movie.VoteAverage.Take(5))
+        //    {
+        //        if (user.ActorWeights.TryGetValue(actor.ActorId, out var value))
+        //            score += value;
+        //    }
+        //}
+
+        return score;
+    }
+
 
 }

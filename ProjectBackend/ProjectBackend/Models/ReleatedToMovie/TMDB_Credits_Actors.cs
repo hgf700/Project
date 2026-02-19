@@ -30,5 +30,8 @@ public class TMDB_Cast_Response
 
     [JsonPropertyName("known_for_department")]
     public string KnownFor { get; set; }
+
+    [JsonPropertyName("popularity")]
+    public double Popularity { get; set; }
     
 }

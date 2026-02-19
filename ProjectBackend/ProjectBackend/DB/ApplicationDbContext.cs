@@ -31,8 +31,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Friend> Friends { get; set; }
     public DbSet<PrefferedGenre> PrefferedGenres { get; set; }
     public DbSet<MovieUserPreference> MovieUserPreferences { get; set; }
+    public DbSet<Actor> Actors { get; set; }
+    public DbSet<MovieActor> MovieActors { get; set; }
 
-    
+
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -40,6 +43,19 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         modelBuilder.Entity<CommentBase>()
             .UseTphMappingStrategy();
+
+        modelBuilder.Entity<MovieActor>()
+            .HasKey(mg => new { mg.MovieId, mg.ActorId });
+
+        modelBuilder.Entity<MovieActor>()
+            .HasOne(mg => mg.Movie)
+            .WithMany(g => g.MovieActors)
+            .HasForeignKey(mg => mg.MovieId);
+
+        modelBuilder.Entity<MovieActor>()
+            .HasOne(mg => mg.Actor)
+            .WithMany(g => g.MovieActors)
+            .HasForeignKey(mg => mg.ActorId);
 
         modelBuilder.Entity<MovieGenre>()
             .HasKey(mg => new { mg.MovieId, mg.GenreId });
