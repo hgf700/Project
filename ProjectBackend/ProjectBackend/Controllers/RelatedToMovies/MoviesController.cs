@@ -61,6 +61,18 @@ public class MoviesController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet("show-selected-movie/{tmdbId}")]
+    public async Task<IActionResult> ShowSelectedMovie(int tmdbId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
+
+        var movie = await _context.Movies.FirstOrDefaultAsync(sm => sm.TmdbId == tmdbId);
+
+        return Ok(movie);
+    }
+
+    [Authorize]
     [HttpGet("show-actors/{filmId}")]
     public async Task<IActionResult> ShowActors(int filmId)
     {

@@ -19,6 +19,13 @@ export class ManageMovieService {
     });
   }
 
+  getSelectedMovie(tmdbId: number){
+    return this.http.get<MovieAG>(
+      `${this.apiurlMovies}/show-selected-movie/${tmdbId}`,
+      { headers: getAuthHeaders() },
+    );
+  }
+
   getMovieActors(filmId: number){
     return this.http.get<movieActorsDto[]>(
       `${this.apiurlMovies}/show-actors/${filmId}`,

@@ -79,6 +79,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .Property(p => p.TmdbRatingBuckets)
             .HasConversion(dictConverter);
 
+        modelBuilder.Entity<MovieUserPreference>()
+            .Property(p => p.ActorWeights)
+            .HasConversion(dictConverter);
+
         modelBuilder.Entity<UserMediaStatus>()
             .HasIndex(um => new { um.UserId, um.MovieId })
             .IsUnique();
