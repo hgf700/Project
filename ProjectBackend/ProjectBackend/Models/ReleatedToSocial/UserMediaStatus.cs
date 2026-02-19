@@ -6,9 +6,9 @@ namespace ProjectBackend.Models.ReleatedToSocial;
 
 public enum RatingValue
 {
-    Bad = 1,
-    Neutral = 3,
-    Good = 10
+    Bad = -1,
+    Neutral = 0,
+    Good = 2
 }
 
 public class UserMediaStatus

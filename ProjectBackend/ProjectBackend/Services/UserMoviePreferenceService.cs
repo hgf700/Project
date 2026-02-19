@@ -1,6 +1,7 @@
 ﻿using ProjectBackend.Models.RelatedToRecommendation;
 using ProjectBackend.Models.ReleatedToMovie;
 using ProjectBackend.Models.ReleatedToSocial;
+using System.Numerics;
 
 namespace ProjectBackend.Services;
 
@@ -28,6 +29,32 @@ public class UserMoviePreferenceService
             user.GenreWeights[genreId] = 0;
 
         user.GenreWeights[genreId] += (double)rate;
+    }
+
+    public void TmdbRatingPreference(MovieUserPreference user, double tmdbRating, RatingValue rate)
+    {
+        if (user.TmdbRatingBuckets == null)
+            user.TmdbRatingBuckets = new Dictionary<int, double>();
+
+        int bucket = (int)Math.Floor(tmdbRating);
+
+        if (!user.TmdbRatingBuckets.ContainsKey(bucket))
+            user.TmdbRatingBuckets[bucket] = 0;
+
+        user.TmdbRatingBuckets[bucket] += (double)rate;
+    }
+
+    public void ActorsPreference(MovieUserPreference user, int actorId, int order, RatingValue rate)
+    {
+        if (user.ActorWeights == null)
+            user.ActorWeights = new Dictionary<int, double>();
+
+        double roleWeight = 1.0 / (order + 1);
+
+        if (!user.ActorWeights.ContainsKey(actorId))
+            user.ActorWeights[actorId] = 0;
+
+        user.ActorWeights[actorId] += (double)rate * roleWeight;
     }
 
 

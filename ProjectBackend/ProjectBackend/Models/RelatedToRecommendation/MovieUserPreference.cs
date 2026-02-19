@@ -10,6 +10,7 @@ public class MovieUserPreference
         GenreWeights = new Dictionary<int, double>();
         YearBuckets = new Dictionary<int, double>();
         TmdbRatingBuckets = new Dictionary<int, double>();
+        ActorWeights = new Dictionary<int, double>();
     }
 
     [Key]
@@ -19,5 +20,6 @@ public class MovieUserPreference
     public Dictionary<int, double> GenreWeights { get; set; }
     public Dictionary<int, double> YearBuckets { get; set; }
     public Dictionary<int, double> TmdbRatingBuckets { get; set; }
+    public Dictionary<int, double> ActorWeights { get; set; } 
 }
 

@@ -118,6 +118,15 @@ public class RatingController : ControllerBase
                     dto.Rating
                 );
             }
+
+            _moviePreferenceService.TmdbRatingPreference(
+                userPreference,
+                movie.VoteAverage,
+                dto.Rating
+            );
+
+
+
         }
         else
         {

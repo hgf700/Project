@@ -27,6 +27,7 @@ public class LoadActorsService
             return new List<TMDB_Cast_Response>();
 
         return response.Data.Casts
+            .Where(c => c.KnownFor == "Acting")
             .OrderBy(c => c.Order)
             .Take(3)
             .ToList();

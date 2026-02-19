@@ -28,7 +28,7 @@ public class TMDB_Cast_Response
     [JsonPropertyName("order")]
     public int Order { get; set; }
 
-    [JsonPropertyName("popularity")]
-    public double Popularity { get; set; }
-
+    [JsonPropertyName("known_for_department")]
+    public string KnownFor { get; set; }
+    
 }
