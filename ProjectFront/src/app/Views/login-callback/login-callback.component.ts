@@ -45,6 +45,10 @@ export class LoginCallbackComponent implements OnInit {
     this.router.navigate(['/preffered-genre']);
   }
 
+  movieRecommendations() {
+    this.router.navigate(['/movie-recomendations']);
+  }
+
   loadCurrentUser() {
     this.currentUserService.getCurrentUser().subscribe({
       next: (user) => {

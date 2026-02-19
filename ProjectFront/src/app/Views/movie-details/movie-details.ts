@@ -19,7 +19,7 @@ export class MovieDetails implements OnInit{
   movie!: MovieAG;
   movieActors:movieActorsDto[]=[];
   loading = true;
-  tmdbId!: number;
+  movieTmdbId!: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -29,14 +29,14 @@ export class MovieDetails implements OnInit{
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
-      this.tmdbId = Number(params.get('id'));
-      this.loadSelectedMovie(this.tmdbId);
-      this.loadMovieActors(this.tmdbId);
+      this.movieTmdbId = Number(params.get('id'));
+      this.loadSelectedMovie(this.movieTmdbId);
+      this.loadMovieActors(this.movieTmdbId);
     });
   }
 
-  loadSelectedMovie(tmdbId: number){
-    this.managemovieService.getSelectedMovie(this.tmdbId).subscribe({
+  loadSelectedMovie(movieTmdbId: number){
+    this.managemovieService.getSelectedMovie(this.movieTmdbId).subscribe({
       next: (value) => {
         this.movie = value;
         this.loading = false;
@@ -62,22 +62,22 @@ export class MovieDetails implements OnInit{
   }
 
   RateGood(movieId: number) {
-    this.managemovieService.rateMovie(movieId, 10).subscribe({
-      next: () => console.log('Ocena zapisana 10'),
+    this.managemovieService.rateMovie(movieId, 2).subscribe({
+      next: () => console.log('Ocena zapisana 2'),
       error: (err) => console.error(err),
     });
   }
 
   RateNeutral(movieId: number) {
-    this.managemovieService.rateMovie(movieId, 3).subscribe({
-      next: () => console.log('Ocena zapisana 3'),
+    this.managemovieService.rateMovie(movieId, 0).subscribe({
+      next: () => console.log('Ocena zapisana 0'),
       error: (err) => console.error(err),
     });
   }
 
   RateBad(movieId: number) {
-    this.managemovieService.rateMovie(movieId, 1).subscribe({
-      next: () => console.log('Ocena zapisana 1'),
+    this.managemovieService.rateMovie(movieId, -1).subscribe({
+      next: () => console.log('Ocena zapisana -1'),
       error: (err) => console.error(err),
     });
   }

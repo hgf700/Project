@@ -9,6 +9,7 @@ public class Actor
     public string OriginalName { get; set; }
     public string ProfilePath { get; set; }
     public string KnownFor { get; set; }
+    public double Popularity { get; set; }
     public ICollection<MovieActor> MovieActors { get; set; } = new List<MovieActor>();
 
 }

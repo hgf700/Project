@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
+using ProjectBackend.Models.DTO.RelatedToMovies;
 using ProjectBackend.Services;
 using System.Security.Claims;
 
@@ -33,22 +34,37 @@ public class MovieRecomendController : ControllerBase
         if (userId == null) return Unauthorized();
 
         var userPreference = await _context.MovieUserPreferences
-        .FirstOrDefaultAsync(x => x.UserId == userId);
+            .FirstOrDefaultAsync(x => x.UserId == userId);
+
+        if (userPreference == null)
+            return Ok(new List<getMovieRecommendationsDto>());
 
         var movies = await _context.Movies
             .Include(m => m.MovieGenres)
-            //.Include(m => m.MovieActors)
+            .Include(m => m.MovieActors)
+                .ThenInclude(ma => ma.Actor)
             .ToListAsync();
 
-        var ranked = movies
-            .Select(m => new
+        var scoredMovies = await Task.WhenAll(
+            movies.Select(async m => new
             {
                 Movie = m,
-                Score = _userMoviePreference.CalculateMovieScore(userPreference, m)
+                Score = await _userMoviePreference.CalculateMovieScore(userPreference, m)
             })
+        );
+
+        var ranked = scoredMovies
             .OrderByDescending(x => x.Score)
             .Take(5)
-            .Select(x => x.Movie);
+            .Select(x => new getMovieRecommendationsDto
+            {
+                TmdbId = x.Movie.TmdbId,
+                Title = x.Movie.Title,
+                Overview = x.Movie.Overview,
+                PosterPath = x.Movie.PosterPath,
+                MovieRecommendations = x.Score
+            })
+            .ToList();
 
         return Ok(ranked);
     }

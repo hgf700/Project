@@ -1,21 +1,16 @@
-<!-- <main class="main">
-  <form [formGroup]="addFriendForm" (ngSubmit)="onSubmit()">
-    <label>Email znajomego</label>
-    <input type="email" formControlName="email" />
+<main class="main">
+  <p *ngIf="loading">loading films</p>
 
-    <button type="submit">Dodaj znajomego</button>
-  </form>
+  <div *ngIf="!loading && movieRecommendations.length===0">
+    brak
+  </div>
 
-  <button (click)="loadFriends()">Pokaż znajomych</button>
+  
+  <div *ngFor="let movie of movieRecommendations" class="movie-card">
+    <h3>{{ movie.tmdbId }}</h3>
+    <h3>{{ movie.title }}</h3>
+    <h3>{{ movie.overview }}</h3>
+    <h3>{{ movie.recommendations }}</h3>
 
-  <ul *ngIf="friends.length > 0">
-    <li *ngFor="let f of friends">
-      {{ f.email }}
-      <button (click)="deleteFriend(f.friendId)">usun znajomego</button>
-      <button (click)="showFriendSocialAccount(f.friendId)">
-        wyswietl profil znajomego
-      </button>
-    </li>
-  </ul>
-  <p *ngIf="friends.length === 0">Brak znajomych</p>
-</main> -->
+  </div>
+</main>

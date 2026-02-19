@@ -18,7 +18,4 @@ public class Movie
 
     public ICollection<MovieGenre> MovieGenres { get; set; } = new List<MovieGenre>();
     public ICollection<MovieActor> MovieActors { get; set; } = new List<MovieActor>();
-
-
-    
 }
