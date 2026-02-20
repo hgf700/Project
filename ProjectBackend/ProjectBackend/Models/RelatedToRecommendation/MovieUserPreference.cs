@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProjectBackend.Models.RelatedToRecommendation;
 
+//cache aproach
 public class MovieUserPreference
 {
     public MovieUserPreference()

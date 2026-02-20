@@ -2,8 +2,6 @@
 
 namespace ProjectBackend.Models.ReleatedToSocial;
 
-//nie wiem cczy to dobre
-
 public enum RatingValue
 {
     Bad = -1,
