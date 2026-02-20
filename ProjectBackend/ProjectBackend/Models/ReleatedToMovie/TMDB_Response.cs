@@ -16,8 +16,8 @@ public class TMDB_Response
     [JsonPropertyName("id")]
     public int TmdbId { get; set; }
 
-    [JsonPropertyName("adult")]
-    public bool Adult { get; set; }
+    //[JsonPropertyName("adult")]
+    //public bool Adult { get; set; }
 
     [JsonPropertyName("backdrop_path")]
     public string BackdropPath { get; set; }

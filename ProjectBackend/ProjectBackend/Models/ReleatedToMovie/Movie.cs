@@ -10,7 +10,7 @@ public class Movie
     public int TmdbId { get; set; }
     public string Title { get; set; } // zamiast name, spójnie z TMDB
     public string Overview { get; set; }
-    public bool Adult { get; set; }
+    //public bool Adult { get; set; }
     public DateTime ReleaseDate { get; set; }
     public float VoteAverage { get; set; }
     public string PosterPath { get; set; }

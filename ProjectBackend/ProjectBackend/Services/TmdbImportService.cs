@@ -82,7 +82,6 @@ public class TmdbImportService
                 TmdbId = movieDto.TmdbId,
                 Title = movieDto.Title ?? movieDto.OriginalTitle,
                 Overview = movieDto.Overview,
-                Adult = movieDto.Adult,
                 ReleaseDate = releaseDate,
                 VoteAverage = (float)movieDto.VoteAverage,
                 PosterPath = movieDto.PosterPath,
