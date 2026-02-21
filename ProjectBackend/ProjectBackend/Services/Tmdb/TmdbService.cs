@@ -2,7 +2,7 @@
 using ProjectBackend.Services.interfaces;
 using RestSharp;
 
-namespace ProjectBackend.Services;
+namespace ProjectBackend.Services.Tmdb;
 
 //public class TmdbService : ITmdbService
 public class TmdbService 

@@ -12,6 +12,7 @@ using ProjectBackend.ExtraTools;
 using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
 using ProjectBackend.Services.interfaces;
+using ProjectBackend.Services.Tmdb;
 using System.Configuration;
 using System.Text;
 
@@ -40,12 +41,13 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 builder.Services.AddHttpClient();
 
+builder.Services.AddScoped<TmdbSaveProductionCompaniesService>();
 builder.Services.AddScoped<UserMoviePreferenceService>();
-builder.Services.AddScoped<LoadPeopleRoleService>();
+builder.Services.AddScoped<TmdbLoadPeopleRoleService>();
 builder.Services.AddScoped<TmdbImportService>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<TmdbService>();
-builder.Services.AddScoped<SeedGenresService>();
+builder.Services.AddScoped<TmdbSeedGenresService>();
 //builder.Services.AddScoped<ITmdbService,TmdbService>();
 
 builder.Services.AddAuthorization();

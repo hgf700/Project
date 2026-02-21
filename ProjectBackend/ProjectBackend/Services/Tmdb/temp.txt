@@ -2,21 +2,26 @@
 using ProjectBackend.Models.ReleatedToMovie;
 using Microsoft.EntityFrameworkCore;
 
-namespace ProjectBackend.Services;
+namespace ProjectBackend.Services.Tmdb;
 public class TmdbImportService
 {
     private readonly ApplicationDbContext _context;
     private readonly TmdbService _tmdbService;
-    private readonly SeedGenresService _genresService;
+    private readonly TmdbSeedGenresService _genresService;
+    private readonly TmdbSaveProductionCompaniesService _productionCompaniesService;
+
+    
 
     public TmdbImportService(
         ApplicationDbContext context,
         TmdbService tmdbService,
-        SeedGenresService genresService)
+        TmdbSeedGenresService genresService,
+        TmdbSaveProductionCompaniesService productionCompaniesService)
     {
         _context = context;
         _tmdbService = tmdbService;
         _genresService = genresService;
+        _productionCompaniesService = productionCompaniesService;
     }
 
     public async Task ImportMoviesWithGenresAsync(int page = 1)
@@ -102,8 +107,8 @@ public class TmdbImportService
                         {
                             MovieId = newMovie.Id,
                             GenreId = genre.Id,
-                            MovieTitle=newMovie.Title,
-                            GenreName=genre.Name,
+                            MovieTitle = newMovie.Title,
+                            GenreName = genre.Name,
                         });
                     }
                     else
@@ -115,7 +120,55 @@ public class TmdbImportService
             }
 
             importedCount++;
+
+            var movieCompaniesDto = await _productionCompaniesService.GetMovieCompanies(newMovie.Id);
+
+            if (movieCompaniesDto.CompanyTmdbId != null)
+            {
+                foreach (var movieCompaniesDto in movieCompaniesDto.CompanyTmdbId)
+                {
+                    _context.Companies.Add(new Company
+                    {
+                        CompanyTmdbId= movieCompaniesDto.CompanyTmdbId,
+                        CompanyName = movieCompaniesDto.CompanyName,
+                    });
+
+                }
+            }
         }
+
+        // Krok 1: Pobierz i zapisz gatunki (tylko jeśli ich nie ma)
+
+        if (tmdbGenres == null || !tmdbGenres.Any())
+        {
+            throw new InvalidOperationException("Nie udało się pobrać listy gatunków z TMDB");
+        }
+
+        // Mapa TmdbId → Genre (żeby szybciej znajdować)
+        var genreMap = new Dictionary<int, Genre>();
+
+        foreach (var tmdbGenre in tmdbGenres)
+        {
+            var existing = await _context.Genres
+                .FirstOrDefaultAsync(g => g.TmdbId == tmdbGenre.TmdbId);
+
+            if (existing == null)
+            {
+                var newGenre = new Genre
+                {
+                    TmdbId = tmdbGenre.TmdbId,
+                    Name = tmdbGenre.Name
+                };
+                _context.Genres.Add(newGenre);
+                genreMap[tmdbGenre.TmdbId] = newGenre;
+            }
+            else
+            {
+                genreMap[tmdbGenre.TmdbId] = existing;
+            }
+        }
+
+        await _context.SaveChangesAsync(); // Zapisz nowe gatunki
 
         await _context.SaveChangesAsync();
 

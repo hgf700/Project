@@ -33,9 +33,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<MovieUserPreference> MovieUserPreferences { get; set; }
     public DbSet<PeopleRole> PeopleRoles { get; set; }
     public DbSet<MoviePeopleRole> MovieActors { get; set; }
-
-
-
+    public DbSet<MovieCompany> MovieCompanies { get; set; }
+    public DbSet<Company> Companies { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -69,6 +68,19 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasOne(mg => mg.Genre)
             .WithMany(g => g.MovieGenres)
             .HasForeignKey(mg => mg.GenreId);
+
+        modelBuilder.Entity<MovieCompany>()
+            .HasKey(mg => new { mg.MovieId, mg.CompanyId });
+
+        modelBuilder.Entity<MovieCompany>()
+            .HasOne(mg => mg.Movie)
+            .WithMany(g => g.MovieCompanies)
+            .HasForeignKey(mg => mg.MovieId);
+
+        modelBuilder.Entity<MovieCompany>()
+            .HasOne(mg => mg.Company)
+            .WithMany(g => g.MovieCompanies)
+            .HasForeignKey(mg => mg.CompanyId);
 
         var dictConverter = new ValueConverter<Dictionary<int, double>, string>(
             v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),

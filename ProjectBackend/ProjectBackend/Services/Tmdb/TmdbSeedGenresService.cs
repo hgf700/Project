@@ -1,12 +1,12 @@
 ﻿using ProjectBackend.Models.ReleatedToMovie;
 using RestSharp;
 
-public class SeedGenresService
+public class TmdbSeedGenresService
 {
     private readonly RestClient _client;
     private readonly string _apiToken;
 
-    public SeedGenresService(IConfiguration configuration)
+    public TmdbSeedGenresService(IConfiguration configuration)
     {
         _apiToken = Environment.GetEnvironmentVariable("THE_MOVIE_DB_API")
             ?? throw new Exception("TMDB API token not found");

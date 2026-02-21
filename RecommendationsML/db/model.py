@@ -9,3 +9,10 @@ class UserMediaStatuses(Base):
     MovieId = Column(Integer)
     Rating = Column(Integer)
     CreatedAt = Column(DateTime)
+
+class Genres(Base):
+    __tablename__ = "Genres"
+
+    Id = Column(Integer, primary_key=True, index=True)
+    TmdbId = Column(Integer)
+    Name = Column(String)

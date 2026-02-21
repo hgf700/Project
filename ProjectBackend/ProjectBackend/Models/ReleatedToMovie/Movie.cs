@@ -16,4 +16,6 @@ public class Movie
     public string BackdropPath { get; set; } // dodałem, bo TMDB zwraca tło
     public ICollection<MovieGenre> MovieGenres { get; set; } = new List<MovieGenre>();
     public ICollection<MoviePeopleRole> MoviePeopleRoles { get; set; } = new List<MoviePeopleRole>();
+    public ICollection<MovieCompany> MovieCompanies { get; set; } = new List<MovieCompany>();
+
 }

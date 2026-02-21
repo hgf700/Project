@@ -1,12 +1,12 @@
 ﻿using ProjectBackend.Models.ReleatedToMovie;
 using RestSharp;
 
-namespace ProjectBackend.Services;
-public class LoadPeopleRoleService
+namespace ProjectBackend.Services.Tmdb;
+public class TmdbLoadPeopleRoleService
 {
     private readonly RestClient _client;
     private readonly string _apiToken;
-    public LoadPeopleRoleService(IConfiguration configuration)
+    public TmdbLoadPeopleRoleService(IConfiguration configuration)
     {
         _apiToken = Environment.GetEnvironmentVariable("THE_MOVIE_DB_API")
                     ?? throw new Exception("TMDB API token not found");

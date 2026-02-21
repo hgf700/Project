@@ -7,8 +7,8 @@ using ProjectBackend.Models.DTO;
 using ProjectBackend.Models.ReleatedToMovie;
 using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
-using ProjectBackend.Services;
 using ProjectBackend.Services.interfaces;
+using ProjectBackend.Services.Tmdb;
 using System.Globalization;
 using System.Security.Claims;
 
@@ -20,18 +20,18 @@ namespace ProjectBackend.Controllers.RelatedToMovies;
 public class MoviesController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
-    private readonly SeedGenresService _seedgenres;
+    private readonly TmdbSeedGenresService _seedgenres;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly TmdbImportService _importService;
-    private readonly LoadPeopleRoleService _loadActorsService;
+    private readonly TmdbLoadPeopleRoleService _loadActorsService;
 
 
     public MoviesController(
         ApplicationDbContext context,
-        SeedGenresService seedgenres,
+        TmdbSeedGenresService seedgenres,
         UserManager<ApplicationUser> userManager,
         TmdbImportService importService,
-        LoadPeopleRoleService loadActorsService)
+        TmdbLoadPeopleRoleService loadActorsService)
     {
         _context = context;
         _seedgenres = seedgenres;
