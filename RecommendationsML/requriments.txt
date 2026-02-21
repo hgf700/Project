@@ -1,1 +1,1 @@
-pip install pandas matplotlib scikit-learn numpy sqlalchemy python-dotenv "fastapi[standard]" psycopg2
+pip install notebook pandas matplotlib scikit-learn numpy sqlalchemy python-dotenv "fastapi[standard]" psycopg2 

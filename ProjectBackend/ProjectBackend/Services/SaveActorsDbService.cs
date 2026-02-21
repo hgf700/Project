@@ -8,11 +8,11 @@ namespace ProjectBackend.Services;
 public class SaveActorsDbService
 {
     private readonly ApplicationDbContext _context;
-    private readonly LoadActorsService _loadActors;
+    private readonly LoadPeopleRoleService _loadActors;
 
     public SaveActorsDbService(
         ApplicationDbContext context,
-        LoadActorsService loadActors
+        LoadPeopleRoleService loadActors
         )
     {
         _context = context;

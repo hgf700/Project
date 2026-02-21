@@ -23,7 +23,7 @@ public class MoviesController : ControllerBase
     private readonly SeedGenresService _seedgenres;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly TmdbImportService _importService;
-    private readonly LoadActorsService _loadActorsService;
+    private readonly LoadPeopleRoleService _loadActorsService;
 
 
     public MoviesController(
@@ -31,7 +31,7 @@ public class MoviesController : ControllerBase
         SeedGenresService seedgenres,
         UserManager<ApplicationUser> userManager,
         TmdbImportService importService,
-        LoadActorsService loadActorsService)
+        LoadPeopleRoleService loadActorsService)
     {
         _context = context;
         _seedgenres = seedgenres;

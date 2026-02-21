@@ -1,0 +1,12 @@
+﻿https://developer.themoviedb.org/reference/configuration-jobs
+
+"department": "Directing",
+    "jobs": [ Director
+
+
+https://developer.themoviedb.org/reference/movie-credits
+
+      "department": "Directing",
+      "job": "Director"
+
+      1171/1172
