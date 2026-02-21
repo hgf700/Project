@@ -41,8 +41,8 @@ public class MovieRecomendController : ControllerBase
 
         var movies = await _context.Movies
             .Include(m => m.MovieGenres)
-            .Include(m => m.MovieActors)
-                .ThenInclude(ma => ma.Actor)
+            .Include(m => m.MoviePeopleRoles)
+                .ThenInclude(ma => ma.PeopleRoles)
             .ToListAsync();
 
         var scoredMovies = await Task.WhenAll(

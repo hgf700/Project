@@ -125,11 +125,11 @@ public class RatingController : ControllerBase
                 dto.Rating
             );
 
-            foreach (var movieActor in movie.MovieActors.Take(5))
+            foreach (var movieActor in movie.MoviePeopleRoles.Take(5))
             {
                 _moviePreferenceService.ActorsPreference(
                     userPreference,
-                    movieActor.Actor.TmdbId,
+                    movieActor.PeopleRoles.TmdbId,
                     movieActor.Order,
                     dto.Rating
                 );

@@ -35,7 +35,7 @@ public class SaveActorsDbService
             throw new InvalidOperationException("Nie udało się pobrać listy aktorów z TMDB");
 
         // 3️⃣ Pobierz już istniejących aktorów z bazy
-        var existingActors = await _context.Actors
+        var existingActors = await _context.PeopleRoles
             .Where(a => topActors.Select(t => t.Id).Contains(a.TmdbId))
             .ToListAsync();
 
@@ -46,7 +46,7 @@ public class SaveActorsDbService
             // 4️⃣ Jeśli aktor nie istnieje → dodaj
             if (!actorsMap.TryGetValue(actorDto.Id, out var actor))
             {
-                actor = new Actor
+                actor = new PeopleRole
                 {
                     TmdbId = actorDto.Id,
                     OriginalName = actorDto.OriginalName,
@@ -54,20 +54,20 @@ public class SaveActorsDbService
                     ProfilePath = actorDto.ProfilePath
                 };
 
-                _context.Actors.Add(actor);
+                _context.PeopleRoles.Add(actor);
                 actorsMap[actorDto.Id] = actor;
             }
 
             // 5️⃣ Sprawdź czy relacja już istnieje
             bool relationExists = await _context.MovieActors
-                .AnyAsync(ma => ma.MovieId == movie.Id && ma.ActorId == actor.Id);
+                .AnyAsync(ma => ma.MovieId == movie.Id && ma.PeopleRolesId == actor.Id);
 
             if (!relationExists)
             {
-                _context.MovieActors.Add(new MovieActor
+                _context.MovieActors.Add(new MoviePeopleRole
                 {
                     MovieId = movie.Id,
-                    ActorId = actor.Id,
+                    PeopleRolesId = actor.Id,
                     Order = actorDto.Order,
                     Character= actorDto.Character,
                 });

@@ -31,8 +31,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Friend> Friends { get; set; }
     public DbSet<PrefferedGenre> PrefferedGenres { get; set; }
     public DbSet<MovieUserPreference> MovieUserPreferences { get; set; }
-    public DbSet<Actor> Actors { get; set; }
-    public DbSet<MovieActor> MovieActors { get; set; }
+    public DbSet<PeopleRole> PeopleRoles { get; set; }
+    public DbSet<MoviePeopleRole> MovieActors { get; set; }
 
 
 
@@ -44,18 +44,18 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<CommentBase>()
             .UseTphMappingStrategy();
 
-        modelBuilder.Entity<MovieActor>()
-            .HasKey(mg => new { mg.MovieId, mg.ActorId });
+        modelBuilder.Entity<MoviePeopleRole>()
+            .HasKey(mg => new { mg.MovieId, mg.PeopleRolesId });
 
-        modelBuilder.Entity<MovieActor>()
+        modelBuilder.Entity<MoviePeopleRole>()
             .HasOne(mg => mg.Movie)
-            .WithMany(g => g.MovieActors)
+            .WithMany(g => g.MoviePeopleRoles)
             .HasForeignKey(mg => mg.MovieId);
 
-        modelBuilder.Entity<MovieActor>()
-            .HasOne(mg => mg.Actor)
-            .WithMany(g => g.MovieActors)
-            .HasForeignKey(mg => mg.ActorId);
+        modelBuilder.Entity<MoviePeopleRole>()
+            .HasOne(mg => mg.PeopleRoles)
+            .WithMany(g => g.MoviePeopleRoles)
+            .HasForeignKey(mg => mg.PeopleRolesId);
 
         modelBuilder.Entity<MovieGenre>()
             .HasKey(mg => new { mg.MovieId, mg.GenreId });

@@ -97,9 +97,9 @@ public class UserMoviePreferenceService
 
         if (user.ActorWeights != null)
         {
-            foreach (var movieActor in movie.MovieActors)
+            foreach (var movieActor in movie.MoviePeopleRoles)
             {
-                var actor = movieActor.Actor;
+                var actor = movieActor.PeopleRoles;
 
                 if (user.ActorWeights.TryGetValue(actor.TmdbId, out var value))
                 {

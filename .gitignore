@@ -2,3 +2,5 @@ moje/
 **/venv/
 **/.ipynb_checkpoints/
 RecommendationsML/Data/
+**/.env
+**/__pycache__
