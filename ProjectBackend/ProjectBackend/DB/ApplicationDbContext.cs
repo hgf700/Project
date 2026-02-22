@@ -19,6 +19,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     }
     public DbSet<Movie> Movies { get; set; }
     public DbSet<MovieGenre> MovieGenres { get; set; }
+    public DbSet<RecomendTag> RecomendTags { get; set; }
+    public DbSet<RecomendTagMovie> RecomendTagMovies { get; set; }
     public DbSet<Genre> Genres { get; set; }
     public DbSet<Playlist> Playlists { get; set; }
     public DbSet<PlaylistComment> PlaylistComments { get; set; }
@@ -32,9 +34,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<PrefferedGenre> PrefferedGenres { get; set; }
     public DbSet<MovieUserPreference> MovieUserPreferences { get; set; }
     public DbSet<PeopleRole> PeopleRoles { get; set; }
-    public DbSet<MoviePeopleRole> MovieActors { get; set; }
+    public DbSet<MoviePeopleRole> MoviePeopleRoles { get; set; }
     public DbSet<MovieCompany> MovieCompanies { get; set; }
     public DbSet<Company> Companies { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -48,12 +51,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         modelBuilder.Entity<MoviePeopleRole>()
             .HasOne(mg => mg.Movie)
-            .WithMany(g => g.MoviePeopleRoles)
+            .WithMany(g => g.MoviePeopleRole)
             .HasForeignKey(mg => mg.MovieId);
 
         modelBuilder.Entity<MoviePeopleRole>()
             .HasOne(mg => mg.PeopleRoles)
-            .WithMany(g => g.MoviePeopleRoles)
+            .WithMany(g => g.MoviePeopleRole)
             .HasForeignKey(mg => mg.PeopleRolesId);
 
         modelBuilder.Entity<MovieGenre>()
@@ -61,13 +64,26 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         modelBuilder.Entity<MovieGenre>()
             .HasOne(mg => mg.Movie)
-            .WithMany(m => m.MovieGenres)
+            .WithMany(m => m.MovieGenre)
             .HasForeignKey(mg => mg.MovieId);
 
         modelBuilder.Entity<MovieGenre>()
             .HasOne(mg => mg.Genre)
             .WithMany(g => g.MovieGenres)
             .HasForeignKey(mg => mg.GenreId);
+
+        modelBuilder.Entity<RecomendTagMovie>()
+            .HasKey(mg => new { mg.MovieId, mg.RecomendTagId });
+
+        modelBuilder.Entity<RecomendTagMovie>()
+            .HasOne(mg => mg.Movie)
+            .WithMany(m => m.RecomendTagMovie)
+            .HasForeignKey(mg => mg.MovieId);
+
+        modelBuilder.Entity<RecomendTagMovie>()
+            .HasOne(mg => mg.RecomendTag)
+            .WithMany(g => g.RecomendTagMovie)
+            .HasForeignKey(mg => mg.RecomendTagId);
 
         modelBuilder.Entity<MovieCompany>()
             .HasKey(mg => new { mg.MovieId, mg.CompanyId });

@@ -25,17 +25,14 @@ public class RatingController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly UserMoviePreferenceService _moviePreferenceService;
 
     public RatingController(
         UserManager<ApplicationUser> userManager,
-        ApplicationDbContext context,
-        UserMoviePreferenceService moviePreferenceService
+        ApplicationDbContext context
         )
     {
         _userManager = userManager;
         _context = context;
-        _moviePreferenceService = moviePreferenceService;
     }
 
     [Authorize]
@@ -69,7 +66,7 @@ public class RatingController : ControllerBase
         if (userId == null) return Unauthorized();
 
         var movie = await _context.Movies
-            .Include(m => m.MovieGenres) // WAŻNE
+            .Include(m => m.MovieGenre) // WAŻNE
             .FirstOrDefaultAsync(m => m.TmdbId == movieId);
 
         if (movie == null)
@@ -104,36 +101,36 @@ public class RatingController : ControllerBase
 
             var releaseYear = movie.ReleaseDate.Year;
 
-            _moviePreferenceService.UpdateYearPreference(
-                userPreference,
-                releaseYear,
-                dto.Rating
-            );
+            //_moviePreferenceService.UpdateYearPreference(
+            //    userPreference,
+            //    releaseYear,
+            //    dto.Rating
+            //);
 
-            foreach (var genre in movie.MovieGenres)
-            {
-                _moviePreferenceService.UpdateGenrePreference(
-                    userPreference,
-                    genre.GenreId,
-                    dto.Rating
-                );
-            }
+            //foreach (var genre in movie.MovieGenres)
+            //{
+            //    _moviePreferenceService.UpdateGenrePreference(
+            //        userPreference,
+            //        genre.GenreId,
+            //        dto.Rating
+            //    );
+            //}
 
-            _moviePreferenceService.TmdbRatingPreference(
-                userPreference,
-                movie.VoteAverage,
-                dto.Rating
-            );
+            //_moviePreferenceService.TmdbRatingPreference(
+            //    userPreference,
+            //    movie.VoteAverage,
+            //    dto.Rating
+            //);
 
-            foreach (var movieActor in movie.MoviePeopleRoles.Take(5))
-            {
-                _moviePreferenceService.ActorsPreference(
-                    userPreference,
-                    movieActor.PeopleRoles.TmdbId,
-                    movieActor.Order,
-                    dto.Rating
-                );
-            }
+            //foreach (var movieActor in movie.MoviePeopleRoles.Take(5))
+            //{
+            //    _moviePreferenceService.ActorsPreference(
+            //        userPreference,
+            //        movieActor.PeopleRoles.TmdbId,
+            //        movieActor.Order,
+            //        dto.Rating
+            //    );
+            //}
 
 
         }

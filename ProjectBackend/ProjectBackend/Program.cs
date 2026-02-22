@@ -42,7 +42,7 @@ builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<TmdbSaveProductionCompaniesService>();
-builder.Services.AddScoped<UserMoviePreferenceService>();
+//builder.Services.AddScoped<UserMoviePreferenceService>();
 builder.Services.AddScoped<TmdbLoadPeopleRoleService>();
 builder.Services.AddScoped<TmdbImportService>();
 builder.Services.AddScoped<JwtService>();

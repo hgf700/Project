@@ -10,4 +10,5 @@ public class MoviePeopleRole
 
     public string Character { get; set; } = string.Empty;
     public int Order { get; set; }
+    public string Job { get; set; }
 }

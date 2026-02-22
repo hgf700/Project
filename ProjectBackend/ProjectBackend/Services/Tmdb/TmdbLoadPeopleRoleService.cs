@@ -35,7 +35,7 @@ public class TmdbLoadPeopleRoleService
                 TmdbId = c.Id,
                 OriginalName = c.OriginalName,
                 Popularity = c.Popularity,
-                KnownFor = KnownForDepartment.Acting
+                Job=c.Job,
             })
             .ToList() ?? new List<PeopleRole>();
 
@@ -49,7 +49,6 @@ public class TmdbLoadPeopleRoleService
                 TmdbId = director.Id,
                 OriginalName = director.OriginalName,
                 Popularity = director.Popularity,
-                KnownFor = KnownForDepartment.Directing,
                 Job = director.Job
             });
         }

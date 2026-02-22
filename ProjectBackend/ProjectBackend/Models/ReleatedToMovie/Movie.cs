@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjectBackend.Models.RelatedToRecommendation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,8 +15,8 @@ public class Movie
     public float VoteAverage { get; set; }
     public string? PosterPath { get; set; }
     public string? BackdropPath { get; set; } 
-    public ICollection<MovieGenre> MovieGenres { get; set; } = new List<MovieGenre>();
-    public ICollection<MoviePeopleRole> MoviePeopleRoles { get; set; } = new List<MoviePeopleRole>();
+    public ICollection<MovieGenre> MovieGenre { get; set; } = new List<MovieGenre>();
+    public ICollection<MoviePeopleRole> MoviePeopleRole { get; set; } = new List<MoviePeopleRole>();
     public ICollection<MovieCompany> MovieCompanies { get; set; } = new List<MovieCompany>();
-
+    public ICollection<RecomendTagMovie> RecomendTagMovie { get; set; } = new List<RecomendTagMovie>();
 }

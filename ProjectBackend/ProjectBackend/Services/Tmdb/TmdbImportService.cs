@@ -1,8 +1,10 @@
-﻿using ProjectBackend.DB;
+﻿using Microsoft.EntityFrameworkCore;
+using ProjectBackend.DB;
+using ProjectBackend.Models.RelatedToRecommendation;
 using ProjectBackend.Models.ReleatedToMovie;
-using Microsoft.EntityFrameworkCore;
 
 namespace ProjectBackend.Services.Tmdb;
+
 public class TmdbImportService
 {
     private readonly ApplicationDbContext _context;
@@ -10,7 +12,7 @@ public class TmdbImportService
     private readonly TmdbSeedGenresService _genresService;
     private readonly TmdbSaveProductionCompaniesService _productionCompaniesService;
 
-    
+
 
     public TmdbImportService(
         ApplicationDbContext context,
@@ -27,7 +29,6 @@ public class TmdbImportService
     public async Task ImportMoviesWithGenresAsync(int page = 1)
     {
         var tmdbGenres = await _genresService.GetAllGenresAsync();
-
         if (tmdbGenres == null || !tmdbGenres.Any())
             throw new InvalidOperationException("Nie udało się pobrać listy gatunków z TMDB");
 
@@ -51,6 +52,9 @@ public class TmdbImportService
 
         await _context.SaveChangesAsync();
 
+        var existingTags = await _context.RecomendTags
+            .ToDictionaryAsync(t => t.Tag, t => t);
+
         var moviesDto = await _tmdbService.GetPopularMoviesAsync(page);
         if (moviesDto == null || !moviesDto.Any())
             return;
@@ -59,10 +63,7 @@ public class TmdbImportService
 
         foreach (var movieDto in moviesDto)
         {
-            var existingMovie = await _context.Movies
-                .FirstOrDefaultAsync(m => m.TmdbId == movieDto.TmdbId);
-
-            if (existingMovie != null)
+            if (await _context.Movies.AnyAsync(m => m.TmdbId == movieDto.TmdbId))
                 continue;
 
             DateTime releaseDate = DateTime.MinValue;
@@ -81,9 +82,10 @@ public class TmdbImportService
             };
 
             _context.Movies.Add(newMovie);
-            await _context.SaveChangesAsync(); // potrzebne aby dostać newMovie.Id
+            await _context.SaveChangesAsync(); // tylko raz — potrzebne do Id
 
-            if (movieDto.GenreIds != null && movieDto.GenreIds.Length > 0)
+            // 🎬 GENRES
+            if (movieDto.GenreIds != null)
             {
                 foreach (var tmdbGenreId in movieDto.GenreIds)
                 {
@@ -92,24 +94,18 @@ public class TmdbImportService
                         _context.MovieGenres.Add(new MovieGenre
                         {
                             MovieId = newMovie.Id,
-                            GenreId = genre.Id,
-                            MovieTitle = newMovie.Title,
-                            GenreName = genre.Name,
+                            GenreId = genre.Id
                         });
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Brak gatunku o TmdbId {tmdbGenreId} dla filmu {newMovie.Title}");
                     }
                 }
             }
 
+            // 🏢 COMPANIES
             var companiesDto = await _productionCompaniesService
-                .GetProductionCompaniesAsync(movieDto.TmdbId); // <-- poprawione (TmdbId!)
+                .GetProductionCompaniesAsync(movieDto.TmdbId);
 
             foreach (var companyDto in companiesDto)
             {
-                // sprawdź czy firma już istnieje
                 var existingCompany = await _context.Companies
                     .FirstOrDefaultAsync(c => c.CompanyTmdbId == companyDto.CompanyId);
 
@@ -122,7 +118,7 @@ public class TmdbImportService
                     };
 
                     _context.Companies.Add(existingCompany);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync(); // tylko gdy nowa firma
                 }
 
                 _context.MovieCompanies.Add(new MovieCompany
@@ -132,13 +128,72 @@ public class TmdbImportService
                 });
             }
 
+            await _context.SaveChangesAsync();
+
+            // 🔥 BUDOWANIE TAGÓW — BEZ Include
+
+            var tagList = new List<string>();
+
+            // Gatunki
+            tagList.AddRange(
+                genreMap
+                    .Where(g => movieDto.GenreIds.Contains(g.Key))
+                    .Select(g => g.Value.Name.Replace(" ", ""))
+            );
+
+            // Firmy
+            tagList.AddRange(companiesDto
+                .Select(c => c.CompanyName.Replace(" ", "")));
+
+            // Rok
+            tagList.Add(newMovie.ReleaseDate.Year.ToString());
+
+            // PEOPLE (jeśli masz już zapisane wcześniej)
+            var people = await _context.MoviePeopleRoles
+                .Where(r => r.MovieId == newMovie.Id)
+                .Select(r => new { r.Job, r.PeopleRoles.OriginalName })
+                .ToListAsync();
+
+            tagList.AddRange(people.Select(p => p.Job.Replace(" ", "")));
+
+            tagList.AddRange(
+                people.Where(p => p.Job == "Director")
+                      .Select(p => p.OriginalName.Replace(" ", ""))
+            );
+
+            tagList.AddRange(
+                people.Where(p => p.Job == "Actor")
+                      .Take(3)
+                      .Select(p => p.OriginalName.Replace(" ", ""))
+            );
+
+            tagList = tagList
+                .Where(t => !string.IsNullOrWhiteSpace(t))
+                .Distinct()
+                .ToList();
+
+            foreach (var tag in tagList)
+            {
+                if (!existingTags.TryGetValue(tag, out var tagEntity))
+                {
+                    tagEntity = new RecomendTag { Tag = tag };
+                    _context.RecomendTags.Add(tagEntity);
+                    existingTags[tag] = tagEntity;
+                }
+
+                _context.RecomendTagMovies.Add(new RecomendTagMovie
+                {
+                    MovieId = newMovie.Id,
+                    RecomendTag = tagEntity
+                });
+            }
+
             importedCount++;
         }
 
         await _context.SaveChangesAsync();
 
-        Console.WriteLine(
-            $"Zaimportowano {importedCount} nowych filmów z gatunkami i firmami (strona {page})");
+        Console.WriteLine($"Zaimportowano {importedCount} nowych filmów (strona {page})");
     }
 }
 
