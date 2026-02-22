@@ -83,7 +83,7 @@ public class TmdbImportService
             _context.Movies.Add(newMovie);
             await _context.SaveChangesAsync(); // potrzebne aby dostać newMovie.Id
 
-            if (movieDto.GenreIds != null)
+            if (movieDto.GenreIds != null && movieDto.GenreIds.Length > 0)
             {
                 foreach (var tmdbGenreId in movieDto.GenreIds)
                 {
@@ -92,8 +92,14 @@ public class TmdbImportService
                         _context.MovieGenres.Add(new MovieGenre
                         {
                             MovieId = newMovie.Id,
-                            GenreId = genre.Id
+                            GenreId = genre.Id,
+                            MovieTitle = newMovie.Title,
+                            GenreName = genre.Name,
                         });
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Brak gatunku o TmdbId {tmdbGenreId} dla filmu {newMovie.Title}");
                     }
                 }
             }
