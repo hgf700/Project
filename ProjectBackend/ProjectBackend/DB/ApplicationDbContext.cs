@@ -55,7 +55,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasForeignKey(mg => mg.MovieId);
 
         modelBuilder.Entity<MoviePeopleRole>()
-            .HasOne(mg => mg.PeopleRoles)
+            .HasOne(mg => mg.PeopleRole)
             .WithMany(g => g.MoviePeopleRole)
             .HasForeignKey(mg => mg.PeopleRolesId);
 
@@ -69,7 +69,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         modelBuilder.Entity<MovieGenre>()
             .HasOne(mg => mg.Genre)
-            .WithMany(g => g.MovieGenres)
+            .WithMany(g => g.MovieGenre)
             .HasForeignKey(mg => mg.GenreId);
 
         modelBuilder.Entity<RecomendTagMovie>()
@@ -90,12 +90,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         modelBuilder.Entity<MovieCompany>()
             .HasOne(mg => mg.Movie)
-            .WithMany(g => g.MovieCompanies)
+            .WithMany(g => g.MovieCompanie)
             .HasForeignKey(mg => mg.MovieId);
 
         modelBuilder.Entity<MovieCompany>()
             .HasOne(mg => mg.Company)
-            .WithMany(g => g.MovieCompanies)
+            .WithMany(g => g.MovieCompanie)
             .HasForeignKey(mg => mg.CompanyId);
 
         var dictConverter = new ValueConverter<Dictionary<int, double>, string>(
@@ -227,7 +227,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         modelBuilder.Entity<PrefferedGenre>()
             .HasOne(pg => pg.Genre)
-            .WithMany(g => g.PrefferedGenres)
+            .WithMany(g => g.PrefferedGenre)
             .HasForeignKey(pg => pg.GenreId);
 
         modelBuilder.Entity<PrefferedGenre>()

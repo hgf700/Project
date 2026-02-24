@@ -42,12 +42,11 @@ builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<TmdbSaveProductionCompaniesService>();
-//builder.Services.AddScoped<UserMoviePreferenceService>();
 builder.Services.AddScoped<TmdbLoadPeopleRoleService>();
 builder.Services.AddScoped<TmdbImportService>();
-builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<TmdbService>();
 builder.Services.AddScoped<TmdbSeedGenresService>();
+builder.Services.AddScoped<JwtService>();
 //builder.Services.AddScoped<ITmdbService,TmdbService>();
 
 builder.Services.AddAuthorization();

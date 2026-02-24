@@ -9,9 +9,16 @@ export class RecomendationMoviesService {
 
   constructor(private http: HttpClient) {}
 
-  getMovieRecommendation() {
+  getMovieRecommendationByHeuresticCache() {
     return this.http.get<MovieRecommendationsDto[]>(
       `${this.apiurl}/show-recommendations`,
+      { headers: getAuthHeaders() },
+    );
+  }
+
+  postMovieRecommendationByML(){
+    return this.http.post(
+      `${this.apiurl}/start-recomend-process-asp`,
       { headers: getAuthHeaders() },
     );
   }

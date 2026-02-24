@@ -11,19 +11,20 @@ public class TmdbImportService
     private readonly TmdbService _tmdbService;
     private readonly TmdbSeedGenresService _genresService;
     private readonly TmdbSaveProductionCompaniesService _productionCompaniesService;
-
-
-
+    private readonly TmdbLoadPeopleRoleService _loadPeopleRoleService;
+    
     public TmdbImportService(
         ApplicationDbContext context,
         TmdbService tmdbService,
         TmdbSeedGenresService genresService,
-        TmdbSaveProductionCompaniesService productionCompaniesService)
+        TmdbSaveProductionCompaniesService productionCompaniesService,
+        TmdbLoadPeopleRoleService loadPeopleRoleService)
     {
         _context = context;
         _tmdbService = tmdbService;
         _genresService = genresService;
         _productionCompaniesService = productionCompaniesService;
+        _loadPeopleRoleService = loadPeopleRoleService;
     }
 
     public async Task ImportMoviesWithGenresAsync(int page = 1)
@@ -94,11 +95,70 @@ public class TmdbImportService
                         _context.MovieGenres.Add(new MovieGenre
                         {
                             MovieId = newMovie.Id,
-                            GenreId = genre.Id
+                            GenreId = genre.Id,
+                            MovieTitle = newMovie.Title,
+                            GenreName = genre.Name,
                         });
                     }
                 }
             }
+
+            var topActors = await _loadPeopleRoleService.GetTopPopularPeoplesAsync(movieDto.TmdbId);
+
+            if (topActors == null || !topActors.Any())
+            {
+                Console.WriteLine("Brak aktorów");
+            }
+            else
+            {
+                var tmdbIds = topActors.Select(a => a.TmdbId).ToList();
+
+                var existingActors = await _context.PeopleRoles
+                    .Where(a => tmdbIds.Contains(a.TmdbId))
+                    .ToListAsync();
+
+                var actorsMap = existingActors.ToDictionary(a => a.TmdbId);
+
+                foreach (var actorDto in topActors)
+                {
+                    if (!actorsMap.TryGetValue(actorDto.TmdbId, out var actorEntity))
+                    {
+                        actorEntity = new PeopleRole
+                        {
+                            TmdbId = actorDto.TmdbId,
+                            OriginalName = actorDto.OriginalName,
+                            Popularity = actorDto.Popularity,
+                            ProfilePath = actorDto.ProfilePath,
+                            KnownFor=actorDto.KnownFor,
+                        };
+
+                        _context.PeopleRoles.Add(actorEntity);
+                        await _context.SaveChangesAsync(); // potrzebne żeby mieć Id
+
+                        actorsMap[actorDto.TmdbId] = actorEntity;
+                    }
+
+                    var exists = await _context.MoviePeopleRoles
+                        .AnyAsync(mpr =>
+                            mpr.MovieId == newMovie.Id &&
+                            mpr.PeopleRolesId == actorEntity.Id);
+
+                    if (!exists)
+                    {
+                        _context.MoviePeopleRoles.Add(new MoviePeopleRole
+                        {
+                            MovieId = newMovie.Id,
+                            PeopleRolesId = actorEntity.Id,
+                            Character=actorDto.Character,
+                            Order=actorDto.Order,
+                            Department=actorDto.Department,
+                            Job = actorDto.Job
+                        });
+                    }
+
+                }
+            }
+            await _context.SaveChangesAsync();
 
             // 🏢 COMPANIES
             var companiesDto = await _productionCompaniesService
@@ -130,8 +190,6 @@ public class TmdbImportService
 
             await _context.SaveChangesAsync();
 
-            // 🔥 BUDOWANIE TAGÓW — BEZ Include
-
             var tagList = new List<string>();
 
             // Gatunki
@@ -141,20 +199,10 @@ public class TmdbImportService
                     .Select(g => g.Value.Name.Replace(" ", ""))
             );
 
-            // Firmy
-            tagList.AddRange(companiesDto
-                .Select(c => c.CompanyName.Replace(" ", "")));
-
-            // Rok
-            tagList.Add(newMovie.ReleaseDate.Year.ToString());
-
-            // PEOPLE (jeśli masz już zapisane wcześniej)
             var people = await _context.MoviePeopleRoles
                 .Where(r => r.MovieId == newMovie.Id)
-                .Select(r => new { r.Job, r.PeopleRoles.OriginalName })
+                .Select(r => new { r.Job, r.PeopleRole.OriginalName })
                 .ToListAsync();
-
-            tagList.AddRange(people.Select(p => p.Job.Replace(" ", "")));
 
             tagList.AddRange(
                 people.Where(p => p.Job == "Director")
@@ -163,35 +211,43 @@ public class TmdbImportService
 
             tagList.AddRange(
                 people.Where(p => p.Job == "Actor")
-                      .Take(3)
                       .Select(p => p.OriginalName.Replace(" ", ""))
             );
 
-            tagList = tagList
-                .Where(t => !string.IsNullOrWhiteSpace(t))
-                .Distinct()
-                .ToList();
+            // Firmy
+            tagList.AddRange(companiesDto
+                .Select(c => c.CompanyName.Replace(" ", "")));
 
-            foreach (var tag in tagList)
+            tagList.Add(newMovie.Overview);
+
+            // Rok
+            tagList.Add(newMovie.ReleaseDate.Year.ToString());
+
+            var finalTags = string.Join(" ",
+                tagList
+                    .Where(t => !string.IsNullOrWhiteSpace(t))
+                    .Distinct()
+            );
+
+            if (!existingTags.TryGetValue(finalTags, out var tagEntity))
             {
-                if (!existingTags.TryGetValue(tag, out var tagEntity))
-                {
-                    tagEntity = new RecomendTag { Tag = tag };
-                    _context.RecomendTags.Add(tagEntity);
-                    existingTags[tag] = tagEntity;
-                }
+                tagEntity = new RecomendTag { Tag = finalTags };
+                _context.RecomendTags.Add(tagEntity);
+                existingTags[finalTags] = tagEntity;
 
-                _context.RecomendTagMovies.Add(new RecomendTagMovie
-                {
-                    MovieId = newMovie.Id,
-                    RecomendTag = tagEntity
-                });
+                await _context.SaveChangesAsync();
             }
 
-            importedCount++;
-        }
+            _context.RecomendTagMovies.Add(new RecomendTagMovie
+            {
+                MovieId= newMovie.Id,
+                RecomendTagId = tagEntity.Id,
+            });
 
-        await _context.SaveChangesAsync();
+            importedCount++;
+
+            await _context.SaveChangesAsync();
+        }
 
         Console.WriteLine($"Zaimportowano {importedCount} nowych filmów (strona {page})");
     }

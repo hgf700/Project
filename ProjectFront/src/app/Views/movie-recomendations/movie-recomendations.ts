@@ -21,19 +21,27 @@ export class MovieRecomendations implements OnInit{
 
 
   ngOnInit(): void {
-    this.loadMovieRecommendations();
+    // this.loadMovieRecommendations();
+    this.startMovieRecommendationsML();
   }
 
-  loadMovieRecommendations(){
-    this.recomendMoviesService.getMovieRecommendation().subscribe({
-      next: (value) => {
-        this.movieRecommendations = value;
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.loading = false;
-      },
+  startMovieRecommendationsML(){
+    this.recomendMoviesService.postMovieRecommendationByML().subscribe({
+      next: () => console.log('start recomendacji'),
+      error: (err) => console.error(err),
     });
   }
+
+  // loadMovieRecommendations(){
+  //   this.recomendMoviesService.getMovieRecommendation().subscribe({
+  //     next: (value) => {
+  //       this.movieRecommendations = value;
+  //       this.loading = false;
+  //     },
+  //     error: (err) => {
+  //       console.error(err);
+  //       this.loading = false;
+  //     },
+  //   });
+  // }
 }

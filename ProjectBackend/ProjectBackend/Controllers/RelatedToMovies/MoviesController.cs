@@ -79,7 +79,7 @@ public class MoviesController : ControllerBase
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
 
-        var actors = await _loadActorsService.GetTopActorsAsync(filmId);
+        var actors = await _loadActorsService.GetTopPopularPeoplesAsync(filmId);
 
         return Ok(actors);
     }

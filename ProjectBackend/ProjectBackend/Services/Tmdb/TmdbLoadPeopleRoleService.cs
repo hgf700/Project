@@ -1,4 +1,5 @@
-﻿using ProjectBackend.Models.ReleatedToMovie;
+﻿using ProjectBackend.Models.DTO.RelatedToMovies;
+using ProjectBackend.Models.ReleatedToMovie;
 using RestSharp;
 
 namespace ProjectBackend.Services.Tmdb;
@@ -14,7 +15,7 @@ public class TmdbLoadPeopleRoleService
         _client = new RestClient("https://api.themoviedb.org/3/");
     }
 
-    public async Task<List<PeopleRole>> GetTopActorsAsync(int movie_id)
+    public async Task<List<getTmdbPersonCreditDto>> GetTopPopularPeoplesAsync(int movie_id)
     {
         var request = new RestRequest($"movie/{movie_id}/credits", Method.Get);
 
@@ -24,31 +25,41 @@ public class TmdbLoadPeopleRoleService
         var response = await _client.ExecuteAsync<TMDB_Credits_Response>(request);
 
         if (!response.IsSuccessful || response.Data == null)
-            return new List<PeopleRole>();
+            return new List<getTmdbPersonCreditDto>();
 
-        var result = response.Data.Casts?
-            .Where(c => c.KnownFor == "Acting")
+        var result = new List<getTmdbPersonCreditDto>();
+
+        var actors = response.Data.Casts
             .OrderBy(c => c.Order)
-            .Take(3)
-            .Select(c => new PeopleRole
-            {
-                TmdbId = c.Id,
-                OriginalName = c.OriginalName,
-                Popularity = c.Popularity,
-                Job=c.Job,
-            })
-            .ToList() ?? new List<PeopleRole>();
+            .Take(3);
 
-        var director = response.Data.Casts?
-            .FirstOrDefault(c => c.KnownFor == "Directing" && c.Job == "Director");
+        foreach (var actor in actors)
+        {
+            result.Add(new getTmdbPersonCreditDto
+            {
+                TmdbId = actor.Id,
+                OriginalName = actor.OriginalName,
+                Popularity = actor.Popularity,
+                ProfilePath = actor.ProfilePath,
+                Character = actor.Character,
+                Order = actor.Order,
+                Department = "Acting",
+                Job = "Actor"
+            });
+        }
+
+        var director = response.Data.Crew
+            .FirstOrDefault(c => c.Job == "Director" && c.Department=="Directing");
 
         if (director != null)
         {
-            result.Add(new PeopleRole
+            result.Add(new getTmdbPersonCreditDto
             {
                 TmdbId = director.Id,
                 OriginalName = director.OriginalName,
                 Popularity = director.Popularity,
+                ProfilePath = director.ProfilePath,
+                Department = director.Department,
                 Job = director.Job
             });
         }

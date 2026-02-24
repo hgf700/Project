@@ -17,6 +17,6 @@ public class Movie
     public string? BackdropPath { get; set; } 
     public ICollection<MovieGenre> MovieGenre { get; set; } = new List<MovieGenre>();
     public ICollection<MoviePeopleRole> MoviePeopleRole { get; set; } = new List<MoviePeopleRole>();
-    public ICollection<MovieCompany> MovieCompanies { get; set; } = new List<MovieCompany>();
+    public ICollection<MovieCompany> MovieCompanie { get; set; } = new List<MovieCompany>();
     public ICollection<RecomendTagMovie> RecomendTagMovie { get; set; } = new List<RecomendTagMovie>();
 }
