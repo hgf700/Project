@@ -32,32 +32,42 @@ public class MovieRecomendController : ControllerBase
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
 
-        var likedMovies = await _context.UserMediaStatuses
+        var likedMoviesIds = await _context.UserMediaStatuses
             .Where(x => x.UserId == userId && x.Rating == RatingValue.Good)
+            .OrderByDescending(x => x.CreatedAt)
             .Select(x => x.MovieId)
+            .Take(3)
+            .ToListAsync();
+
+        var tags = await _context.RecomendTagMovies
+            .Where(rtm => likedMoviesIds.Contains(rtm.MovieId))
+            .Select(rtm => rtm.RecomendTag.Tag)
+            .Distinct()
             .ToListAsync();
 
         var httpClient = new HttpClient();
 
-        foreach (var movie in likedMovies)
+        var payload = new postMovieTagDto
         {
-            var payload = new postMovieIdDto
-            {
-                MovieIds = likedMovies,
-            };
+            tags = tags,
+        };
 
-            var json = JsonSerializer.Serialize(payload);
+        var json = JsonSerializer.Serialize(payload);
 
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await httpClient.PostAsync(
-                "http://localhost:5000/recommend/start-recommend-process-py",
-                content
-            );
+        var response = await httpClient.PostAsync(
+            "http://localhost:5000/recommend/start-recommend-process-py",
+            content
+        );
 
-            if (!response.IsSuccessStatusCode)
-                return StatusCode((int)response.StatusCode);
-        }
+        Console.WriteLine("json111111111111111111" + json);
+
+        Console.WriteLine(response);
+
+        if (!response.IsSuccessStatusCode)
+               return StatusCode((int)response.StatusCode);
+
         return Ok("Recommendation process started");
     }
 

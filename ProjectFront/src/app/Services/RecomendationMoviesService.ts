@@ -19,6 +19,7 @@ export class RecomendationMoviesService {
   postMovieRecommendationByML(){
     return this.http.post(
       `${this.apiurl}/start-recomend-process-asp`,
+      null,
       { headers: getAuthHeaders() },
     );
   }
