@@ -10,19 +10,19 @@ export class RecomendationMoviesService {
   constructor(private http: HttpClient) {}
 
   postMovieRecommendationByML(){
-    return this.http.post(
-      `${this.apiurl}/start-recomend-process-asp`,
-      null,
-      { headers: getAuthHeaders() },
-    );
-  }
-
-  postReceiveRecommendationsFromPy(){
     return this.http.post<string[]>(
-      `${this.apiurl}/receive-recommend-process-py`,
+      `${this.apiurl}/start-recommend-process-asp`,
       {},
       { headers: getAuthHeaders() },
     );
   }
+
+  // postReceiveRecommendationsFromPy(){
+  //   return this.http.post<string[]>(
+  //     `${this.apiurl}/receive-recommend-process-py`,
+  //     {},
+  //     { headers: getAuthHeaders() },
+  //   );
+  // }
 
 }

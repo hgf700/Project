@@ -21,7 +21,38 @@ var builder = WebApplication.CreateBuilder(args);
 DotNetEnv.Env.Load();
 
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+//builder.Services.AddOpenApi();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+//builder.Services.AddSwaggerGen(options =>
+//{
+//    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+//    {
+//        Name = "Authorization",
+//        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+//        Scheme = "bearer",
+//        BearerFormat = "JWT",
+//        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+//        Description = "Wpisz token JWT: Bearer {token}"
+//    });
+
+//    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+//    {
+//        {
+//            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+//            {
+//                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+//                {
+//                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+//                    Id = "Bearer"
+//                }
+//            },
+//            new string[] {}
+//        }
+//    });
+//});
 
 var host = Environment.GetEnvironmentVariable("POSTGRES_HOST");
 var db = Environment.GetEnvironmentVariable("POSTGRES_DB");
@@ -47,7 +78,6 @@ builder.Services.AddScoped<TmdbImportService>();
 builder.Services.AddScoped<TmdbService>();
 builder.Services.AddScoped<TmdbSeedGenresService>();
 builder.Services.AddScoped<JwtService>();
-//builder.Services.AddScoped<ITmdbService,TmdbService>();
 
 builder.Services.AddAuthorization();
 
@@ -147,6 +177,13 @@ else
 }
 
 var app = builder.Build();
+
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    options.RoutePrefix = string.Empty;
+});
 
 if (app.Environment.IsDevelopment())
 {

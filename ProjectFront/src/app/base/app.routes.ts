@@ -10,7 +10,7 @@ import { ManageFriends } from '../Views/manage-friends/manage-friends';
 import { DevelopingView } from '../Views/developing-view/developing-view';
 import { ViewFriendProfile } from '../Views/view-friend-profile/view-friend-profile';
 import { PrefferedGenre } from '../Views/preffered-genre/preffered-genre';
-import { MovieRecomendations } from '../Views/movie-recomendations/movie-recomendations';
+import { MovieRecomendations } from '../Views/movie-recomendations/movie-recommendations';
 import { MovieDetails } from '../Views/movie-details/movie-details';
 
 

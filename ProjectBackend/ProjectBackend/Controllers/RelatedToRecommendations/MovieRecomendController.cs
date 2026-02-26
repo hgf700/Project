@@ -12,7 +12,8 @@ using System.Text.Json;
 
 namespace ProjectBackend.Controllers.RelatedToRecommendations;
 
-[Authorize]
+[AllowAnonymous]
+//[Authorize]
 [ApiController]
 [Route("recommendations")]
 public class MovieRecomendController : ControllerBase
@@ -26,7 +27,9 @@ public class MovieRecomendController : ControllerBase
         _context = context;
     }
 
-    [HttpPost("start-recomend-process-asp")]
+    [AllowAnonymous]
+    //[Authorize]
+    [HttpPost("start-recommend-process-asp")]
     public async Task<IActionResult> StartRecommendAsp()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -57,7 +60,7 @@ public class MovieRecomendController : ControllerBase
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
         var response = await httpClient.PostAsync(
-            "http://localhost:5000/recommendations/start-recommend-process-py",
+            "http://localhost:5000/recommendations/receive-recommend-process-py",
             content
         );
 
@@ -67,7 +70,8 @@ public class MovieRecomendController : ControllerBase
         return Ok("Recommendation process started");
     }
 
-    [Authorize]
+    //[Authorize]
+    [AllowAnonymous]
     [HttpPost("receive-recommend-process-py")]
     public async Task<IActionResult> GetRecommendFromPython([FromBody] getRecommendationsResponsePyDto dto)
     {
