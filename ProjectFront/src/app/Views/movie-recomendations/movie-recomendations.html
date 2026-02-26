@@ -1,16 +1,20 @@
 <main class="main">
   <p *ngIf="loading">loading films</p>
 
-  <div *ngIf="!loading && movieRecommendations.length===0">
+  <!-- <div *ngIf="!loading && movieRecommendations.length===0">
     brak
-  </div>
+  </div> -->
 
   
-  <div *ngFor="let movie of movieRecommendations" class="movie-card">
+  <!-- <div *ngFor="let movie of movieRecommendations" class="movie-card">
     <h3>{{ movie.tmdbId }}</h3>
     <h3>{{ movie.title }}</h3>
     <h3>{{ movie.overview }}</h3>
     <h3>{{ movie.recommendations }}</h3>
 
+  </div> -->
+  <div *ngFor="let movie of recommendations">
+    {{ movie }}
   </div>
+
 </main>

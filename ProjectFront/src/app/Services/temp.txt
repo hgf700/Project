@@ -15,3 +15,23 @@
       { headers },
     );
   }
+
+    // getMovieRecommendationByHeuresticCache() {
+  //   return this.http.get<MovieRecommendationsDto[]>(
+  //     `${this.apiurl}/show-recommendations`,
+  //     { headers: getAuthHeaders() },
+  //   );
+  // }
+
+    // loadMovieRecommendations(){
+  //   this.recomendMoviesService.getMovieRecommendation().subscribe({
+  //     next: (value) => {
+  //       this.movieRecommendations = value;
+  //       this.loading = false;
+  //     },
+  //     error: (err) => {
+  //       console.error(err);
+  //       this.loading = false;
+  //     },
+  //   });
+  // }

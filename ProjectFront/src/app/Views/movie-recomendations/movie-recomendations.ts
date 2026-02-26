@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RecomendationMoviesService } from '../../Services/RecomendationMoviesService';
-import { MovieRecommendationsDto } from '../../Dto/movieRecommendationsDto';
+// import { MovieRecommendationsDto } from '../../Dto/movieRecommendationsDto';
 
 @Component({
   selector: 'app-movie-recomendations',
@@ -11,18 +11,17 @@ import { MovieRecommendationsDto } from '../../Dto/movieRecommendationsDto';
   styleUrl: './movie-recomendations.css',
 })
 export class MovieRecomendations implements OnInit{
-  movieRecommendations: MovieRecommendationsDto[]=[];
+  // movieRecommendations: MovieRecommendationsDto[]=[];
   loading = true;
+  recommendations: string[] = [];
 
   constructor(
     private recomendMoviesService: RecomendationMoviesService,
-
   ) {}
 
-
   ngOnInit(): void {
-    // this.loadMovieRecommendations();
     this.startMovieRecommendationsML();
+    this.receiveMovieRecommendations();
   }
 
   startMovieRecommendationsML(){
@@ -32,16 +31,14 @@ export class MovieRecomendations implements OnInit{
     });
   }
 
-  // loadMovieRecommendations(){
-  //   this.recomendMoviesService.getMovieRecommendation().subscribe({
-  //     next: (value) => {
-  //       this.movieRecommendations = value;
-  //       this.loading = false;
-  //     },
-  //     error: (err) => {
-  //       console.error(err);
-  //       this.loading = false;
-  //     },
-  //   });
-  // }
+  receiveMovieRecommendations(){
+    this.recomendMoviesService.postReceiveRecommendationsFromPy().subscribe({
+      next: (data) => {
+        this.recommendations = data;
+        this.loading = false;
+      },
+      error: (err) => console.error(err),
+    });
+  }
+
 }

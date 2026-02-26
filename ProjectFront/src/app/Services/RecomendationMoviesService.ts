@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { getAuthHeaders } from '../helpers/GetAuthHeaders';
-import { MovieRecommendationsDto } from '../Dto/movieRecommendationsDto';
+// import { MovieRecommendationsDto } from '../Dto/movieRecommendationsDto';
 
 @Injectable({ providedIn: 'root' })
 export class RecomendationMoviesService {
@@ -9,17 +9,18 @@ export class RecomendationMoviesService {
 
   constructor(private http: HttpClient) {}
 
-  getMovieRecommendationByHeuresticCache() {
-    return this.http.get<MovieRecommendationsDto[]>(
-      `${this.apiurl}/show-recommendations`,
-      { headers: getAuthHeaders() },
-    );
-  }
-
   postMovieRecommendationByML(){
     return this.http.post(
       `${this.apiurl}/start-recomend-process-asp`,
       null,
+      { headers: getAuthHeaders() },
+    );
+  }
+
+  postReceiveRecommendationsFromPy(){
+    return this.http.post<string[]>(
+      `${this.apiurl}/receive-recommend-process-py`,
+      {},
       { headers: getAuthHeaders() },
     );
   }

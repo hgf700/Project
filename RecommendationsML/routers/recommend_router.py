@@ -7,19 +7,15 @@ from db.Dto import movieTagsFromASP
 from services.recommendation_service import recommendation_process
 
 router = APIRouter(
-    prefix="/recommend",
+    prefix="/recommendations",
     tags=["recommendations"]
 )
 
-@router.post("/start-recommend-process-py")
+@router.post("/receive-recommend-process-py")
 async def start_recommend_process(request: movieTagsFromASP):
-
-    print("REQUEST:", request)
-    print("TAGS:", request.tags)
 
     results = recommendation_process(request.tags)
 
     return {
-        "status": "ok",
         "recommendations": results
     }

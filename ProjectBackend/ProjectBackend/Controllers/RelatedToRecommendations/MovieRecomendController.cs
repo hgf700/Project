@@ -57,7 +57,7 @@ public class MovieRecomendController : ControllerBase
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
         var response = await httpClient.PostAsync(
-            "http://localhost:5000/recommend/start-recommend-process-py",
+            "http://localhost:5000/recommendations/start-recommend-process-py",
             content
         );
 
@@ -67,59 +67,81 @@ public class MovieRecomendController : ControllerBase
         return Ok("Recommendation process started");
     }
 
-    //[Authorize]
-    //[HttpGet("show-recommendations")]
-    //public async Task<IActionResult> ShowRecommendations()
-    //{
-    //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-    //    if (userId == null) return Unauthorized();
+    [Authorize]
+    [HttpPost("receive-recommend-process-py")]
+    public async Task<IActionResult> GetRecommendFromPython([FromBody] getRecommendationsResponsePyDto dto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
 
-    //    var userPreference = await _context.MovieUserPreferences
-    //        .FirstOrDefaultAsync(x => x.UserId == userId);
+        var httpClient = new HttpClient();
 
-    //    if (userPreference == null)
-    //        return Ok(new List<getMovieRecommendationsDto>());
+        var response = await httpClient.PostAsJsonAsync(
+            "http://localhost:5000/recommendations/receive-recommend-process-py",
+            dto
+        );
 
-    //    var movies = await _context.Movies
-    //        .Include(m => m.MovieGenre)
-    //        .Include(m => m.MoviePeopleRole)
-    //            .ThenInclude(ma => ma.PeopleRole)
-    //        .ToListAsync();
+        var result = await response.Content.ReadFromJsonAsync<getRecommendationsResponsePyDto>();
 
-    //    var scoredMovies = await Task.WhenAll(
-    //        movies.Select(async m => new
-    //        {
-    //            Movie = m,
-    //            Score = await _userMoviePreference.CalculateMovieScore(userPreference, m)
-    //        })
-    //    );
+        return Ok(result.recommendations);
+    }
 
-    //    var ranked = scoredMovies
-    //        .OrderByDescending(x => x.Score)
-    //        .Take(5)
-    //        .Select(x => new getMovieRecommendationsDto
-    //        {
-    //            TmdbId = x.Movie.TmdbId,
-    //            Title = x.Movie.Title,
-    //            Overview = x.Movie.Overview,
-    //            PosterPath = x.Movie.PosterPath,
-    //            MovieRecommendations = x.Score
-    //        })
-    //        .ToList();
 
-    //    var movies = await _context.Movies
-    //.Include(m => m.RecomendTagMovies)
-    //    .ThenInclude(rt => rt.RecomendTag)
-    //.Select(m => new
-    //{
-    //    m.Id,
-    //    m.Title,
-    //    Tag = m.RecomendTagMovies
-    //        .Select(rt => rt.RecomendTag.Tag)
-    //        .FirstOrDefault()
-    //})
-    //.ToListAsync();
 
-    //    return Ok(ranked);
-    //}
-}
+
+        //[Authorize]
+        //[HttpGet("show-recommendations")]
+        //public async Task<IActionResult> ShowRecommendations()
+        //{
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    if (userId == null) return Unauthorized();
+
+        //    var userPreference = await _context.MovieUserPreferences
+        //        .FirstOrDefaultAsync(x => x.UserId == userId);
+
+        //    if (userPreference == null)
+        //        return Ok(new List<getMovieRecommendationsDto>());
+
+        //    var movies = await _context.Movies
+        //        .Include(m => m.MovieGenre)
+        //        .Include(m => m.MoviePeopleRole)
+        //            .ThenInclude(ma => ma.PeopleRole)
+        //        .ToListAsync();
+
+        //    var scoredMovies = await Task.WhenAll(
+        //        movies.Select(async m => new
+        //        {
+        //            Movie = m,
+        //            Score = await _userMoviePreference.CalculateMovieScore(userPreference, m)
+        //        })
+        //    );
+
+        //    var ranked = scoredMovies
+        //        .OrderByDescending(x => x.Score)
+        //        .Take(5)
+        //        .Select(x => new getMovieRecommendationsDto
+        //        {
+        //            TmdbId = x.Movie.TmdbId,
+        //            Title = x.Movie.Title,
+        //            Overview = x.Movie.Overview,
+        //            PosterPath = x.Movie.PosterPath,
+        //            MovieRecommendations = x.Score
+        //        })
+        //        .ToList();
+
+        //    var movies = await _context.Movies
+        //.Include(m => m.RecomendTagMovies)
+        //    .ThenInclude(rt => rt.RecomendTag)
+        //.Select(m => new
+        //{
+        //    m.Id,
+        //    m.Title,
+        //    Tag = m.RecomendTagMovies
+        //        .Select(rt => rt.RecomendTag.Tag)
+        //        .FirstOrDefault()
+        //})
+        //.ToListAsync();
+
+        //    return Ok(ranked);
+        //}
+    }
