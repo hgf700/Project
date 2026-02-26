@@ -25,7 +25,7 @@ public class FollowProfilesController : ControllerBase
         _userManager = userManager;
     }
 
-    //niespraw
+    //niesprawdzone
 
     [Authorize]
     [HttpPost("follow-profile/{targetUserId}")]

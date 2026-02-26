@@ -25,6 +25,8 @@ public class ProfileMessageController : ControllerBase
         _userManager = userManager;
     }
 
+    //niesprawdzone
+
     [Authorize]
     [HttpGet("users/{targetUserId}/view-profile-message")]
     public async Task<IActionResult> GetProfileMessages(string targetUserId)

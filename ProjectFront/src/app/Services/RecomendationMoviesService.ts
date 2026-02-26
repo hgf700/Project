@@ -17,12 +17,4 @@ export class RecomendationMoviesService {
     );
   }
 
-  // postReceiveRecommendationsFromPy(){
-  //   return this.http.post<string[]>(
-  //     `${this.apiurl}/receive-recommend-process-py`,
-  //     {},
-  //     { headers: getAuthHeaders() },
-  //   );
-  // }
-
 }
