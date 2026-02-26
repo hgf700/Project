@@ -61,10 +61,6 @@ public class MovieRecomendController : ControllerBase
             content
         );
 
-        Console.WriteLine("json111111111111111111" + json);
-
-        Console.WriteLine(response);
-
         if (!response.IsSuccessStatusCode)
                return StatusCode((int)response.StatusCode);
 

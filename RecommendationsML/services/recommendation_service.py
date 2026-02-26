@@ -3,6 +3,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 
 csv_path = r'C:\Users\USER098\Documents\GitHub\Project\RecommendationsML\Data\results\conected_data.csv'
+
 df = pd.read_csv(csv_path)
 
 cv = TfidfVectorizer(
@@ -11,19 +12,21 @@ cv = TfidfVectorizer(
     ngram_range=(1,2)
 )
 
-vectors = cv.fit_transform(df['tags']).toarray()
+def recommendation_process(tag_array):
 
-tag="Action ScienceFiction Thriller ТимурБекмамбетов ChrisPratt RebeccaFerguson KaliReis AtlasEntertainment AmazonMGMStudios Bazelevs In the near future, a detective stands on trial accused of murdering his wife. He has ninety minutes to prove his innocence to the advanced AI Judge he once championed, before it determines his fate. 2026"
+    recommendations = []
+    df['tags'] = df['tags'].fillna('')
+    vectors = cv.fit_transform(df['tags']).toarray()
 
-def recommend(tag):
-    tag_vector= cv.transform([tag])
+    for tag_a in tag_array:
 
-    similarity = cosine_similarity(tag_vector,vectors)
+        tag_vector= cv.transform([tag_a])
 
+        similarity = cosine_similarity(tag_vector,vectors)
 
-    distances = list(enumerate(similarity[tag]))
-    distances = sorted(distances, key=lambda x: x[1], reverse=True)[1:6]  
-    for i in distances:
-        print(df.iloc[i[0]]['title'])
+        distances = list(enumerate(similarity[0]))
+        distances = sorted(distances, key=lambda x: x[1], reverse=True)[1:6]  
+        for i in distances:
+            recommendations.append(df.iloc[i[0]]['title'])
 
-recommend(tag)
+    return recommendations
