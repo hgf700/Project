@@ -16,6 +16,8 @@ async def start_recommend_process(request: movieTagsFromASP):
 
     results = recommendation_process(request.tags)
 
+    print(results)
+
     return {
         "recommendations": results
     }

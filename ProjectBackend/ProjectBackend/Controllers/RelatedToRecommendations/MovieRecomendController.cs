@@ -67,28 +67,12 @@ public class MovieRecomendController : ControllerBase
         if (!response.IsSuccessStatusCode)
                return StatusCode((int)response.StatusCode);
 
-        return Ok("Recommendation process started");
-    }
-
-    //[Authorize]
-    [AllowAnonymous]
-    [HttpPost("receive-recommend-process-py")]
-    public async Task<IActionResult> GetRecommendFromPython([FromBody] getRecommendationsResponsePyDto dto)
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null) return Unauthorized();
-
-        var httpClient = new HttpClient();
-
-        var response = await httpClient.PostAsJsonAsync(
-            "http://localhost:5000/recommendations/receive-recommend-process-py",
-            dto
-        );
-
         var result = await response.Content.ReadFromJsonAsync<getRecommendationsResponsePyDto>();
 
         return Ok(result.recommendations);
     }
+
+
 
 
 
