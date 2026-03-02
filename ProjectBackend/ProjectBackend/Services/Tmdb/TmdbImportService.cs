@@ -196,7 +196,7 @@ public class TmdbImportService
             tagList.AddRange(
                 genreMap
                     .Where(g => movieDto.GenreIds.Contains(g.Key))
-                    .Select(g => g.Value.Name.Replace(" ", ""))
+                    .Select(g => g.Value.Name.Replace(" ", "").ToLower())
             );
 
             var people = await _context.MoviePeopleRoles
@@ -206,19 +206,19 @@ public class TmdbImportService
 
             tagList.AddRange(
                 people.Where(p => p.Job == "Director")
-                      .Select(p => p.OriginalName.Replace(" ", ""))
+                      .Select(p => p.OriginalName.Replace(" ", "").ToLower())
             );
 
             tagList.AddRange(
                 people.Where(p => p.Job == "Actor")
-                      .Select(p => p.OriginalName.Replace(" ", ""))
+                      .Select(p => p.OriginalName.Replace(" ", "").ToLower())
             );
 
             // Firmy
             tagList.AddRange(companiesDto
-                .Select(c => c.CompanyName.Replace(" ", "")));
+                .Select(c => c.CompanyName.Replace(" ", "").ToLower()));
 
-            tagList.Add(newMovie.Overview);
+            tagList.Add(newMovie.Overview.ToLower());
 
             // Rok
             tagList.Add(newMovie.ReleaseDate.Year.ToString());

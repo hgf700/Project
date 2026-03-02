@@ -12,7 +12,9 @@ using ProjectBackend.ExtraTools;
 using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
 using ProjectBackend.Services.interfaces;
+using ProjectBackend.Services.Redis;
 using ProjectBackend.Services.Tmdb;
+using StackExchange.Redis;
 using System.Configuration;
 using System.Text;
 
@@ -25,34 +27,6 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-//builder.Services.AddSwaggerGen(options =>
-//{
-//    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-//    {
-//        Name = "Authorization",
-//        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
-//        Scheme = "bearer",
-//        BearerFormat = "JWT",
-//        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-//        Description = "Wpisz token JWT: Bearer {token}"
-//    });
-
-//    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-//    {
-//        {
-//            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-//            {
-//                Reference = new Microsoft.OpenApi.Models.OpenApiReference
-//                {
-//                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-//                    Id = "Bearer"
-//                }
-//            },
-//            new string[] {}
-//        }
-//    });
-//});
 
 var host = Environment.GetEnvironmentVariable("POSTGRES_HOST");
 var db = Environment.GetEnvironmentVariable("POSTGRES_DB");
@@ -71,6 +45,18 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 
 builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 builder.Services.AddHttpClient();
+
+//Redis
+//var tokenSource = new CancellationTokenSource();
+//var token = tokenSource.Token;
+
+//builder.Services.AddSingleton<IConnectionMultiplexer>(
+//    ConnectionMultiplexer.Connect("localhost"));
+
+//const string streamName = "telemetry";
+//const string groupName = "avg";
+
+//builder.Services.AddScoped<RecommendationCacheService>();
 
 builder.Services.AddScoped<TmdbSaveProductionCompaniesService>();
 builder.Services.AddScoped<TmdbLoadPeopleRoleService>();

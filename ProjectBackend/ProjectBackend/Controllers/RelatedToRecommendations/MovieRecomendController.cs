@@ -6,6 +6,8 @@ using ProjectBackend.Models.DTO.RelatedToMovies;
 using ProjectBackend.Models.DTO.RelatedToRecommendations;
 using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
+using ProjectBackend.Services.Redis;
+using StackExchange.Redis;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -18,12 +20,15 @@ namespace ProjectBackend.Controllers.RelatedToRecommendations;
 public class MovieRecomendController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
+    //private readonly RecommendationCacheService _cache;
 
     public MovieRecomendController(
         ApplicationDbContext context
+        //RecommendationCacheService cache
         )
     {
         _context = context;
+        //_cache = cache;
     }
 
     [Authorize]
