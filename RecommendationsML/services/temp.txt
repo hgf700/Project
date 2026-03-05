@@ -1,0 +1,18 @@
+def recommendation_process(tag_array):
+
+    recommendations = []
+    
+    vectors = cv.fit_transform(df['tags']).toarray()
+
+    for tag_a in tag_array:
+
+        tag_vector= cv.transform([tag_a])
+
+        similarity = cosine_similarity(tag_vector,vectors)
+
+        distances = list(enumerate(similarity[0]))
+        distances = sorted(distances, key=lambda x: x[1], reverse=True)[1:6]  
+        for i in distances:
+            recommendations.append(df.iloc[i[0]]['title'])
+
+    return recommendations

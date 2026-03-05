@@ -2,7 +2,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 
-csv_path = r'C:\Users\USER098\Documents\GitHub\Project\RecommendationsML\Data\results\final.csv'
+csv_path = r'C:\Users\USER098\Documents\GitHub\Project\RecommendationsML\Data\results\id_title_tag.csv'
 
 df = pd.read_csv(csv_path)
 
@@ -12,21 +12,21 @@ cv = TfidfVectorizer(
     ngram_range=(1,2)
 )
 
+vectors = cv.fit_transform(df['tags'])
+
 def recommendation_process(tag_array):
+    tag_array = tag_array.lower()
 
-    recommendations = []
-    
-    vectors = cv.fit_transform(df['tags']).toarray()
+    query = " ".join(tag_array)
 
-    for tag_a in tag_array:
+    query_vector = cv.transform([query])
 
-        tag_vector= cv.transform([tag_a])
+    similarity = cosine_similarity(query_vector, vectors).flatten()
 
-        similarity = cosine_similarity(tag_vector,vectors)
+    top_idx = similarity.argsort()[::-1][1:6]
 
-        distances = list(enumerate(similarity[0]))
-        distances = sorted(distances, key=lambda x: x[1], reverse=True)[1:6]  
-        for i in distances:
-            recommendations.append(df.iloc[i[0]]['title'])
+    recommendations = [(df.iloc[i]['title'], similarity[i]) for i in top_idx]
 
     return recommendations
+
+    
