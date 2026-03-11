@@ -8,3 +8,16 @@
     //{
     //    await _db.StringSetAsync(key, value, TimeSpan.FromMinutes(10));
     //}
+
+
+
+
+        
+    //Task<IEnumerable<FriendAction>> SearchAsync(int? targetFriendId, bool? seen);
+    //Task<FriendAction?> OneAsync(int IdOfAction);
+    //Task<FriendAction> CreateAsync(CreateFriendActionDto dto);
+    //Task<FriendAction?> UpdateAsync(int IdOfAction, UpdateFriendActionDto dto);
+    //Task DeleteAsync(int IdOfAction);
+    //Task DeleteAllAsync();
+    //void CreateIndexIfNotExists();
+    //void DropIndex();

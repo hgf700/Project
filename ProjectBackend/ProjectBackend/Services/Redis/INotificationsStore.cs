@@ -5,11 +5,10 @@ namespace ProjectBackend.Services.Redis;
 
 public interface INotificationsStore
 {
-    Task<IEnumerable<FriendAction>> AllAsync();
-    Task<IEnumerable<FriendAction>> SearchAsync(int? targetUserId, bool? seen);
-    Task<FriendAction?> OneAsync(int idOfAction);
-    Task<FriendAction> CreateAsync(CreateFriendActionDto dto);
-    Task<FriendAction?> UpdateAsync(int idOfAction, UpdateFriendActionDto dto);
-    Task DeleteAsync(int idOfAction);
-    Task DeleteAllAsync();
+    //Task<IEnumerable<FriendAction>> AllAsync();
+    Task<IEnumerable<FriendAction>> GetUserNotificationsAsync(string UserId);
+    Task MarkAsSeenAsync(string idOfAction);
+    Task<IEnumerable<FriendAction>> GetUnseenAsync(string targetUserId);
+
+
 }

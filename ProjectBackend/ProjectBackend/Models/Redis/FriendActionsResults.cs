@@ -14,7 +14,7 @@ public class FriendActionsResults
 public class FriendAction
 {
     [JsonPropertyName("idOfAction")]
-    public required int IdOfAction { get; set; }
+    public string IdOfAction { get; set; }
 
     [JsonPropertyName("friendId")]
     public int? FriendId { get; set; }
@@ -22,8 +22,8 @@ public class FriendAction
     [JsonPropertyName("friendNick")]
     public string? FriendNick { get; set; }
 
-    [JsonPropertyName("friendCommittedAction")]
-    public FriendActionType FriendCommittedAction { get; set; }     //Typ akcji wykonanej przez znajomego.likecommentsharefriend_request
+    [JsonPropertyName("friendCommittedAction")] 
+    public FriendActionType FriendCommittedAction { get; set; } //Typ akcji wykonanej przez znajomego.likecommentsharefriend_request
 
     [JsonPropertyName("targetUserId")]
     public string TargetUserId { get; set; }
