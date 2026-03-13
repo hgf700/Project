@@ -1,0 +1,61 @@
+﻿//_moviePreferenceService.UpdateYearPreference(
+            //    userPreference,
+            //    releaseYear,
+            //    dto.Rating
+            //);
+
+            //foreach (var genre in movie.MovieGenres)
+            //{
+            //    _moviePreferenceService.UpdateGenrePreference(
+            //        userPreference,
+            //        genre.GenreId,
+            //        dto.Rating
+            //    );
+            //}
+
+            //_moviePreferenceService.TmdbRatingPreference(
+            //    userPreference,
+            //    movie.VoteAverage,
+            //    dto.Rating
+            //);
+
+            //foreach (var movieActor in movie.MoviePeopleRoles.Take(5))
+            //{
+            //    _moviePreferenceService.ActorsPreference(
+            //        userPreference,
+            //        movieActor.PeopleRoles.TmdbId,
+            //        movieActor.Order,
+            //        dto.Rating
+            //    );
+            //}
+
+
+
+
+            //else
+        //{
+        //    var oldRating = entry.Rating;
+
+        //    // odejmij wpływ starej oceny
+        //    _moviePreferenceService.RemoveYearPreference(userPreference, movie.ReleaseDate.Year, oldRating);
+
+        //    foreach (var genre in movie.MovieGenres)
+        //    {
+        //        _moviePreferenceService.RemoveGenrePreference(userPreference, genre.GenreId, oldRating);
+        //    }
+
+        //    _moviePreferenceService.RemoveTmdbRatingPreference(userPreference, movie.VoteAverage, oldRating);
+
+        //    // ustaw nową ocenę
+        //    entry.Rating = dto.Rating;
+
+        //    // dodaj nową wagę
+        //    _moviePreferenceService.UpdateYearPreference(userPreference, movie.ReleaseDate.Year, dto.Rating);
+
+        //    foreach (var genre in movie.MovieGenres)
+        //    {
+        //        _moviePreferenceService.UpdateGenrePreference(userPreference, genre.GenreId, dto.Rating);
+        //    }
+
+        //    _moviePreferenceService.TmdbRatingPreference(userPreference, movie.VoteAverage, dto.Rating);
+        //}

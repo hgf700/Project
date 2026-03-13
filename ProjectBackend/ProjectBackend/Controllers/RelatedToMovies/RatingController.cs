@@ -7,13 +7,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
 using ProjectBackend.Models.DTO;
+using ProjectBackend.Models.DTO.Redis;
 using ProjectBackend.Models.DTO.RelatedToMovies;
+using ProjectBackend.Models.Redis;
 using ProjectBackend.Models.RelatedToRecommendation;
 using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
+using ProjectBackend.Services.Redis;
+using StackExchange.Redis;
 using System.ComponentModel.Design;
 using System.Security.Claims;
+using System.Text.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProjectBackend.Controllers.RelatedToMovies;
@@ -25,14 +30,16 @@ public class RatingController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
-
+    private readonly INotificationsStore _redis;
     public RatingController(
         UserManager<ApplicationUser> userManager,
-        ApplicationDbContext context
+        ApplicationDbContext context,
+        INotificationsStore redis
         )
     {
         _userManager = userManager;
         _context = context;
+        _redis = redis;
     }
 
     [Authorize]
@@ -62,8 +69,15 @@ public class RatingController : ControllerBase
     [HttpPost("rate-movie")]
     public async Task<IActionResult> RateMovie(int movieId, [FromBody] postRateMoviePostDto dto)
     {
+        var ping = await _redis.PingAsync(); // ping jest typu TimeSpan
+        Console.WriteLine($"Redis ping: {ping.TotalMilliseconds} ms");
+
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
+
+        var user = await _userManager.FindByIdAsync(userId);
+
+        var email = user.Email;
 
         var movie = await _context.Movies
             .Include(m => m.MovieGenre) // WAŻNE
@@ -100,76 +114,21 @@ public class RatingController : ControllerBase
             _context.UserMediaStatuses.Add(entry);
 
             var releaseYear = movie.ReleaseDate.Year;
-
-            //_moviePreferenceService.UpdateYearPreference(
-            //    userPreference,
-            //    releaseYear,
-            //    dto.Rating
-            //);
-
-            //foreach (var genre in movie.MovieGenres)
-            //{
-            //    _moviePreferenceService.UpdateGenrePreference(
-            //        userPreference,
-            //        genre.GenreId,
-            //        dto.Rating
-            //    );
-            //}
-
-            //_moviePreferenceService.TmdbRatingPreference(
-            //    userPreference,
-            //    movie.VoteAverage,
-            //    dto.Rating
-            //);
-
-            //foreach (var movieActor in movie.MoviePeopleRoles.Take(5))
-            //{
-            //    _moviePreferenceService.ActorsPreference(
-            //        userPreference,
-            //        movieActor.PeopleRoles.TmdbId,
-            //        movieActor.Order,
-            //        dto.Rating
-            //    );
-            //}
-
-
         }
         else
         {
             var oldRating = entry.Rating;
-
         }
-        //else
-        //{
-        //    var oldRating = entry.Rating;
-
-        //    // odejmij wpływ starej oceny
-        //    _moviePreferenceService.RemoveYearPreference(userPreference, movie.ReleaseDate.Year, oldRating);
-
-        //    foreach (var genre in movie.MovieGenres)
-        //    {
-        //        _moviePreferenceService.RemoveGenrePreference(userPreference, genre.GenreId, oldRating);
-        //    }
-
-        //    _moviePreferenceService.RemoveTmdbRatingPreference(userPreference, movie.VoteAverage, oldRating);
-
-        //    // ustaw nową ocenę
-        //    entry.Rating = dto.Rating;
-
-        //    // dodaj nową wagę
-        //    _moviePreferenceService.UpdateYearPreference(userPreference, movie.ReleaseDate.Year, dto.Rating);
-
-        //    foreach (var genre in movie.MovieGenres)
-        //    {
-        //        _moviePreferenceService.UpdateGenrePreference(userPreference, genre.GenreId, dto.Rating);
-        //    }
-
-        //    _moviePreferenceService.TmdbRatingPreference(userPreference, movie.VoteAverage, dto.Rating);
-        //}
-
-
-
         await _context.SaveChangesAsync();
+
+        await _redis.NotifyMovieRatedAsync(new RedCreateRateMovieDto
+        {
+            userId = userId,
+            userNick = email,
+            movieId = movie.Id,
+            FriendCommittedAction = UserActionType.Rate
+        });
+
         return Ok();
     }
 
@@ -191,6 +150,5 @@ public class RatingController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok();
     }
-
 
 }

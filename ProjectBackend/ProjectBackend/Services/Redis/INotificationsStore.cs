@@ -5,10 +5,12 @@ namespace ProjectBackend.Services.Redis;
 
 public interface INotificationsStore
 {
+    Task<UserAction> NotifyMovieRatedAsync(RedCreateRateMovieDto dto);
+    Task <TimeSpan> PingAsync();
+
     //Task<IEnumerable<FriendAction>> AllAsync();
-    Task<IEnumerable<FriendAction>> GetUserNotificationsAsync(string UserId);
-    Task MarkAsSeenAsync(string idOfAction);
-    Task<IEnumerable<FriendAction>> GetUnseenAsync(string targetUserId);
-
-
+    //Task<IEnumerable<FriendAction>> GetUserNotificationsAsync(string UserId);
+    //Task MarkAsSeenAsync(string idOfAction);
+    //Task<IEnumerable<FriendAction>> GetUnseenAsync(string targetUserId);
+    //Task<FriendAction> CreateAsync(CreateFriendActionDto dto);
 }

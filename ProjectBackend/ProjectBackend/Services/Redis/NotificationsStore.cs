@@ -1,106 +1,85 @@
-﻿using System.Text.Json;
-using StackExchange.Redis;
-using ProjectBackend.Models.Redis;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using ProjectBackend.DB;
 using ProjectBackend.Models.DTO.Redis;
+using ProjectBackend.Models.Redis;
+using ProjectBackend.Models.ReleatedToMovie;
+using ProjectBackend.Models.ReleatedToSocial;
+using StackExchange.Redis;
+using System.Text.Json;
 
 namespace ProjectBackend.Services.Redis;
 
 public class NotificationsStore : INotificationsStore
 {
     private readonly IDatabase _redis;
+    private readonly ApplicationDbContext _context;
 
-    public NotificationsStore(IConnectionMultiplexer muxer)
+    public NotificationsStore(IConnectionMultiplexer muxer,
+        ApplicationDbContext context
+        )
     {
         _redis = muxer.GetDatabase();
+        _context= context;
     }
 
-    public async Task<FriendAction> CreateAsync(CreateFriendActionDto dto)
+    public async Task<UserAction> NotifyMovieRatedAsync(RedCreateRateMovieDto dto)
     {
-        var id = Guid.NewGuid().ToString();
+        var notificationId = Guid.NewGuid().ToString();
 
-        var action = new FriendAction
+        var notification = new UserAction
         {
-            IdOfAction = id,
-            FriendNick = dto.FriendNick,
-            FriendCommittedAction = dto.FriendCommittedAction,
-            TargetUserId = dto.TargetUserId,
-            ObjectId = dto.ObjectId,
-            ObjectType = dto.ObjectType,
+            IdOfAction = notificationId,
+            UserId = dto.userId,
+            UserNick=dto.userNick,
+            FriendCommittedAction=dto.FriendCommittedAction,
+            ObjectId=dto.movieId,
+            ObjectType = "movie",
             CreatedDate = DateTime.UtcNow,
-            Seen = false,
+            Seen = false
         };
 
-        var key = $"notification:{id}";
-        var json = JsonSerializer.Serialize(action);
-
-        var listKey = $"user_notifications:{dto.TargetUserId}";
-
-        await _redis.ListLeftPushAsync(listKey, id);
-        await _redis.ListTrimAsync(listKey, 0, 99);
+        var json = JsonSerializer.Serialize(notification);
+        var key = $"notification:{notificationId}";
 
         await _redis.StringSetAsync(key, json, TimeSpan.FromHours(1));
 
-        return action;
-    }
+        var friends = await _context.Friends
+            .Where(f => f.UserId == dto.userId)
+            .Select(f => f.FriendId)
+            .ToListAsync();
 
-    public async Task<IEnumerable<FriendAction>> GetUserNotificationsAsync(string targetUserId)
-    {
-        var ids = await _redis.ListRangeAsync($"user_notifications:{targetUserId}");
+        var tasks = new List<Task>();
 
-        if (ids.Length == 0)
-            return Enumerable.Empty<FriendAction>();
-
-        var keys = ids.Select(id => (RedisKey)$"notification:{id}").ToArray();
-        var values = await _redis.StringGetAsync(keys);
-
-        var result = new List<FriendAction>();
-
-        foreach (var value in values)
+        foreach (var friendId in friends)
         {
-            if (!value.IsNullOrEmpty)
-            {
-                var action = JsonSerializer.Deserialize<FriendAction>((string)value);
-                if (action != null)
-                    result.Add(action);
-            }
+            var listKey = $"user_notifications:{friendId}";
+
+            tasks.Add(_redis.ListLeftPushAsync(listKey, notificationId));
+            tasks.Add(_redis.ListTrimAsync(listKey, 0, 99));
         }
 
-        return result;
+        await Task.WhenAll(tasks);
+
+        return notification;
     }
 
-    public async Task<int> CountUnseenAsync(string targetUserId)
+    public async Task<TimeSpan> PingAsync()
     {
-        var notifications = await GetUserNotificationsAsync(targetUserId);
-
-        return notifications.Count(n => !n.Seen);
+        var redisConnectionString = "localhost:6379";
+        try
+        {
+            var redis = await ConnectionMultiplexer.ConnectAsync(redisConnectionString);
+            var db = redis.GetDatabase();
+            var pong = await db.PingAsync();
+            await redis.CloseAsync();
+            return pong;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Błąd połączenia z Redis: {ex.Message}");
+            return TimeSpan.Zero;
+        }
     }
 
-    public async Task<IEnumerable<FriendAction>> GetUnseenAsync(string targetUserId)
-    {
-        var notifications = await GetUserNotificationsAsync(targetUserId);
-
-        return notifications.Where(n => !n.Seen);
-    }
-
-    public async Task MarkAsSeenAsync(string idOfAction)
-    {
-        var key = $"notification:{idOfAction}";
-
-        var value = await _redis.StringGetAsync(key);
-
-        if (value.IsNullOrEmpty)
-            return;
-
-        var action = JsonSerializer.Deserialize<FriendAction>((string)value!);
-
-        if (action == null)
-            return;
-
-        action.Seen = true;
-        action.UpdatedDate = DateTime.UtcNow;
-
-        var updatedJson = JsonSerializer.Serialize(action);
-
-        await _redis.StringSetAsync(key, updatedJson);
-    }
 }

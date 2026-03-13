@@ -56,8 +56,14 @@ builder.Services.AddHttpClient();
 //const string streamName = "telemetry";
 //const string groupName = "avg";
 
-//builder.Services.AddScoped<RecommendationCacheService>();
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var configuration = ConfigurationOptions.Parse("localhost:6379");
+    configuration.AbortOnConnectFail = false;
+    return ConnectionMultiplexer.Connect(configuration);
+});
 
+builder.Services.AddScoped<INotificationsStore, NotificationsStore>();
 builder.Services.AddScoped<TmdbSaveProductionCompaniesService>();
 builder.Services.AddScoped<TmdbLoadPeopleRoleService>();
 builder.Services.AddScoped<TmdbImportService>();

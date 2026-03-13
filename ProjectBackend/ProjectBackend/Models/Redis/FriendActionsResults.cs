@@ -2,31 +2,34 @@
 
 namespace ProjectBackend.Models.Redis;
 
-public class FriendActionsResults
+public enum UserActionType
+{
+    Rate,
+    Comment,
+    PostCreated
+}
+public class UserActionsResults
 {
     [JsonPropertyName("total")]
     public long Total { get; set; }
 
     [JsonPropertyName("actions")]
-    public required List<FriendAction> FriendActions { get; set; }
+    public required List<UserAction> FriendActions { get; set; }
 }
 
-public class FriendAction
+public class UserAction
 {
     [JsonPropertyName("idOfAction")]
     public string IdOfAction { get; set; }
 
-    [JsonPropertyName("friendId")]
-    public int? FriendId { get; set; }
+    [JsonPropertyName("userId")]
+    public string? UserId { get; set; }
 
-    [JsonPropertyName("friendNick")]
-    public string? FriendNick { get; set; }
+    [JsonPropertyName("userNick")]
+    public string? UserNick { get; set; }
 
-    [JsonPropertyName("friendCommittedAction")] 
-    public FriendActionType FriendCommittedAction { get; set; } //Typ akcji wykonanej przez znajomego.likecommentsharefriend_request
-
-    [JsonPropertyName("targetUserId")]
-    public string TargetUserId { get; set; }
+    [JsonPropertyName("userCommittedAction")] 
+    public UserActionType FriendCommittedAction { get; set; } //Typ akcji wykonanej przez znajomego.likecommentsharefriend_request
 
     [JsonPropertyName("objectId")]
     public int? ObjectId { get; set; }  //ID obiektu, którego dotyczy akcja. Przykłady: post id = 45
@@ -37,19 +40,8 @@ public class FriendAction
     [JsonPropertyName("createdDate")]
     public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
-    [JsonPropertyName("updatedDate")]
-    public DateTime? UpdatedDate { get; set; }
-
     [JsonPropertyName("seen")]
     public bool Seen { get; set; } = false;
 
-    [JsonPropertyName("priority")]
-    public int? Priority { get; set; } 
 }
 
-public enum FriendActionType
-{
-    Like,
-    Comment,
-    PostCreated
-}
