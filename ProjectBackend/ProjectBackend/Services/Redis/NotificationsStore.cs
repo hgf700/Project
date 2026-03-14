@@ -23,7 +23,7 @@ public class NotificationsStore : INotificationsStore
         _context= context;
     }
 
-    public async Task<UserAction> NotifyMovieRatedAsync(RedCreateRateMovieDto dto)
+    public async Task<UserAction> NotifyObjectAsync(RedCreateObjectDto dto)
     {
         var notificationId = Guid.NewGuid().ToString();
 
@@ -32,9 +32,9 @@ public class NotificationsStore : INotificationsStore
             IdOfAction = notificationId,
             UserId = dto.userId,
             UserNick=dto.userNick,
-            FriendCommittedAction=dto.FriendCommittedAction,
-            ObjectId=dto.movieId,
-            ObjectType = "movie",
+            UserCommittedAction = dto.UserCommittedAction,
+            ObjectId=dto.objectId,
+            ObjectType = dto.objectType,
             CreatedDate = DateTime.UtcNow,
             Seen = false
         };
@@ -42,7 +42,7 @@ public class NotificationsStore : INotificationsStore
         var json = JsonSerializer.Serialize(notification);
         var key = $"notification:{notificationId}";
 
-        await _redis.StringSetAsync(key, json, TimeSpan.FromHours(1));
+        await _redis.StringSetAsync(key, json, TimeSpan.FromMinutes(15));
 
         var friends = await _context.Friends
             .Where(f => f.UserId == dto.userId)

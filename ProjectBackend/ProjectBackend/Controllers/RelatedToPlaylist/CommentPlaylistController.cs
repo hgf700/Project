@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
 using ProjectBackend.Models.DTO.RelatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
+using ProjectBackend.Services.Redis;
+using StackExchange.Redis;
 using System.Security.Claims;
 
 namespace ProjectBackend.Controllers.RelatedToPlaylist;
@@ -16,11 +18,15 @@ public class CommentPlaylistController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
-
+    private readonly INotificationsStore _redis;
+// ciezko redis narazie tutaj bo to wymaga wiekszego przemyslenia
     public CommentPlaylistController(
         ApplicationDbContext context,
-        UserManager<ApplicationUser> userManager)
+        UserManager<ApplicationUser> userManager,
+        INotificationsStore redis
+        )
     {
+        _redis=redis;
         _context = context;
         _userManager = userManager;
     }
@@ -33,7 +39,7 @@ public class CommentPlaylistController : ControllerBase
         if (userId == null) return Unauthorized();
 
         var playlist = await _context.Playlists
-            .FirstOrDefaultAsync(p => p.Id == playlistId);
+            .AnyAsync(p => p.Id == playlistId);
 
         if (playlist == null)
             return NotFound("Playlist not found");
@@ -50,6 +56,8 @@ public class CommentPlaylistController : ControllerBase
 
         await _context.SaveChangesAsync();
 
+
+
         return Ok();
     }
 
@@ -60,7 +68,7 @@ public class CommentPlaylistController : ControllerBase
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         var playlist = await _context.Playlists
-            .FirstOrDefaultAsync(p => p.Id == playlistId);
+            .AnyAsync(p => p.Id == playlistId);
 
         if (playlist == null)
             return NotFound("Playlist not found");

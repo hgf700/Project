@@ -49,7 +49,6 @@ public class FollowProfilesController : ControllerBase
             CreatedAt = DateTime.UtcNow,
         };
 
-
         _context.Add(follow);
         await _context.SaveChangesAsync();
 

@@ -5,12 +5,14 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using ProjectBackend.DB;
 using ProjectBackend.Models.DTO;
 using ProjectBackend.Models.DTO.Redis;
 using ProjectBackend.Models.DTO.RelatedToMovies;
 using ProjectBackend.Models.Redis;
 using ProjectBackend.Models.RelatedToRecommendation;
+using ProjectBackend.Models.ReleatedToMovie;
 using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
@@ -69,28 +71,24 @@ public class RatingController : ControllerBase
     [HttpPost("rate-movie")]
     public async Task<IActionResult> RateMovie(int movieId, [FromBody] postRateMoviePostDto dto)
     {
-        var ping = await _redis.PingAsync(); // ping jest typu TimeSpan
-        Console.WriteLine($"Redis ping: {ping.TotalMilliseconds} ms");
-
+        var useremail = User.FindFirstValue(ClaimTypes.Email);
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (useremail == null) return Unauthorized();
         if (userId == null) return Unauthorized();
 
-        var user = await _userManager.FindByIdAsync(userId);
+        var movieIdDb = await _context.Movies
+            .Where(m => m.TmdbId == movieId)
+            .Select(m => m.Id)
+            .FirstOrDefaultAsync();
 
-        var email = user.Email;
-
-        var movie = await _context.Movies
-            .Include(m => m.MovieGenre) // WAŻNE
-            .FirstOrDefaultAsync(m => m.TmdbId == movieId);
-
-        if (movie == null)
-            return NotFound("Movie not found");
-
-        var entry = await _context.UserMediaStatuses
-            .FirstOrDefaultAsync(x => x.UserId == userId && x.MovieId == movie.Id);
+        var entry =  await _context.UserMediaStatuses
+            .FirstOrDefaultAsync(x => x.UserId == userId && x.MovieId == movieIdDb);
 
         var userPreference = await _context.MovieUserPreferences
             .FirstOrDefaultAsync(x => x.UserId == userId);
+
+        if (movieIdDb == 0)
+            return NotFound();
 
         if (userPreference == null)
         {
@@ -107,27 +105,34 @@ public class RatingController : ControllerBase
             entry = new UserMediaStatus
             {
                 UserId = userId,
-                MovieId = movie.Id,
+                MovieId = movieIdDb,
                 Rating = dto.Rating
             };
 
             _context.UserMediaStatuses.Add(entry);
-
-            var releaseYear = movie.ReleaseDate.Year;
         }
         else
         {
             var oldRating = entry.Rating;
         }
+
         await _context.SaveChangesAsync();
 
-        await _redis.NotifyMovieRatedAsync(new RedCreateRateMovieDto
+        try
         {
-            userId = userId,
-            userNick = email,
-            movieId = movie.Id,
-            FriendCommittedAction = UserActionType.Rate
-        });
+            _ = _redis.NotifyObjectAsync(new RedCreateObjectDto
+            {
+                userId = userId,
+                userNick = useremail,
+                objectId = movieIdDb,
+                objectType = ObjectType.Movie,
+                UserCommittedAction = UserActionType.Rate
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
 
         return Ok();
     }
@@ -136,8 +141,10 @@ public class RatingController : ControllerBase
     [HttpPost("remove-rate")]
     public async Task<IActionResult> RemoveRate([FromBody] postRemoveRateIdPostDto dto)
     {
+        var useremail = User.FindFirstValue(ClaimTypes.Email);
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
+        if (useremail == null) return Unauthorized();
 
         var entry = await _context.UserMediaStatuses
             .FirstOrDefaultAsync(x => x.UserId == userId && x.MovieId == dto.movieId);
@@ -146,9 +153,24 @@ public class RatingController : ControllerBase
             return NotFound();
 
         _context.UserMediaStatuses.Remove(entry);
-
         await _context.SaveChangesAsync();
+
+        try
+        {
+            _ = _redis.NotifyObjectAsync(new RedCreateObjectDto
+            {
+                userId = userId,
+                userNick = useremail,
+                objectId = dto.movieId,
+                objectType = ObjectType.Movie,
+                UserCommittedAction = UserActionType.RemoveRate
+            });
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+
         return Ok();
     }
-
 }

@@ -2,11 +2,23 @@
 
 namespace ProjectBackend.Models.Redis;
 
+public enum ObjectType
+{
+    Movie,
+    Playlist,
+
+}
+
 public enum UserActionType
 {
     Rate,
     Comment,
-    PostCreated
+    PostCreated,
+    LikePlaylist,
+    RemoveRate,
+    RemoveComment,
+    RemovePost,
+    StopLikePlaylist,
 }
 public class UserActionsResults
 {
@@ -29,13 +41,13 @@ public class UserAction
     public string? UserNick { get; set; }
 
     [JsonPropertyName("userCommittedAction")] 
-    public UserActionType FriendCommittedAction { get; set; } //Typ akcji wykonanej przez znajomego.likecommentsharefriend_request
+    public UserActionType UserCommittedAction { get; set; } //Typ akcji wykonanej przez znajomego.likecommentsharefriend_request
 
     [JsonPropertyName("objectId")]
     public int? ObjectId { get; set; }  //ID obiektu, którego dotyczy akcja. Przykłady: post id = 45
 
     [JsonPropertyName("objectType")]
-    public string? ObjectType { get; set; } //Typ obiektu. postcommentphotoprofile
+    public ObjectType? ObjectType { get; set; } //Typ obiektu. postcommentphotoprofile
 
     [JsonPropertyName("createdDate")]
     public DateTime CreatedDate { get; set; } = DateTime.UtcNow;

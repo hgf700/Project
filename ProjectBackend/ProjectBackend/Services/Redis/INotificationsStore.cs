@@ -5,7 +5,7 @@ namespace ProjectBackend.Services.Redis;
 
 public interface INotificationsStore
 {
-    Task<UserAction> NotifyMovieRatedAsync(RedCreateRateMovieDto dto);
+    Task<UserAction> NotifyObjectAsync(RedCreateObjectDto dto);
     Task <TimeSpan> PingAsync();
 
     //Task<IEnumerable<FriendAction>> AllAsync();
