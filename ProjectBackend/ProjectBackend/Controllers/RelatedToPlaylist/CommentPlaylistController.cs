@@ -19,7 +19,8 @@ public class CommentPlaylistController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly INotificationsStore _redis;
-// ciezko redis narazie tutaj bo to wymaga wiekszego przemyslenia
+
+    // ciezko redis narazie tutaj bo to wymaga wiekszego przemyslenia najlepiej moja playlista / do ktorej dodany jestem
     public CommentPlaylistController(
         ApplicationDbContext context,
         UserManager<ApplicationUser> userManager,

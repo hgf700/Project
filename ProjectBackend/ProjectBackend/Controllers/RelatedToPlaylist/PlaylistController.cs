@@ -4,12 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
 using ProjectBackend.Models.DTO;
+using ProjectBackend.Models.DTO.Redis;
 using ProjectBackend.Models.DTO.RelatedToPlaylist;
+using ProjectBackend.Models.Redis;
 using ProjectBackend.Models.ReleatedToMovie;
 using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
 using ProjectBackend.Services;
 using ProjectBackend.Services.interfaces;
+using ProjectBackend.Services.Redis;
+using StackExchange.Redis;
 using System.Data;
 using System.Security.Claims;
 
@@ -22,20 +26,26 @@ public class PlaylistController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly INotificationsStore _redis;
 
     public PlaylistController(
         ApplicationDbContext context,
-        UserManager<ApplicationUser> userManager)
+        UserManager<ApplicationUser> userManager,
+        INotificationsStore redis
+        )
     {
         _context = context;
         _userManager = userManager;
+        _redis= redis;
     }
 
     [Authorize]
     [HttpPost("create-playlist")]
     public async Task<IActionResult> CreatePlaylist([FromBody] postCreatePlaylistNamePostDto dto)
     {
+        var useremail = User.FindFirstValue(ClaimTypes.Email);
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (useremail == null) return Unauthorized();
         if (userId == null) return Unauthorized();
 
         var exists = await _context.Playlists
@@ -113,9 +123,10 @@ public class PlaylistController : ControllerBase
     [HttpPost("delete-playlist")]
     public async Task<IActionResult> DeletePlaylist([FromBody] postDeletePlaylistIdPostDto dto)
     {
+        var useremail = User.FindFirstValue(ClaimTypes.Email);
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
-            return Unauthorized();
+        if (useremail == null) return Unauthorized();
+        if (userId == null) return Unauthorized();
 
         var playlist = await _context.Playlists
             .FirstOrDefaultAsync(p => p.Id == dto.PlaylistId && p.UserId == userId);

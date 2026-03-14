@@ -126,7 +126,7 @@ public class RatingController : ControllerBase
                 userNick = useremail,
                 objectId = movieIdDb,
                 objectType = ObjectType.Movie,
-                UserCommittedAction = UserActionType.Rate
+                UserCommittedAction = UserActionType.RateCreated,
             });
         }
         catch (Exception ex)
@@ -163,7 +163,7 @@ public class RatingController : ControllerBase
                 userNick = useremail,
                 objectId = dto.movieId,
                 objectType = ObjectType.Movie,
-                UserCommittedAction = UserActionType.RemoveRate
+                UserCommittedAction = UserActionType.RateRemoved,
             });
         }
         catch(Exception ex)

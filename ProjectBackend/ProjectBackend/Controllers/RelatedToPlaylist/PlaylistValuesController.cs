@@ -4,8 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
 using ProjectBackend.Models.DTO;
+using ProjectBackend.Models.DTO.Redis;
+using ProjectBackend.Models.Redis;
 using ProjectBackend.Models.ReleatedToPlaylist;
 using ProjectBackend.Models.ReleatedToSocial;
+using ProjectBackend.Services.Redis;
 using System.Security.Claims;
 
 namespace ProjectBackend.Controllers.RelatedToPlaylist;
@@ -17,20 +20,28 @@ public class PlaylistValuesController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly INotificationsStore _redis;
 
     public PlaylistValuesController(
         ApplicationDbContext context,
-        UserManager<ApplicationUser> userManager)
+        UserManager<ApplicationUser> userManager,
+        INotificationsStore redis
+        )
     {
         _context = context;
         _userManager = userManager;
+        _redis = redis;
     }
+
+    //redis o ile playlista chyba pulbic sie poprawi
 
     [Authorize]
     [HttpPost("{playlistId}/movies/{tmdbId}")]
     public async Task<IActionResult> AddToPlaylist(int playlistId, int tmdbId)
     {
+        var useremail = User.FindFirstValue(ClaimTypes.Email);
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (useremail == null) return Unauthorized();
         if (userId == null) return Unauthorized();
 
         var playlist = await _context.Playlists
@@ -76,6 +87,26 @@ public class PlaylistValuesController : ControllerBase
         });
 
         await _context.SaveChangesAsync();
+
+        if (playlist.IsPublic )
+        {
+            try
+            {
+                _ = _redis.NotifyObjectAsync(new RedCreateObjectDto
+                {
+                    userId = userId,
+                    userNick = useremail,
+                    objectId = playlistId,
+                    objectType = ObjectType.Playlist,
+                    UserCommittedAction = UserActionType.PlaylistCreated,
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
         return Ok();
     }
 
@@ -131,7 +162,9 @@ public class PlaylistValuesController : ControllerBase
     [HttpPost("{playlistId}/delete-from-playlist/{tmdbId}")]
     public async Task<IActionResult> DeleteFromPlaylist(int playlistId, int tmdbId)
     {
+        var useremail = User.FindFirstValue(ClaimTypes.Email);
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (useremail == null) return Unauthorized();
         if (userId == null) return Unauthorized();
 
         var playlist = await _context.Playlists
@@ -175,7 +208,25 @@ public class PlaylistValuesController : ControllerBase
         _context.PlaylistValues.Remove(playlistValue);
         await _context.SaveChangesAsync();
 
+        if (playlist.IsPublic)
+        {
+            try
+            {
+                _ = _redis.NotifyObjectAsync(new RedCreateObjectDto
+                {
+                    userId = userId,
+                    userNick = useremail,
+                    objectId = playlistId,
+                    objectType = ObjectType.Playlist,
+                    UserCommittedAction = UserActionType.PlaylistValueDeleted,
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
         return NoContent();
     }
-
 }

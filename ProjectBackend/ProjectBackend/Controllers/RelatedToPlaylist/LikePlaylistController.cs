@@ -34,6 +34,8 @@ public class LikePlaylistController : ControllerBase
         _redis= redis;
     }
 
+    //chyba mam to nie dokonczone i nie sprawdzone / chyba widoku nie mam?
+
     [Authorize]
     [HttpPost("like-playlist/{playlistId}")]
     public async Task<IActionResult> LikePlaylist(int playlistId)
@@ -75,7 +77,7 @@ public class LikePlaylistController : ControllerBase
                 userNick = useremail,
                 objectId = playlistId,
                 objectType= ObjectType.Playlist,
-                UserCommittedAction = UserActionType.LikePlaylist,
+                UserCommittedAction = UserActionType.PlaylistLiked,
             });
         }
         catch (Exception ex)
@@ -90,7 +92,10 @@ public class LikePlaylistController : ControllerBase
     [HttpDelete("stop-like-playlist/{playlistId}")]
     public async Task<IActionResult> StoplikePlaylist(int playlistId)
     {
+        var useremail = User.FindFirstValue(ClaimTypes.Email);
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
+        if (useremail == null) return Unauthorized();
 
         var like = await _context.PlaylistLikes
             .FirstOrDefaultAsync(l => l.PlaylistId == playlistId && l.UserId == userId);
@@ -108,6 +113,23 @@ public class LikePlaylistController : ControllerBase
         }
 
         await _context.SaveChangesAsync();
+
+        try
+        {
+            _ = _redis.NotifyObjectAsync(new RedCreateObjectDto
+            {
+                userId = userId,
+                userNick = useremail,
+                objectId = playlistId,
+                objectType = ObjectType.Playlist,
+                UserCommittedAction = UserActionType.PlaylistUnliked,
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+
         return NoContent();
     }
 

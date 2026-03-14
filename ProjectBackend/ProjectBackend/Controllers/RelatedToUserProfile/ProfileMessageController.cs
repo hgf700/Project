@@ -25,7 +25,7 @@ public class ProfileMessageController : ControllerBase
         _userManager = userManager;
     }
 
-    //niesprawdzone
+    //niesprawdzone tylko jako odbiorca redis?
 
     [Authorize]
     [HttpGet("users/{targetUserId}/view-profile-message")]

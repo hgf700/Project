@@ -11,14 +11,20 @@ public enum ObjectType
 
 public enum UserActionType
 {
-    Rate,
-    Comment,
+    RateCreated,
+    RateRemoved,
+    CommentCreated,
+    CommentRemoved,
     PostCreated,
-    LikePlaylist,
-    RemoveRate,
-    RemoveComment,
-    RemovePost,
-    StopLikePlaylist,
+    PostRemoved,
+    PlaylistLiked,
+    PlaylistUnliked,
+    PlaylistAdded,
+    PlaylistCreated,
+    PlaylistMadePublic,
+    PlaylistSharedWithFriends,
+    PlaylistUnsharedWithFriends,
+    PlaylistValueDeleted,
 }
 public class UserActionsResults
 {

@@ -25,7 +25,7 @@ public class FollowProfilesController : ControllerBase
         _userManager = userManager;
     }
 
-    //niesprawdzone
+    //niesprawdzone i dodac chyba do redis
 
     [Authorize]
     [HttpPost("follow-profile/{targetUserId}")]
