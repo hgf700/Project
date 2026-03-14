@@ -49,6 +49,10 @@ export class LoginCallbackComponent implements OnInit {
     this.router.navigate(['/movie-recomendations']);
   }
 
+  retrieveRedisData() {
+    this.router.navigate(['/redis-retive-data']);
+  }
+
   loadCurrentUser() {
     this.currentUserService.getCurrentUser().subscribe({
       next: (user) => {

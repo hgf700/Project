@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
 using ProjectBackend.Models.DTO.Redis;
+using ProjectBackend.Models.DTO.Rediss;
 using ProjectBackend.Models.Redis;
 using ProjectBackend.Models.ReleatedToMovie;
 using ProjectBackend.Models.ReleatedToSocial;
@@ -31,15 +32,19 @@ public class NotificationsStore : INotificationsStore
         {
             IdOfAction = notificationId,
             UserId = dto.userId,
-            UserNick=dto.userNick,
+            UserNick = dto.userNick,
             UserCommittedAction = dto.UserCommittedAction,
-            ObjectId=dto.objectId,
+            ObjectId = dto.objectId,
             ObjectType = dto.objectType,
             CreatedDate = DateTime.UtcNow,
             Seen = false
         };
 
-        var json = JsonSerializer.Serialize(notification);
+        var jsonOptions = new JsonSerializerOptions
+        {
+            Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() }
+        };
+        var json = JsonSerializer.Serialize(notification, jsonOptions);
         var key = $"notification:{notificationId}";
 
         await _redis.StringSetAsync(key, json, TimeSpan.FromMinutes(15));
@@ -49,19 +54,54 @@ public class NotificationsStore : INotificationsStore
             .Select(f => f.FriendId)
             .ToListAsync();
 
-        var tasks = new List<Task>();
+        // dodaj samego siebie, żeby własne akcje też były widoczne
+        if (!friends.Contains(dto.userId))
+            friends.Add(dto.userId);
 
         foreach (var friendId in friends)
         {
             var listKey = $"user_notifications:{friendId}";
-
-            tasks.Add(_redis.ListLeftPushAsync(listKey, notificationId));
-            tasks.Add(_redis.ListTrimAsync(listKey, 0, 99));
+            await _redis.ListLeftPushAsync(listKey, notificationId);
+            await _redis.ListTrimAsync(listKey, 0, 99);
         }
 
-        await Task.WhenAll(tasks);
-
         return notification;
+    }
+
+    public async Task<List<getRedRetrieveRedisDataDto>> RetrieveDataRedis(string userId)
+    {
+        var listKey = $"user_notifications:{userId}";
+
+        var notificationIds = await _redis.ListRangeAsync(listKey, 0, 99);
+
+        var notifications = new List<getRedRetrieveRedisDataDto>();
+
+        foreach (var id in notificationIds)
+        {
+            var key = $"notification:{id}";
+            var json = await _redis.StringGetAsync(key);
+
+            if (json.IsNullOrEmpty)
+                continue;
+
+            var notification = JsonSerializer.Deserialize<UserAction>((string)json);
+
+            if (notification == null)
+                continue;
+
+            var result = new getRedRetrieveRedisDataDto
+            {
+                userNick = notification.UserNick,
+                userCommittedAction = notification.UserCommittedAction,
+                objectId = notification.ObjectId,
+                objectType = notification.ObjectType,
+                createdDate = notification.CreatedDate
+            };
+
+            notifications.Add(result);
+        }
+
+        return notifications;
     }
 
     public async Task<TimeSpan> PingAsync()
@@ -82,4 +122,14 @@ public class NotificationsStore : INotificationsStore
         }
     }
 
+    public async Task<string> RetrieveLastNotification(string userId)
+    {
+        var listKey = $"user_notifications:{userId}";
+        var lastNotificationId = await _redis.ListGetByIndexAsync(listKey, 0); // _redis jest typu IDatabase
+        if (lastNotificationId.IsNullOrEmpty)
+            return null;
+
+        var json = await _redis.StringGetAsync($"notification:{lastNotificationId}");
+        return json.IsNullOrEmpty ? null : json.ToString();
+    }
 }

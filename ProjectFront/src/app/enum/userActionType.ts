@@ -1,0 +1,16 @@
+export enum UserActionType {
+    RateCreated,
+    RateRemoved,
+    CommentCreated,
+    CommentRemoved,
+    PostCreated,
+    PostRemoved,
+    PlaylistLiked,
+    PlaylistUnliked,
+    PlaylistAdded,
+    PlaylistCreated,
+    PlaylistMadePublic,
+    PlaylistSharedWithFriends,
+    PlaylistUnsharedWithFriends,
+    PlaylistValueDeleted,
+}

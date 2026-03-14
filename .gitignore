@@ -4,3 +4,4 @@ moje/
 RecommendationsML/Data/
 **/.env
 **/__pycache__
+**/.vscode/

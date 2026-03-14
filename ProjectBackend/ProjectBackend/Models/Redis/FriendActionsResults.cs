@@ -6,7 +6,6 @@ public enum ObjectType
 {
     Movie,
     Playlist,
-
 }
 
 public enum UserActionType
@@ -26,6 +25,7 @@ public enum UserActionType
     PlaylistUnsharedWithFriends,
     PlaylistValueDeleted,
 }
+
 public class UserActionsResults
 {
     [JsonPropertyName("total")]

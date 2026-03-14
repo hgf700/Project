@@ -2,7 +2,7 @@
 
 namespace ProjectBackend.Models.DTO.Redis;
 
-public class CreateFriendActionDto
+public class postRedCreateFriendActionDto
 {
     public string FriendNick {  get; set; }
     public string TargetUserId { get; set; }

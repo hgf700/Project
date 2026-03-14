@@ -22,7 +22,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 DotNetEnv.Env.Load();
 
-builder.Services.AddControllers();
+//builder.Services.AddControllers();
+//moze byc problem bo mam enum na liczby w rate
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+});
 //builder.Services.AddOpenApi();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -45,6 +50,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 
 builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 builder.Services.AddHttpClient();
+
+
 
 //Redis
 //var tokenSource = new CancellationTokenSource();

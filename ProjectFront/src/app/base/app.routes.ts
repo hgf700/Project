@@ -12,7 +12,7 @@ import { ViewFriendProfile } from '../Views/view-friend-profile/view-friend-prof
 import { PrefferedGenre } from '../Views/preffered-genre/preffered-genre';
 import { MovieRecomendations } from '../Views/movie-recomendations/movie-recommendations';
 import { MovieDetails } from '../Views/movie-details/movie-details';
-
+import { RedisRetiveData } from '../Views/redis-retive-data/redis-retive-data';
 
 
 export const routes: Routes = [
@@ -28,6 +28,7 @@ export const routes: Routes = [
   { path: 'view-friend-profile/:id', component: ViewFriendProfile },
   { path: 'preffered-genre', component: PrefferedGenre },
   { path: 'movie-recomendations', component: MovieRecomendations },
+  { path: 'redis-retive-data', component: RedisRetiveData },
 
 
 ];

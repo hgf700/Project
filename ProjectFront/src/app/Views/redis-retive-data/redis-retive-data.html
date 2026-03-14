@@ -1,0 +1,20 @@
+<main class="playlist-dialog">
+  <p *ngIf="loading">Ładowanie...</p>
+
+  <section *ngIf="!loading">
+    <ul *ngIf="redisdata.length > 0; else empty">
+      <li *ngFor="let r of redisdata" class="genres-item">
+        <span>
+          {{ r.userNick }} {{ getActionText(r.userCommittedAction) }}
+        </span>
+        <span class="genres-name">{{ r.objectId }}</span>
+        <span class="genres-name">{{ r.objectType }}</span>
+        <span class="genres-name">{{ r.createdDate | date:'short' }}</span>
+      </li>
+    </ul>
+
+    <ng-template #empty>
+      <p>Brak redisdata</p>
+    </ng-template>
+  </section>
+</main>
