@@ -8,6 +8,7 @@ using ProjectBackend.Models.ReleatedToMovie;
 using ProjectBackend.Models.ReleatedToSocial;
 using StackExchange.Redis;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ProjectBackend.Services.Redis;
 
@@ -84,7 +85,12 @@ public class NotificationsStore : INotificationsStore
             if (json.IsNullOrEmpty)
                 continue;
 
-            var notification = JsonSerializer.Deserialize<UserAction>((string)json);
+            var jsonOptions = new JsonSerializerOptions
+            {
+                Converters = { new JsonStringEnumConverter() }
+            };
+
+            var notification = JsonSerializer.Deserialize<UserAction>((string)json, jsonOptions);
 
             if (notification == null)
                 continue;
@@ -102,24 +108,6 @@ public class NotificationsStore : INotificationsStore
         }
 
         return notifications;
-    }
-
-    public async Task<TimeSpan> PingAsync()
-    {
-        var redisConnectionString = "localhost:6379";
-        try
-        {
-            var redis = await ConnectionMultiplexer.ConnectAsync(redisConnectionString);
-            var db = redis.GetDatabase();
-            var pong = await db.PingAsync();
-            await redis.CloseAsync();
-            return pong;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Błąd połączenia z Redis: {ex.Message}");
-            return TimeSpan.Zero;
-        }
     }
 
     public async Task<string> RetrieveLastNotification(string userId)

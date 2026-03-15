@@ -120,7 +120,7 @@ public class RatingController : ControllerBase
 
         try
         {
-            _ = _redis.NotifyObjectAsync(new RedCreateObjectDto
+            await _redis.NotifyObjectAsync(new RedCreateObjectDto
             {
                 userId = userId,
                 userNick = useremail,
@@ -157,7 +157,7 @@ public class RatingController : ControllerBase
 
         try
         {
-            _ = _redis.NotifyObjectAsync(new RedCreateObjectDto
+            await _redis.NotifyObjectAsync(new RedCreateObjectDto
             {
                 userId = userId,
                 userNick = useremail,

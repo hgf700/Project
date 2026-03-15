@@ -7,7 +7,6 @@ namespace ProjectBackend.Services.Redis;
 public interface INotificationsStore
 {
     Task<UserAction> NotifyObjectAsync(RedCreateObjectDto dto);
-    Task <TimeSpan> PingAsync();
     Task<List<getRedRetrieveRedisDataDto>> RetrieveDataRedis(string userId);
     Task<string> RetrieveLastNotification(string userId);
 

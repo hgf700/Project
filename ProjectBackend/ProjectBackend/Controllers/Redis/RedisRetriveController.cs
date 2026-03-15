@@ -28,7 +28,7 @@ public class RedisRetriveController : ControllerBase
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
 
-        var json = await _redis.RetrieveLastNotification(userId); // <-- wywołujesz metodę serwisu, nie Redis
+        var json = await _redis.RetrieveDataRedis(userId); // <-- wywołujesz metodę serwisu, nie Redis
 
         if (json == null)
             return Ok("Brak powiadomień");
