@@ -8,7 +8,6 @@ public interface INotificationsStore
 {
     Task<UserAction> NotifyObjectAsync(RedCreateObjectDto dto);
     Task<List<getRedRetrieveRedisDataDto>> RetrieveDataRedis(string userId);
-    Task<string> RetrieveLastNotification(string userId);
 
     //Task<IEnumerable<FriendAction>> AllAsync();
     //Task<IEnumerable<FriendAction>> GetUserNotificationsAsync(string UserId);

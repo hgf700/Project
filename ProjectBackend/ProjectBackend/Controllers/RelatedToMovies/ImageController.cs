@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
 using ProjectBackend.Services.interfaces;
 
 namespace ProjectBackend.Controllers.RelatedToMovies;
 
+[EnableRateLimiting("ratelimit")]
 [Authorize]
 [ApiController]
 [Route("image")]
@@ -17,6 +19,7 @@ public class ImageController : ControllerBase
     {
         _context = context;
     }
+
 
     [Authorize]
     [HttpGet("show-images")]

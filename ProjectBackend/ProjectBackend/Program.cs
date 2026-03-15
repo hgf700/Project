@@ -17,19 +17,24 @@ using ProjectBackend.Services.Tmdb;
 using StackExchange.Redis;
 using System.Configuration;
 using System.Text;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
+using Serilog;
+using Serilog.Events;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 DotNetEnv.Env.Load();
 
 //builder.Services.AddControllers();
-//moze byc problem bo mam enum na liczby w rate
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
 });
-//builder.Services.AddOpenApi();
 
+//builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -38,6 +43,7 @@ var db = Environment.GetEnvironmentVariable("POSTGRES_DB");
 var user = Environment.GetEnvironmentVariable("POSTGRES_USER");
 var pass = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
 
+//db
 var connectionString =
     $"Host={host};Port=5432;Database={db};Username={user};Password={pass}";
 
@@ -51,7 +57,31 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 builder.Services.AddHttpClient();
 
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .WriteTo.File(
+        "Logs/log.txt",
+        rollingInterval: RollingInterval.Day,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}"
+    )
+    .CreateLogger();
 
+builder.Host.UseSerilog();
+
+//rate limit
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter(policyName: "ratelimit", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = 100;
+        limiterOptions.Window = TimeSpan.FromMinutes(1);
+        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiterOptions.QueueLimit = 0;
+    });
+});
 
 //Redis
 //var tokenSource = new CancellationTokenSource();
@@ -70,6 +100,7 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     return ConnectionMultiplexer.Connect(configuration);
 });
 
+//servicy di
 builder.Services.AddScoped<INotificationsStore, NotificationsStore>();
 builder.Services.AddScoped<TmdbSaveProductionCompaniesService>();
 builder.Services.AddScoped<TmdbLoadPeopleRoleService>();
@@ -80,6 +111,7 @@ builder.Services.AddScoped<JwtService>();
 
 builder.Services.AddAuthorization();
 
+//cors
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularDev",
@@ -121,6 +153,7 @@ if (string.IsNullOrWhiteSpace(googleClientSecret))
 
 int zoauth = 0;
 
+//jwt conf
 if (zoauth == 1)
 {
     builder.Services.AddAuthentication(options =>
@@ -200,5 +233,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseSerilogRequestLogging();
+
+app.UseRateLimiter();
 
 app.Run();

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
 using ProjectBackend.Models.DTO.RelatedToUserProfile;
@@ -9,6 +10,7 @@ using System.Security.Claims;
 
 namespace ProjectBackend.Controllers.RelatedToUserProfile;
 
+[EnableRateLimiting("ratelimit")]
 [Authorize]
 [ApiController]
 [Route("profile-message")]

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using ProjectBackend.DB;
 using ProjectBackend.Models.DTO;
@@ -16,6 +17,7 @@ using System.Security.Claims;
 namespace ProjectBackend.Controllers.RelatedToPlaylist;
 
 
+[EnableRateLimiting("ratelimit")]
 [Authorize]
 [ApiController]
 [Route("share-playlist-to-friend")]

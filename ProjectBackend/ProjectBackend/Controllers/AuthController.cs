@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using ProjectBackend.DB;
@@ -20,6 +21,7 @@ using System.Text;
 
 namespace ProjectBackend.Controllers;
 
+[EnableRateLimiting("ratelimit")]
 [ApiController]
 [Route("auth")]
 public class AuthController : ControllerBase

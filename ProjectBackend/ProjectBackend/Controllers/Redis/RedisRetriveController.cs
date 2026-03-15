@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using ProjectBackend.Models.DTO.RelatedToUserProfile;
@@ -12,6 +13,7 @@ namespace ProjectBackend.Controllers.Redis;
 [Authorize]
 [ApiController]
 [Route("redis")]
+[EnableRateLimiting("ratelimit")]
 public class RedisRetriveController : ControllerBase
 {
     private readonly INotificationsStore _redis;

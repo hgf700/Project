@@ -71,6 +71,7 @@ public class NotificationsStore : INotificationsStore
 
     public async Task<List<getRedRetrieveRedisDataDto>> RetrieveDataRedis(string userId)
     {
+
         var listKey = $"user_notifications:{userId}";
 
         var notificationIds = await _redis.ListRangeAsync(listKey, 0, 99);
@@ -108,16 +109,5 @@ public class NotificationsStore : INotificationsStore
         }
 
         return notifications;
-    }
-
-    public async Task<string> RetrieveLastNotification(string userId)
-    {
-        var listKey = $"user_notifications:{userId}";
-        var lastNotificationId = await _redis.ListGetByIndexAsync(listKey, 0); // _redis jest typu IDatabase
-        if (lastNotificationId.IsNullOrEmpty)
-            return null;
-
-        var json = await _redis.StringGetAsync($"notification:{lastNotificationId}");
-        return json.IsNullOrEmpty ? null : json.ToString();
     }
 }

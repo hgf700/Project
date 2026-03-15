@@ -42,3 +42,18 @@
             return TimeSpan.Zero;
         }
     }
+
+
+
+
+
+    public async Task<string> RetrieveLastNotification(string userId)
+    {
+        var listKey = $"user_notifications:{userId}";
+        var lastNotificationId = await _redis.ListGetByIndexAsync(listKey, 0); // _redis jest typu IDatabase
+        if (lastNotificationId.IsNullOrEmpty)
+            return null;
+
+        var json = await _redis.StringGetAsync($"notification:{lastNotificationId}");
+        return json.IsNullOrEmpty ? null : json.ToString();
+    }

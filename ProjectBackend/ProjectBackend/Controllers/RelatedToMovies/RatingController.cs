@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using ProjectBackend.DB;
@@ -25,6 +26,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProjectBackend.Controllers.RelatedToMovies;
 
+[EnableRateLimiting("ratelimit")]
 [Authorize]
 [ApiController]
 [Route("rating")]
@@ -33,15 +35,18 @@ public class RatingController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly INotificationsStore _redis;
+    private readonly ILogger<RatingController> _logger;
     public RatingController(
         UserManager<ApplicationUser> userManager,
         ApplicationDbContext context,
-        INotificationsStore redis
+        INotificationsStore redis,
+        ILogger<RatingController> logger
         )
     {
         _userManager = userManager;
         _context = context;
         _redis = redis;
+        _logger = logger;
     }
 
     [Authorize]
@@ -73,8 +78,11 @@ public class RatingController : ControllerBase
     {
         var useremail = User.FindFirstValue(ClaimTypes.Email);
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (useremail == null) return Unauthorized();
-        if (userId == null) return Unauthorized();
+        if (useremail == null || userId == null)
+        {
+            _logger.LogWarning("Unauthorized access attempt to rate movie {MovieTmdbId}", movieId);
+            return Unauthorized();
+        }
 
         var movieIdDb = await _context.Movies
             .Where(m => m.TmdbId == movieId)
@@ -88,7 +96,10 @@ public class RatingController : ControllerBase
             .FirstOrDefaultAsync(x => x.UserId == userId);
 
         if (movieIdDb == 0)
+        {
+            _logger.LogWarning("Movie with TmdbId {MovieTmdbId} not found for user {UserEmail}", movieId, useremail);
             return NotFound();
+        }
 
         if (userPreference == null)
         {
@@ -133,6 +144,9 @@ public class RatingController : ControllerBase
         {
             Console.WriteLine(ex);
         }
+
+        _logger.LogInformation("User {UserEmail} ({UserId}) is rating movie {MovieTmdbId} with rating {Rating}",
+                useremail, userId, movieId, dto.Rating);
 
         return Ok();
     }

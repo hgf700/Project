@@ -1,4 +1,4 @@
 export enum ObjectType {
-    Movie,
-    Playlist,
+    Movie = 'Movie',
+    Playlist = 'Playlist',
 }

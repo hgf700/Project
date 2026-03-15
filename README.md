@@ -10,3 +10,5 @@ Redis – real-time user interaction notifications and caching
 Angular – frontend framework for building the client interface
 Node.js - for angular
 Oauth authorisation 
+rate limits asp
+logger Serilog
