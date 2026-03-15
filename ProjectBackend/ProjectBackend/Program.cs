@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ProjectBackend.DB;
@@ -14,14 +15,16 @@ using ProjectBackend.Services;
 using ProjectBackend.Services.interfaces;
 using ProjectBackend.Services.Redis;
 using ProjectBackend.Services.Tmdb;
+using Serilog;
+using Serilog.Events;
 using StackExchange.Redis;
 using System.Configuration;
 using System.Text;
-using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
-using Serilog;
-using Serilog.Events;
-
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,6 +60,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 builder.Services.AddHttpClient();
 
+//logs
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
@@ -83,16 +87,30 @@ builder.Services.AddRateLimiter(options =>
     });
 });
 
+// trace
+const string serviceName = "roll-dice";
+
+builder.Logging.AddOpenTelemetry(options =>
+{
+    options
+        .SetResourceBuilder(
+            ResourceBuilder.CreateDefault()
+                .AddService(serviceName))
+            .AddConsoleExporter();
+});
+builder.Services.AddOpenTelemetry()
+      .ConfigureResource(resource => resource.AddService(serviceName))
+      .WithTracing(tracing => tracing
+          .AddAspNetCoreInstrumentation()
+          .AddConsoleExporter())
+      .WithMetrics(metrics => metrics
+          .AddAspNetCoreInstrumentation()
+          .AddConsoleExporter());
+
+
 //Redis
 //var tokenSource = new CancellationTokenSource();
 //var token = tokenSource.Token;
-
-//builder.Services.AddSingleton<IConnectionMultiplexer>(
-//    ConnectionMultiplexer.Connect("localhost"));
-
-//const string streamName = "telemetry";
-//const string groupName = "avg";
-
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
     var configuration = ConfigurationOptions.Parse("localhost:6379");
@@ -124,6 +142,7 @@ builder.Services.AddCors(options =>
     );
 });
 
+//identity
 builder.Services.Configure<IdentityOptions>(options =>
 {
     options.Password.RequireDigit = true;
