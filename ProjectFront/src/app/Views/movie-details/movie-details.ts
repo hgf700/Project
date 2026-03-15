@@ -11,7 +11,7 @@ import { movieActorsDto } from '../../Dto/movieActorsDto';
 @Component({
   selector: 'app-movie-details',
   standalone: true,
-  imports: [CommonModule, MatDialogModule,RouterModule],
+  imports: [CommonModule, MatDialogModule, RouterModule],
   templateUrl: './movie-details.html',
   styleUrl: './movie-details.css',
 })

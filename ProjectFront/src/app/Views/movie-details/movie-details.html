@@ -5,10 +5,12 @@
     brak
   </div>
 
-  <h3>{{ movie.tmdbId }}</h3>
-  <h3>{{ movie.id }}</h3>
-  <h3>{{ movie.title }}</h3>
-  <h3>{{ movie.overview }}</h3>
+  <div *ngIf="movie">
+    <h3>{{ movie.tmdbId }}</h3>
+    <h3>{{ movie.id }}</h3>
+    <h3>{{ movie.title }}</h3>
+    <h3>{{ movie.overview }}</h3>
+  </div>
 
   <button (click)="RateGood(movie.tmdbId)">👍 Good</button>
   <button (click)="RateNeutral(movie.tmdbId)">😐 Neutral</button>
