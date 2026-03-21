@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from RecommendationsML.temp.auth_service import verify_internal_key
+# from RecommendationsML.temp.auth_service import verify_internal_key
 # from db.get_db import get_db
 # from db.model import UserMediaStatuses
 from db.Dto import movieTagsFromASP

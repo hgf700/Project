@@ -15,7 +15,6 @@ cv = TfidfVectorizer(
 vectors = cv.fit_transform(df['tags'])
 
 def recommendation_process(tag_array):
-    tag_array = tag_array.lower()
 
     query = " ".join(tag_array)
 
@@ -25,7 +24,9 @@ def recommendation_process(tag_array):
 
     top_idx = similarity.argsort()[::-1][1:6]
 
-    recommendations = [(df.iloc[i]['title'], similarity[i]) for i in top_idx]
+    # recommendations = [(df.iloc[i]['title'], similarity[i]) for i in top_idx]
+    recommendations = [(df.iloc[i]['title']) for i in top_idx]
+
 
     return recommendations
 
