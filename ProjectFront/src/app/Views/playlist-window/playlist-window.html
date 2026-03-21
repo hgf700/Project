@@ -27,6 +27,12 @@
   </section>
 
   <!-- SZCZEGÓŁY PLAYLISTY -->
+   <section *ngIf="selectedPlaylist && !loading" class="playlist-details">
+    <h3>
+      {{selectedPlaylist.role}}
+    </h3> 
+   </section>
+
   <section *ngIf="selectedPlaylist && !loading" class="playlist-details">
     <h3>{{ selectedPlaylist.name }}</h3>
     <button

@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using ProjectBackend.DB;
 using ProjectBackend.ExtraTools;
 using ProjectBackend.Models.ReleatedToSocial;
@@ -17,14 +21,11 @@ using ProjectBackend.Services.Redis;
 using ProjectBackend.Services.Tmdb;
 using Serilog;
 using Serilog.Events;
+using Serilog.Sinks.Grafana.Loki;
 using StackExchange.Redis;
 using System.Configuration;
 using System.Text;
 using System.Threading.RateLimiting;
-using OpenTelemetry.Logs;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -71,6 +72,7 @@ Log.Logger = new LoggerConfiguration()
         rollingInterval: RollingInterval.Day,
         outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}"
     )
+    .WriteTo.GrafanaLoki("http://localhost:3100")
     .CreateLogger();
 
 builder.Host.UseSerilog();
@@ -88,24 +90,24 @@ builder.Services.AddRateLimiter(options =>
 });
 
 // trace
-const string serviceName = "roll-dice";
+//const string serviceName = "roll-dice";
 
-builder.Logging.AddOpenTelemetry(options =>
-{
-    options
-        .SetResourceBuilder(
-            ResourceBuilder.CreateDefault()
-                .AddService(serviceName))
-            .AddConsoleExporter();
-});
-builder.Services.AddOpenTelemetry()
-      .ConfigureResource(resource => resource.AddService(serviceName))
-      .WithTracing(tracing => tracing
-          .AddAspNetCoreInstrumentation()
-          .AddConsoleExporter())
-      .WithMetrics(metrics => metrics
-          .AddAspNetCoreInstrumentation()
-          .AddConsoleExporter());
+//builder.Logging.AddOpenTelemetry(options =>
+//{
+//    options
+//        .SetResourceBuilder(
+//            ResourceBuilder.CreateDefault()
+//                .AddService(serviceName))
+//            .AddConsoleExporter();
+//});
+//builder.Services.AddOpenTelemetry()
+//      .ConfigureResource(resource => resource.AddService(serviceName))
+//      .WithTracing(tracing => tracing
+//          .AddAspNetCoreInstrumentation()
+//          .AddConsoleExporter())
+//      .WithMetrics(metrics => metrics
+//          .AddAspNetCoreInstrumentation()
+//          .AddConsoleExporter());
 
 
 //Redis

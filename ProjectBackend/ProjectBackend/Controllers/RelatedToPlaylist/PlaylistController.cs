@@ -79,7 +79,49 @@ public class PlaylistController : ControllerBase
         return Ok(new { playlist.Id, playlist.Name });
     }
 
-    //dto dodac jak playlist values
+    //dto dodac jak playlist values i poprawic zapytanie bo nie optymalne strasznie opcja na dodawanie do playlisty
+    // nie dziala nie wyswietlaja sie przyciski do dodania do playlisty itd
+    //[Authorize]
+    //[HttpGet("show-playlists")]
+    //public async Task<IActionResult> ShowPlaylists()
+    //{
+    //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    //    if (userId == null) return Unauthorized();
+
+    //    var playlistsQuery = _context.Playlists
+    //        .Where(p =>
+    //            p.UserId == userId ||
+    //            p.IsPublic ||
+    //            _context.PlaylistMembers.Any(pm =>
+    //                pm.PlaylistId == p.Id && pm.UserId == userId)
+    //        )
+    //        .Select(p => new
+    //        {
+    //            p.Id,
+    //            p.Name,
+    //            Role = p.UserId == userId
+    //                ? PlaylistRole.Owner
+    //                : _context.PlaylistMembers
+    //                    .Where(pm => pm.PlaylistId == p.Id && pm.UserId == userId)
+    //                    .Select(pm => (PlaylistRole?)pm.Role)
+    //                    .FirstOrDefault() ?? PlaylistRole.Viewer
+    //        });
+
+    //    var playlists = playlistsQuery
+    //        .AsEnumerable() 
+    //        .Select(p => new
+    //        {
+    //            p.Id,
+    //            p.Name,
+    //            Role = Enum.IsDefined(typeof(PlaylistRole), p.Role) ? p.Role : PlaylistRole.Viewer
+    //        })
+    //        .ToList();
+
+
+
+    //    return Ok(playlists);
+    //}
+
     [Authorize]
     [HttpGet("show-playlists")]
     public async Task<IActionResult> ShowPlaylists()
@@ -87,9 +129,8 @@ public class PlaylistController : ControllerBase
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
 
-        var playlistsQuery = _context.Playlists
+        var playlists = await _context.Playlists
             .Where(p =>
-                p.UserId == userId ||
                 p.IsPublic ||
                 _context.PlaylistMembers.Any(pm =>
                     pm.PlaylistId == p.Id && pm.UserId == userId)
@@ -98,25 +139,12 @@ public class PlaylistController : ControllerBase
             {
                 p.Id,
                 p.Name,
-                Role = p.UserId == userId
-                    ? PlaylistRole.Owner
-                    : _context.PlaylistMembers
-                        .Where(pm => pm.PlaylistId == p.Id && pm.UserId == userId)
-                        .Select(pm => pm.Role)
-                        .FirstOrDefault() // EFCore tu zwróci 0,1,2 albo default(PlaylistRole)
-            });
-
-        var playlists = playlistsQuery
-            .AsEnumerable() 
-            .Select(p => new
-            {
-                p.Id,
-                p.Name,
-                Role = Enum.IsDefined(typeof(PlaylistRole), p.Role) ? p.Role : PlaylistRole.Viewer
+                Role = _context.PlaylistMembers
+                    .Where(pm => pm.PlaylistId == p.Id && pm.UserId == userId)
+                    .Select(pm => (PlaylistRole?)pm.Role)
+                    .FirstOrDefault() ?? PlaylistRole.Viewer
             })
-            .ToList();
-
-
+            .ToListAsync();
 
         return Ok(playlists);
     }
@@ -161,5 +189,4 @@ public class PlaylistController : ControllerBase
 
         return Ok();
     }
-
 }
