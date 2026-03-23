@@ -101,15 +101,15 @@ public class RatingController : ControllerBase
             return NotFound();
         }
 
-        if (userPreference == null)
-        {
-            userPreference = new MovieUserPreference
-            {
-                UserId = userId
-            };
+        //if (userPreference == null)
+        //{
+        //    userPreference = new MovieUserPreference
+        //    {
+        //        UserId = userId
+        //    };
 
-            _context.MovieUserPreferences.Add(userPreference);
-        }
+        //    _context.MovieUserPreferences.Add(userPreference);
+        //}
 
         if (entry == null)
         {

@@ -53,6 +53,17 @@ public class MovieRecomendController : ControllerBase
             .Distinct()
             .ToListAsync();
 
+        if (!tags.Any())
+        {
+            var popularMovies = await _context.Movies
+                .OrderByDescending(m => m.VoteAverage) // lub RatingAverage
+                .Take(5)
+                .Select(m => m.Title)
+                .ToListAsync();
+
+            return Ok(popularMovies);
+        }
+
         var httpClient = new HttpClient();
 
         var payload = new postMovieTagDto
