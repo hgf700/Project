@@ -1,0 +1,12 @@
+- Supabase for backend.
+- Vercel for deploying.
+- Namecheap for domain.
+- Stripe for payments.
+- GitHub for version control.
+- Resend for emails.
+- Clerk for auth.
+- Cloudflare for DNS.
+- PostHog for analytics.
+- Sentry for error tracking.
+- Upstash for Redis.
+- Pinecone for vector DB.

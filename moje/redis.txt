@@ -1,0 +1,8 @@
+#wszystkie
+KEYS *
+
+#wyswietlic string
+GET /nazwa/
+
+#wysiwetli zawartosc tablicy
+LRANGE /nazwa/ 0 -1

@@ -1,0 +1,59 @@
+spko sie wydaje b Systemy rekomendujące oparte na przedmiotach lub ml ale on potem
+https://ichi.pro/pl/zrozumienie-podstawowego-systemu-rekomendacji-236382342396803
+
+spoko tylko to sie opiera na % jak bardzo dany film ma akcji a ja nie mam tych danych
+https://ichi.pro/pl/system-polecajacy-od-podstaw-275339364023935
+
+Filtrowanie oparte na zawartości wydaje sie spoko scikit-learn
+https://ichi.pro/pl/jak-systemy-uczace-sie-polecaja-ci-filmy-85489909346454
+
+lekki opis i polecenie dnn
+https://recsys.acm.org/recsys19/tutorials/#content-tab-1-0-tab
+
+dla audio ale mzoe sie przyda
+https://github.com/marsyas/marsyas
+
+metody knn github rekomendacje
+https://github.com/amifunny/likely/
+
+gotowe ksiazki rekomendacje
+https://github.com/entbappy/End-to-End-Book-Recommender-System/blob/main/notebook/research.ipynb
+
+chat opis
+Najlepsza architektura na start (industry-like)
+🔹 Warstwa 1 — Content-based scoring (core)
+To już robisz — i to jest DOBRZE.
+filmy mają cechy (gatunki, rok, tempo, klimat, itp.)
+użytkownik ma wektor preferencji
+liczysz score
+To: skaluje się
+działa bez danych
+jest interpretowalne (ważne!)
+🔹 Warstwa 2 — Eksploracja (klucz do „future-proof”)
+Dodajesz kontrolowaną losowość, ale nie naiwną.
+Najlepszy kompromis:
+👉 ε-greedy (bandit w wersji light)
+ε = 0.1 – 0.3
+70–90% → najlepszy score
+10–30% → eksploracja
+Dlaczego to przyszłościowe?
+identyczny mechanizm używany w RL
+później ε może być dynamiczne
+łatwo dodać reward (klik, watch time)
+🔹 Warstwa 3 — Feedback loop (nawet minimalny)
+Nawet bez użytkowników możesz zbierać:
+klik / nie klik
+obejrzał > X%
+odrzucił
+To już są dane.
+Nie musisz mieć kont — wystarczy:
+sesja
+localStorage
+cookie
+
+dodac
+⚠️ Średnie sygnały
+klik w szczegóły filmu
+sprawdzenie obsady
+sprawdzenie oceny (ratingu)
+sprawdzenie roku produkcji

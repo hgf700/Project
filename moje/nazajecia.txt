@@ -1,0 +1,7 @@
+service dicovery - consul, rejestracja oraz pobieranie danych przed strzałem do innego serwisu, // chyba nie trzeba
+centralizacja logów - seq/ grafana loki  // grafana wybralem  X
+tracing - jaeger/ grafana tempo // wstepnie brak mocny 
+komunikacja szyną - rabbitmq/kaffka + outbox/ inbox pattern  // redis czesciowo
+api gateway - rate limiting/ audyt/ uwierzytelnianie  // mam rate uwierztylnianie log   brak audyt 
+load balacing - np. fabio // brak
+docker compose

@@ -1,0 +1,38 @@
+    1. Bot Detection – wykrywanie botów
+
+Nie jest to część frameworka, tylko zewnętrzne rozwiązania / middleware:
+
+DataDome.AspNetCore – middleware do ASP.NET Core, które automatycznie analizuje ruch i blokuje boty zanim trafią do Twojej aplikacji (wymaga kluczy i zewnętrznej usługi).
+
+ReCAPTCHA + middleware – integracja Google reCAPTCHA (np. przez pakiet AspNetCore.ReCaptcha) pomaga odróżnić ludzi od botów na formularzach.
+
+Custom honeypot / tokeny JS – dodatkowa logika po stronie klienta i serwera, która odfiltrowuje proste boty (technika, nie biblioteka).
+
+⚠️ Uwaga: bot detection nie jest idealne w warstwie aplikacji i często łączy się z usługami CDN / WAF jak Cloudflare, Azure WAF itd.
+
+    2. Rate Limiting – ograniczanie liczby żądań
+
+ASP.NET Core ma obecnie wbudowane rate limiting middleware (od .NET 7+), który można konfigurować per‑endpoint / per‑user / per‑IP bez dodatkowych pakietów.
+
+Dodatkowo możesz użyć pakietu:
+
+AspNetCoreRateLimit – popularny NuGet do kompleksowego rate limiting (IP, ClientID itp.).
+
+    3 Email Validation / Potwierdzanie adresu
+
+To nie specjalna biblioteka bezpieczeństwa, tylko funkcja ASP.NET Identity:
+
+ASP.NET Core Identity – wbudowany pakiet do zarządzania użytkownikami, który ma weryfikację email i potwierdzanie konta (generuje tokeny potwierdzające i umożliwia weryfikację linkiem email).
+Ta część jest częścią frameworka i jest szeroko używana.
+
+Dodatkowo możesz używać pakietów jak FluentValidation + atrybutów DataAnnotations ([EmailAddress]) do walidacji formatu email.
+
+    4. Data Redaction / Maskowanie danych
+
+Nie ma wbudowanego globalnego pakietu „redaction”, ale możesz używać:
+
+Custom JSON serializers lub middleware, które maskują pola (np. JsonIgnore, JsonConverter),
+
+Attribute‑based filters do usuwania wrażliwych danych z logów.
+
+To jest raczej strategia projektowa niż pojedyncze narzędzie. 

@@ -1,0 +1,6 @@
+
+
+
+curl.exe -X GET "https://api.themoviedb.org/3/movie/550/credits" `
+  -H "Authorization: " `
+  -H "accept: application/json"

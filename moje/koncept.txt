@@ -1,0 +1,123 @@
+koncept np
+
+1. „Co teraz?” – inteligentny hub rozrywki
+Nie baza danych filmów, tylko doradca rozrywkowy
+Koncept:
+Użytkownik wchodzi i odpowiada:
+„Mam 2h, jestem zmęczony, lubię sci-fi”
+A aplikacja mówi:
+🎬 Film
+🎮 Gra
+📺 Serial
+🎥 YouTube / dokument
+
+4. Listy tematyczne + kuratorzy
+Trochę jak Spotify playlists, ale dla filmów i gier
+Koncept:
+Listy typu:
+„Filmy na samotny wieczór”
+„Gry po ciężkim dniu”
+Użytkownicy jako kuratorzy
+Follow list
+Plus:
+Bardzo social
+Nie potrzebujesz milionów filmów na start
+
+chcialbym uzyc np
+
+2️ PODPISYWANIE QUERY (HMAC) – najczęstsze „secure query”/ jwt i w nim wsyzstko
+
+Backend
+•	ASP.NET Core Web API
+•	Clean Architecture
+•	MediatR (opcjonalnie, ale ładnie wygląda)
+•	JWT + Refresh Tokens (OAuth jako v2 – dobra decyzja)
+
+DB / Cache
+•	PostgreSQL
+•	Redis (cache + rate limit)
+•	EF Core
+
+CONTENT – integracja API
+Źródła:
+•	TMDB – filmy/seriale
+•	IGDB – gry
+•	Google Books – książki
+
+Bardzo ważne: logika > model
+v1:
+•	preferowane gatunki
+•	ostatnie feedbacki
+•	czas dostępny
+•	losowość (exploration)
+v2:
+•	collaborative filtering (prosty)
+•	podobni użytkownicy
+•	boost dla list kuratorów
+
+feed
+•  listy, które followujesz
+•  nowe listy
+•  popularne propozycje
+•  „Co teraz?” dnia
+
+DARK MODE
+•	CSS variables
+•	zapis w localStorage
+•	sync z systemem
+
+TESTY (mega plus)
+Backend:
+•	xUnit
+•	testy:
+o	Services
+o	RecommendationEngine
+o	Auth
+CI:
+•	GitHub Actions
+•	build
+•	test
+•	coverage badge
+
+DEVOPS
+Na start:
+•	Docker (API + DB + Redis)
+•	docker-compose
+Potem:
+•	GitHub Actions
+•	deploy na:
+o	Azure / Fly.io / Railway
+
+GEMINI / CHATBOT (FAZA 3)
+Bardzo dobra decyzja, że nie od razu.
+Use case:
+„Mam wolny wieczór, co polecasz?”
+•	bot korzysta z:
+o	profilu usera
+o	historii
+o	rekomendacji
+•	web search jako fallback
+
+FAZA 1 – FUNDAMENT
+•	cache
+•	„Co teraz?” (hardcoded logika)
+FAZA 2 – SPOŁECZNOŚĆ
+•	feed
+•	feedback
+•	rekomendacje v2
+FAZA 3 – POLISH
+•	dark mode
+•	testy
+•	CI/CD
+•	optymalizacja
+FAZA 4 – AI
+•	Gemini
+•	chat UI
+•	web search
+
+
+Cache danych
+Algorytmy rekomendacji
+Auth, profile, feed
+dark mode
+devops

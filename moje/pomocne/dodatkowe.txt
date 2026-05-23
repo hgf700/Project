@@ -1,0 +1,11 @@
+spoko
+
+xUnit / NUnit / MSTest + Moq/NSubstitute w 100% wystarczą.
+To jest dokładny odpowiednik Jest unit tests w JS.
+Przykładowy stack:
+
+xUnit – testy
+
+Moq – mocki
+
+FluentAssertions – czytelne asercje

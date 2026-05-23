@@ -1,0 +1,44 @@
+    narazie
+
+Cache wyników obliczeń Twoje rekomendacje scikit-learn mogą być kosztowne do liczenia na bieżąco.
+Redis jako cache z TTL, np.co 1h
+
+
+
+    bardzo potem
+
+Liczniki / statystyki Liczba odtworzeń filmu, liczba polubień, rankingi – 
+mozna zapisywac rekomendacje do ml 
+rekomendacje dla usera zeby od razu wczesniej generowana
+do roznych id w tabelach mozna tez dodac guid tylko jest wolniejszy ale bezpieczneijszy
+role dla uzytk ale potem bo nie mam jeszcze pomyslu na to
+czyli jakis widok z zaproszeniami kolejny on init akceptacja zmianie w bazie ze jestem znaj
+zaproszenia akceptacja / odrzucenie
+jakas paginacja by wypadalo
+zmiana wszystko co powinno byc dto 
+zap aktora do db
+losowość (exploration) wyswietlanie
+collaborative filtering (prosty)
+boost dla list kuratorów
+
+    potem
+
+TmdbLoadPeopleRoleService poprawic chyba do dto bo potrzebuje wartosci z PeopleRole i MoviePeopleRole
+redis tokeny expiration z jwt moze
+Redis sety, sorted sets do szybkich statystyk i leaderboardów.
+mozliwe ze zdjecia tych wszystkich filmow? i nazwy?
+Redis Streams
+friend request block friend ale to jako enum pending canceled blocked added
+GET /notifications?limit=20 await _redis.ListRangeAsync(key, 0, limit - 1);
+blokujesz → nie może:
+wysłać zaproszenia
+
+    optymalizacja zapytan do bazy:
+
+email mam w jwt
+Nie używaj Include() jeśli nie potrzebujesz danych
+.Where(m => m.TmdbId == movieId).Select(m => m.Id) #select i zapytanie o 1 obiekt
+AnyAsync tylko do zapytania czy istnieje do innych FirstOrDefaultAsync
+await Task.WhenAll(movieTask, entryTask, prefTask); # kilka wczesniejszych zapytan dla bez await
+builder.HasIndex(x => new { x.UserId, x.MovieId }); #indexy w db 
+_ = _redis.NotifyMovieRatedAsync(...) # fire and forget

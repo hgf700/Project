@@ -1,0 +1,19 @@
+npm start
+
+ng generate component Views/
+
+cd ProjectFront/src/app
+
+#prettier
+npx prettier --write src/
+
+#REDIS start
+docker exec -it redis redis-cli
+
+# redis commands
+https://redis.io/docs/latest/commands/redis-8-6-commands/
+
+#Start a redis instance CHYBA NIE TRZEBA
+docker run --name some-redis -d redis
+
+
